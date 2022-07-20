@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+.EyeTrackerInfo{
+    padding-top:20px;
+    height:250px;
+    width:100%;
+}

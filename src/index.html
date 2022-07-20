@@ -7,13 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <script src="https://webgazer.cs.brown.edu/webgazer.js" type="text/javascript"></script>
-  <p style="margin-top: 300px;">
-    <button id="startButton" type="button" onclick="startWebgazer();">Start</button>
-    <button type="button" onclick="pauseWebgazer();">Pause / Resume</button>
-    <div>x: <span id="x"></span></div>
-    <div>y: <span id="y"></span></div>
-    <div>time: <span id="time"></span></div>
-  </p>
   <script type = "text/javascript">
     function startWebgazer(){
       document.getElementById("startButton").style.display="none";
@@ -27,6 +20,8 @@
       }).begin();
     }
 
+    //window.onload = startWebgazer();
+
     var paused = false;
     function pauseWebgazer(){
       if(paused){
@@ -39,7 +34,18 @@
       }
     }
   </script>
-  <app-root></app-root>
+
+
+  <div class="EyeTrackerInfo">
+    <div style="margin-left:auto;margin-right:auto;width:100px;height:100px;">
+      <button id="startButton" type="button" onclick="startWebgazer();">Start</button>
+      <button type="button" onclick="pauseWebgazer();">Pause / Resume</button>
+      <div>x: <span id="x"></span></div>
+      <div>y: <span id="y"></span></div>
+      <div>time: <span id="time"></span></div>
+    </div>
+    <app-root></app-root>
+  </div>
 </body>
 </html>
 

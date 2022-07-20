@@ -1,0 +1,86 @@
+/*#Pt0 {
+    top: 70px;
+    left: 340px;
+}
+
+#Pt1 {
+    top: 70px;
+    left: 640px;
+}
+
+#Pt2 {
+    top: 70px;
+    left: 940px;
+}
+
+#Pt3 {
+    top: 170px;
+    left: 340px;
+}
+
+#Pt4 {
+    top: 170px;
+    left: 640px;
+}
+
+#Pt5 {
+    top: 170px;
+    left: 940px;
+}
+
+#Pt6 {
+    top: 270px;
+    left: 340px;
+}
+
+#Pt7 {
+    top: 270px;
+    left: 640px;
+}
+
+#Pt8 {
+    top: 270px;
+    left: 940px;
+}
+
+#Pt9 {
+    top: 370px;
+    left: 340px;
+}
+
+#Pt10 {
+    top: 370px;
+    left: 640px;
+}
+
+#Pt11 {
+    top: 370px;
+    left: 940px;
+} */
+
+.Flexbox {
+    display: flex;
+    justify-content: space-between;
+    margin: 100px 10px 100px 10px;
+}
+
+.CalibrationPt {
+    width: 25px;
+    height: 25px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background-color: rgba(255, 0, 0, 0.5);
+    border-color: rgba(255, 0, 0, 0.5);
+    border-style: solid;
+}
+
+.CalibrationPt:hover {
+    cursor: pointer;
+}
+
+.TestPt{
+    background-color: rgba(0, 0, 255, 0.221);
+    width: 100px;
+    height: 100px;
+}
