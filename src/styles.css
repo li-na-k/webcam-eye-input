@@ -1,6 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --blue:#93b5c6;
+    --green: #c5d886;
+    --yellow: #f0cf65;
+    --apricot: #d7816a;
+    --red: #bd4f6c;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+h1{
+    color: var(--blue);
+}
+
+button{
+    background-color: var(--apricot);
+    color: #fff;
+    border-radius: 20px;
+    border: none;
+    padding: 5px 10px;
+    margin: 2px;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
 .EyeTrackerInfo{
     padding-top:20px;
     height:250px;
     width:100%;
 }
+

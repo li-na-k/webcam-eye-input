@@ -1,4 +1,5 @@
-<div style="margin-left:auto;margin-right:auto;width:100px;height:100px;">
+<h1>Master Thesis: Eye Input for Visualization</h1>
+<div style="margin-left:auto; width:100px; height:100px; margin-top: -50px; margin-bottom: 50px; margin-right: 20px;">
     <button id="startButton" type="button" (click)="startWebgazer()">Start</button>
     <button type="button" (click)="pauseWebgazer();">Pause / Resume</button>
     <div>x: <span id="x"></span></div>
@@ -7,8 +8,13 @@
 </div>
 
 <div *ngIf="!calibrationDone">
-    <p style="border: 2px solid black; border-radius: 15px; padding: 20px;">Click start. Then, please click on every dot while looking at it until it turns green.
-        <button type="button" (click)="calibrationDone = true;">Skip callibration</button></p>
+    <div *ngIf="showPopup" style="border: 2px solid black; border-radius: 15px; padding: 20px;">
+        <div style="text-align:right;">
+            <button (click)="showPopup=false;">x</button>
+        </div>
+        Click start. Then, please click on every dot while looking at it until it turns green.
+        <button type="button" (click)="calibrationDone = true;">Skip callibration</button>
+    </div>
     
 <div class="Flexbox">
     <input type="button" class="CalibrationPt" id="CPt0" (click)="changeButtonColor(0)" >

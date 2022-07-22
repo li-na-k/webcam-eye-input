@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from './state/app.state';
@@ -7,17 +7,18 @@ import { selectCurrentEyePos } from './state/eyetracking.selector';
 
 declare var webgazer: any;
 
-
-//doch mit http server???
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'eye-input-visualization';
+
+  ngOnInit(): void {
+      this.showPopup = true;
+  }
 
   //settings
   public clickGoal = 2;
@@ -28,6 +29,7 @@ export class AppComponent {
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   public greenPtCount : number = 0;
   public currentEyePos$ : Observable<number[]> = this.store.select(selectCurrentEyePos);
+  public showPopup = false;
 
   constructor(private store : Store<AppState>){}
 
@@ -64,7 +66,7 @@ export class AppComponent {
     this.buttonClicks[buttonNr]++
     var button = document.getElementById("CPt"+buttonNr)
     if(button && this.buttonClicks[buttonNr] == this.clickGoal){ //turns green
-      button.style.backgroundColor = "LimeGreen"
+      button.style.backgroundColor = "var(--green)"
       this.greenPtCount++;
       if(this.greenPtCount == this.numberOfCPt){
         this.calibrationDone = true;
@@ -73,7 +75,7 @@ export class AppComponent {
     }
     else if(button){
       button.style.opacity = "1.0";
-      button.style.borderColor = "LimeGreen"
+      button.style.borderColor = "var(--green)";
       var newBorderWidth = this.buttonClicks[buttonNr] + 2;
       button.style.borderWidth = String(newBorderWidth)+"px";
     }

@@ -70,8 +70,8 @@
     -webkit-border-radius: 25px;
     -moz-border-radius: 25px;
     border-radius: 25px;
-    background-color: rgba(255, 0, 0, 0.5);
-    border-color: rgba(255, 0, 0, 0.5);
+    background-color: var(--red);
+    border-color: var(--red);
     border-style: solid;
 }
 
