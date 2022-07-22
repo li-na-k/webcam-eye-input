@@ -4,6 +4,12 @@ import { Store } from '@ngrx/store';
 import { AppState } from './state/app.state';
 import { selectCurrentEyePos } from './state/eyetracking.selector';
 
+
+declare var webgazer: any;
+
+
+//doch mit http server???
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,12 +24,41 @@ export class AppComponent {
   public numberOfCPt = 6*3;
 
   //current state
-  public calibrationDone = true; //false;
+  public calibrationDone = false;
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   public greenPtCount : number = 0;
   public currentEyePos$ : Observable<number[]> = this.store.select(selectCurrentEyePos);
 
   constructor(private store : Store<AppState>){}
+
+  public startWebgazer(){
+    var startButton = document.getElementById("startButton");
+    if(startButton){startButton.style.display="none"};
+    webgazer.setGazeListener(function(data : any, elapsedTime : any) {
+        if (data == null) {
+            return;
+        }
+        var xDisplay = document.getElementById("x");
+        var yDisplay = document.getElementById("y");
+        if(xDisplay){xDisplay.innerHTML = data.x;}
+        if(yDisplay){yDisplay.innerHTML = data.y;}
+        //document.getElementById("time").innerHTML = elapsedTime;
+    }).begin();
+  }
+
+  public paused = false;
+
+  public pauseWebgazer(){
+    if(this.paused){
+      this.paused = false;
+      webgazer.resume()
+    }
+    else{
+      this.paused = true;
+      webgazer.pause()
+    }
+  }
+
 
   public changeButtonColor(buttonNr: number){
     this.buttonClicks[buttonNr]++
