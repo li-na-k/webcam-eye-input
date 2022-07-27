@@ -1,19 +1,20 @@
 <h1>Master Thesis: Eye Input for Visualization</h1>
-<div style="margin-left:auto; width:100px; height:100px; margin-top: -50px; margin-bottom: 50px; margin-right: 20px;">
-    <button id="startButton" type="button" (click)="startWebgazer()">Start</button>
-    <button type="button" (click)="pauseWebgazer();">Pause / Resume</button>
+<div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px;">
     <div>x: <span id="x"></span></div>
     <div>y: <span id="y"></span></div>
-    <div>time: <span id="time"></span></div>
+    <button style="margin-top: 20px; "type="button" (click)="pauseWebgazer();">Pause / Resume</button>
+    <!-- <div>Eye Position from Store: <span id="x">{{currentEyePos$|async}}</span></div>-->
 </div>
 
 <div *ngIf="!calibrationDone">
-    <div *ngIf="showPopup" style="border: 2px solid black; border-radius: 15px; padding: 20px;">
-        <div style="text-align:right;">
-            <button (click)="showPopup=false;">x</button>
+
+    <div *ngIf="showPopup" class="Popup">
+        <div class="popup-header">
+            <span>Calibration</span>
+            <button class="Popup-close" (click)="showPopup=false;">×</button>
         </div>
-        Click start. Then, please click on every dot while looking at it until it turns green.
-        <button type="button" (click)="calibrationDone = true;">Skip callibration</button>
+        Click on every dot while looking at it until it turns green.
+        <button style="display: block; margin-top: 20px;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
     </div>
     
 <div class="Flexbox">
@@ -44,11 +45,19 @@
 
 
 <div *ngIf="calibrationDone">
-    <p style="border: 2px solid black; border-radius: 15px; padding: 20px;">Calibration was successful. Current position is {{(currentEyePos$ | async)}}.</p>
-<div class="Flexbox">
-    <div class="TestPt" id="TestPt1"></div>
-    <div class="TestPt" id="TestPt2"></div>
-    <div class="TestPt" id="TestPt3"></div>
-    <div class="TestPt" id="TestPt4"></div>
-</div>
+
+    <div *ngIf="showPopup" class="Popup">
+        <div class="popup-header">
+            <span>Calibration was successful!</span>
+            <button class="Popup-close" (click)="showPopup=false;">×</button>
+        </div>
+        Now, your eyes are being tracked :)
+    </div>
+
+    <div class="Flexbox">
+        <div class="TestPt" id="TestPt1"></div>
+        <div class="TestPt" id="TestPt2"></div>
+        <div class="TestPt" id="TestPt3"></div>
+        <div class="TestPt" id="TestPt4"></div>
+    </div>
 </div>
