@@ -158,7 +158,7 @@ export class AppComponent implements OnInit{
       this.greenPtCount++;
       if(this.greenPtCount == this.numberOfCPt){
         this.calibrationDone = true;
-        this.startTestTracking();
+        this.showPopup=true;
       }
     }
     else if(button){
@@ -169,9 +169,7 @@ export class AppComponent implements OnInit{
     }
   }
 
-  startTestTracking(){
 
-  }
 }  
 
 
