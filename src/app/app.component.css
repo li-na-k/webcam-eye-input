@@ -1,0 +1,53 @@
+.Flexbox {
+    display: flex;
+    justify-content: space-between;
+    margin: 100px 10px 100px 10px;
+}
+
+.CalibrationPt {
+    width: 25px;
+    height: 25px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background-color: var(--red);
+    border-color: var(--red);
+    border-style: solid;
+}
+
+.CalibrationPt:hover {
+    cursor: pointer;
+}
+
+.TestPt{
+    background-color: var(--blue);
+    width: 400px;
+    height: 400px;
+}
+
+.Popup{
+    position: fixed;
+    bottom: 35px;
+    right: 20px;
+    margin-left: 20px;
+    max-width: 300px;
+    border: 2px solid black; 
+    border-radius: 15px; 
+    padding: 20px; 
+    background-color: var(--blue); 
+}
+
+.Popup-close{
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    cursor: pointer;
+    background-color: transparent;
+    color: #000;
+    font-size: 30px;
+}
+
+.popup-header {
+    padding: 20px 0px;
+    font-size: 30px;
+  }
