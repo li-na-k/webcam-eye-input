@@ -42,6 +42,7 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
                         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_back"></mat-icon>
                     </button>
                 </div>
+                <button style="display: block; margin-top: 20px;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
             </div>
         </div>
         
@@ -82,7 +83,9 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
 
     <div *ngIf="calibrationDone">
 
-        <div *ngIf="showPopup"> 
+        <div *ngIf="showPopup" style="display:flex;justify-content:center;">
+            <div class="popup-background">
+            </div> 
             <div class="Popup">
                 <div class="popup-header">
                     <span>Calibration was successful!</span>
