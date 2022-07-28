@@ -12,9 +12,18 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
     <div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px; width: 230px;">
         <div>x: <span id="x"></span></div>
         <div>y: <span id="y"></span></div>
-        <button style="margin-top: 20px; "type="button" (click)="pauseWebgazer();">Pause / Resume</button>
-        <button mat-icon-button style="margin-top: 20px; "type="button" (click)="showPopup=true;">
-            <mat-icon>help</mat-icon>
+        <span *ngIf="!paused">
+            <button  mat-icon-button style="margin: 20px;" type="button" (click)="pauseWebgazer()">
+                <mat-icon>pause_circle_outline</mat-icon>
+            </button>
+        </span>
+        <span *ngIf="paused">
+            <button mat-icon-button style="margin: 20px;" type="button" (click)="pauseWebgazer()">
+                <mat-icon>play_circle_outline</mat-icon>
+            </button>
+        </span>
+        <button mat-icon-button style="margin: 20px;" type="button" (click)="showPopup=true;">
+            <mat-icon>help_outline</mat-icon>
         </button>
     </div>
 
