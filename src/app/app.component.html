@@ -13,6 +13,9 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
         <div>x: <span id="x"></span></div>
         <div>y: <span id="y"></span></div>
         <button style="margin-top: 20px; "type="button" (click)="pauseWebgazer();">Pause / Resume</button>
+        <button mat-icon-button style="margin-top: 20px; "type="button" (click)="showPopup=true;">
+            <mat-icon>help</mat-icon>
+        </button>
     </div>
 
     <div *ngIf="!calibrationDone">
@@ -35,14 +38,14 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
                     The rectangle should always be green to indicate that the tracking is working.
                 </div>
                 <div style="margin-top: 25px;">
-                    <button style="display: block; float: right;" type="button" (click)="nextExplanation();"> 
-                        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_forward"></mat-icon>
+                    <button mat-icon-button style="display: block; float: right;" type="button" (click)="nextExplanation();"> 
+                        <mat-icon fontIcon="arrow_forward"></mat-icon>
                     </button>
-                    <button *ngIf="explanationNr!=0" style="display: block; float: left;" type="button" (click)="previousExplanation();">
-                        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_back"></mat-icon>
+                    <button mat-icon-button *ngIf="explanationNr!=0" style="display: block; float: left;" type="button" (click)="previousExplanation();">
+                        <mat-icon fontIcon="arrow_back"></mat-icon>
                     </button>
                 </div>
-                <button style="display: block; margin-top: 20px;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
+                <button style="display: block; margin-top: 20px; margin-left: auto; margin-right: auto;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
             </div>
         </div>
         
