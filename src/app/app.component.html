@@ -17,13 +17,17 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
     </div>
 
     <div *ngIf="!calibrationDone">
-        <div *ngIf="showPopup" class="Popup">
-            <div class="popup-header">
-                <span>Calibration</span>
-                <button class="Popup-close" (click)="showPopup=false;">×</button>
+        <div *ngIf="showPopup" style="display:flex;justify-content:center;">
+            <div class="popup-background">
             </div>
-            Click on every dot while looking at it until it turns green.
-            <button style="display: block; margin-top: 20px;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
+            <div class="Popup">
+                <div class="popup-header">
+                    <span>Calibration</span>
+                    <button class="Popup-close" (click)="showPopup=false;">×</button>
+                </div>
+                Click on every dot while looking at it until it turns green.
+                <button style="display: block; margin-top: 20px;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
+            </div>
         </div>
         
     <div class="Flexbox">
