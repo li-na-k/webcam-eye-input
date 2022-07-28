@@ -186,6 +186,18 @@ export class AppComponent implements OnInit{
     }
   }
 
+  public numberSlides : number = 2;
+  public nextExplanation(){
+    if(this.explanationNr >= this.numberSlides){
+      this.showPopup=false;
+    }
+    this.explanationNr = this.explanationNr+1; 
+  }
+
+  public previousExplanation(){
+    this.explanationNr = this.explanationNr-1; 
+  }
+
 
 }  
 

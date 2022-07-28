@@ -8,12 +8,11 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
 
 
 <div *ngIf="webgazerLoaded" style="padding: 30px;">
-    <h1>Master Thesis: Eye Input for Visualization</h1>
+    <h1>Eye Input for Visualization</h1>
     <div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px; width: 230px;">
         <div>x: <span id="x"></span></div>
         <div>y: <span id="y"></span></div>
         <button style="margin-top: 20px; "type="button" (click)="pauseWebgazer();">Pause / Resume</button>
-        <!-- <div>Eye Position from Store: <span id="x">{{currentEyePos$|async}}</span></div>-->
     </div>
 
     <div *ngIf="!calibrationDone">
@@ -36,10 +35,10 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
                     The rectangle should always be green to indicate that the tracking is working.
                 </div>
                 <div style="margin-top: 25px;">
-                    <button mat-icon-button style="display: block; float: right;" type="button" (click)="explanationNr = explanationNr+1;"> 
+                    <button style="display: block; float: right;" type="button" (click)="nextExplanation();"> 
                         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_forward"></mat-icon>
                     </button>
-                    <button mat-icon-button *ngIf="explanationNr!=0" style="display: block; float: left;" type="button" (click)="explanationNr = explanationNr-1;">
+                    <button *ngIf="explanationNr!=0" style="display: block; float: left;" type="button" (click)="previousExplanation();">
                         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_back"></mat-icon>
                     </button>
                 </div>
