@@ -10,6 +10,7 @@ import { eyetrackingReducer } from './state/eyetracking.reducer';
 
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {MatIconModule} from '@angular/material/icon';
     AppRoutingModule,
     MatProgressSpinnerModule,
     MatIconModule,
+    MatButtonModule,
     StoreModule.forRoot({
       eyetrackingData : eyetrackingReducer
     })
