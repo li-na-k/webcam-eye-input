@@ -36,8 +36,12 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
                     The rectangle should always be green to indicate that the tracking is working.
                 </div>
                 <div style="margin-top: 25px;">
-                    <button style="display: block; float: right;" type="button" (click)="explanationNr = explanationNr+1;">Next</button>
-                    <button *ngIf="explanationNr!=0" style="display: block; float: left;" type="button" (click)="explanationNr = explanationNr-1;">Back</button>
+                    <button mat-icon-button style="display: block; float: right;" type="button" (click)="explanationNr = explanationNr+1;"> 
+                        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_forward"></mat-icon>
+                    </button>
+                    <button mat-icon-button *ngIf="explanationNr!=0" style="display: block; float: left;" type="button" (click)="explanationNr = explanationNr-1;">
+                        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_back"></mat-icon>
+                    </button>
                 </div>
             </div>
         </div>
