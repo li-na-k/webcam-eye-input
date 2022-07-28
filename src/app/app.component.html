@@ -13,12 +13,12 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
         <div>x: <span id="x"></span></div>
         <div>y: <span id="y"></span></div>
         <span *ngIf="!paused">
-            <button  mat-icon-button style="margin: 20px;" type="button" (click)="pauseWebgazer()">
+            <button  mat-icon-button style="margin: 20px 0px;" type="button" (click)="pauseWebgazer()">
                 <mat-icon>pause_circle_outline</mat-icon>
             </button>
         </span>
         <span *ngIf="paused">
-            <button mat-icon-button style="margin: 20px;" type="button" (click)="pauseWebgazer()">
+            <button mat-icon-button style="margin: 20px 0px;" type="button" (click)="pauseWebgazer()">
                 <mat-icon>play_circle_outline</mat-icon>
             </button>
         </span>
