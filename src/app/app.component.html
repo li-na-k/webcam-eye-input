@@ -25,8 +25,20 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
                     <span>Calibration</span>
                     <button class="Popup-close" (click)="showPopup=false;">×</button>
                 </div>
-                Click on every dot while looking at it until it turns green.
-                <button style="display: block; margin-top: 20px;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
+                <div *ngIf="explanationNr==0">
+                    Click on every dot while looking at it until they turn green.
+                </div>
+                <div *ngIf="explanationNr==1">
+                    Make sure you keep your head still and stay in that position after the calibration is done.
+                </div>
+                <div *ngIf="explanationNr==2">
+                    In the video display, your face should be inside the rectangle. <br>
+                    The rectangle should always be green to indicate that the tracking is working.
+                </div>
+                <div style="margin-top: 25px;">
+                    <button style="display: block; float: right;" type="button" (click)="explanationNr = explanationNr+1;">Next</button>
+                    <button *ngIf="explanationNr!=0" style="display: block; float: left;" type="button" (click)="explanationNr = explanationNr-1;">Back</button>
+                </div>
             </div>
         </div>
         

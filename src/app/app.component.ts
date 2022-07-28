@@ -39,6 +39,9 @@ export class AppComponent implements OnInit{
   public xprediction = 0.0;
   public yprediction = 0.0;
 
+  //explanation
+  public explanationNr : number = 0;
+
   constructor(private store : Store<AppState>){}
 
   public startWebgazer(){

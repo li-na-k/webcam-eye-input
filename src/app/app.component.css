@@ -33,6 +33,8 @@
     padding: 50px; 
     background-color: var(--blue); 
     z-index: 3;
+    text-align: center;
+    width: 400px;
 }
 
 .Popup-close{
@@ -45,7 +47,7 @@
 }
 
 .popup-header {
-    padding: 20px 0px;
+    padding: 20px 0px 40px 0px;
     font-size: 30px;
   }
 
