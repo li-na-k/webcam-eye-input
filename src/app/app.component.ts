@@ -21,14 +21,16 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
       this.showPopup = true;
       this.startWebgazer();
+      this.checkWebGazerLoaded();
   }
 
   //settings
   public clickGoal = 2;
-  public numberOfCPt = 6*3;
+  public numberOfCPt = 6*4;
 
   //current state
-  public calibrationDone = false;
+  public webgazerLoaded : boolean = false;
+  public calibrationDone : boolean = false;
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   public greenPtCount : number = 0;
   public currentEyePos$ : Observable<number[]> = this.store.select(selectCurrentEyePos);
@@ -39,11 +41,8 @@ export class AppComponent implements OnInit{
 
   constructor(private store : Store<AppState>){}
 
-  
-
-
   public startWebgazer(){
-    var store = this.store
+    //var store = this.store
     //store.dispatch(changeYPos({newy: 123.0}));
     //var rect2 = document.getElementById("TestPt2")?.getBoundingClientRect();
     //console.log(rect2?.top + " / " + rect2?.right + " / " + rect2?.bottom + " / " + rect2?.left)
@@ -124,8 +123,23 @@ export class AppComponent implements OnInit{
        
         //store.dispatch(changeXPos(data.x));
         //store.dispatch(changeYPos({newy: 123.0}));
-    }).begin();
+    }).begin()
   }
+
+
+  public interval : any;
+  checkWebGazerLoaded = () => {
+    this.interval = setInterval(() => {
+        if(webgazer.isReady()) {
+            this.webgazerLoaded = true;
+            console.log('webgazer loaded: ',webgazer)
+            clearInterval(this.interval)
+        }
+        else {
+            console.log('webgazer not loaded ____')
+        }
+    },1000)
+}
 
 
   public paused = false;

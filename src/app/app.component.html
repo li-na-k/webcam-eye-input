@@ -1,63 +1,83 @@
-<h1>Master Thesis: Eye Input for Visualization</h1>
-<div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px;">
-    <div>x: <span id="x"></span></div>
-    <div>y: <span id="y"></span></div>
-    <button style="margin-top: 20px; "type="button" (click)="pauseWebgazer();">Pause / Resume</button>
-    <!-- <div>Eye Position from Store: <span id="x">{{currentEyePos$|async}}</span></div>-->
-</div>
-
-<div *ngIf="!calibrationDone">
-
-    <div *ngIf="showPopup" class="Popup">
-        <div class="popup-header">
-            <span>Calibration</span>
-            <button class="Popup-close" (click)="showPopup=false;">×</button>
-        </div>
-        Click on every dot while looking at it until it turns green.
-        <button style="display: block; margin-top: 20px;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
+<div *ngIf="!webgazerLoaded" 
+style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;">
+    <div class="loading">
+        <mat-spinner [diameter]="30" ></mat-spinner>
+        Please wait. Everything is being prepared...
     </div>
-    
-<div class="Flexbox">
-    <input type="button" class="CalibrationPt" id="CPt0" (click)="changeButtonColor(0)" >
-    <input type="button" class="CalibrationPt" id="CPt1" (click)="changeButtonColor(1)" >
-    <input type="button" class="CalibrationPt" id="CPt2" (click)="changeButtonColor(2)" >
-    <input type="button" class="CalibrationPt" id="CPt3" (click)="changeButtonColor(3)" >
-    <input type="button" class="CalibrationPt" id="CPt4" (click)="changeButtonColor(4)" >
-    <input type="button" class="CalibrationPt" id="CPt5" (click)="changeButtonColor(5)" >
-</div>
-<div class="Flexbox">
-    <input type="button" class="CalibrationPt" id="CPt6" (click)="changeButtonColor(6)" >
-    <input type="button" class="CalibrationPt" id="CPt7" (click)="changeButtonColor(7)" >
-    <input type="button" class="CalibrationPt" id="CPt8" (click)="changeButtonColor(8)" >
-    <input type="button" class="CalibrationPt" id="CPt9" (click)="changeButtonColor(9)" >
-    <input type="button" class="CalibrationPt" id="CPt10" (click)="changeButtonColor(10)" >
-    <input type="button" class="CalibrationPt" id="CPt11" (click)="changeButtonColor(11)" >
-</div>
-<div class="Flexbox">
-    <input type="button" class="CalibrationPt" id="CPt12" (click)="changeButtonColor(12)" >
-    <input type="button" class="CalibrationPt" id="CPt13" (click)="changeButtonColor(13)" >
-    <input type="button" class="CalibrationPt" id="CPt14" (click)="changeButtonColor(14)" >
-    <input type="button" class="CalibrationPt" id="CPt15" (click)="changeButtonColor(15)" >
-    <input type="button" class="CalibrationPt" id="CPt16" (click)="changeButtonColor(16)" >
-    <input type="button" class="CalibrationPt" id="CPt17" (click)="changeButtonColor(17)" >
-</div>
 </div>
 
 
-<div *ngIf="calibrationDone">
-
-    <div *ngIf="showPopup" class="Popup">
-        <div class="popup-header">
-            <span>Calibration was successful!</span>
-            <button class="Popup-close" (click)="showPopup=false;">×</button>
-        </div>
-        Now, your eyes are being tracked :)
+<div *ngIf="webgazerLoaded" style="padding: 30px;">
+    <h1>Master Thesis: Eye Input for Visualization</h1>
+    <div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px; width: 230px;">
+        <div>x: <span id="x"></span></div>
+        <div>y: <span id="y"></span></div>
+        <button style="margin-top: 20px; "type="button" (click)="pauseWebgazer();">Pause / Resume</button>
+        <!-- <div>Eye Position from Store: <span id="x">{{currentEyePos$|async}}</span></div>-->
     </div>
 
+    <div *ngIf="!calibrationDone">
+        <div *ngIf="showPopup" class="Popup">
+            <div class="popup-header">
+                <span>Calibration</span>
+                <button class="Popup-close" (click)="showPopup=false;">×</button>
+            </div>
+            Click on every dot while looking at it until it turns green.
+            <button style="display: block; margin-top: 20px;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
+        </div>
+        
     <div class="Flexbox">
-        <div class="TestPt" id="TestPt1"></div>
-        <div class="TestPt" id="TestPt2"></div>
-        <div class="TestPt" id="TestPt3"></div>
-        <div class="TestPt" id="TestPt4"></div>
+        <input type="button" class="CalibrationPt" id="CPt0" (click)="changeButtonColor(0)" >
+        <input type="button" class="CalibrationPt" id="CPt1" (click)="changeButtonColor(1)" >
+        <input type="button" class="CalibrationPt" id="CPt2" (click)="changeButtonColor(2)" >
+        <input type="button" class="CalibrationPt" id="CPt3" (click)="changeButtonColor(3)" >
+        <input type="button" class="CalibrationPt" id="CPt4" (click)="changeButtonColor(4)" >
+        <input type="button" class="CalibrationPt" id="CPt5" (click)="changeButtonColor(5)" >
+    </div>
+    <div class="Flexbox">
+        <input type="button" class="CalibrationPt" id="CPt6" (click)="changeButtonColor(6)" >
+        <input type="button" class="CalibrationPt" id="CPt7" (click)="changeButtonColor(7)" >
+        <input type="button" class="CalibrationPt" id="CPt8" (click)="changeButtonColor(8)" >
+        <input type="button" class="CalibrationPt" id="CPt9" (click)="changeButtonColor(9)" >
+        <input type="button" class="CalibrationPt" id="CPt10" (click)="changeButtonColor(10)" >
+        <input type="button" class="CalibrationPt" id="CPt11" (click)="changeButtonColor(11)" >
+    </div>
+    <div class="Flexbox">
+        <input type="button" class="CalibrationPt" id="CPt12" (click)="changeButtonColor(12)" >
+        <input type="button" class="CalibrationPt" id="CPt13" (click)="changeButtonColor(13)" >
+        <input type="button" class="CalibrationPt" id="CPt14" (click)="changeButtonColor(14)" >
+        <input type="button" class="CalibrationPt" id="CPt15" (click)="changeButtonColor(15)" >
+        <input type="button" class="CalibrationPt" id="CPt16" (click)="changeButtonColor(16)" >
+        <input type="button" class="CalibrationPt" id="CPt17" (click)="changeButtonColor(17)" >
+    </div>
+    <div class="Flexbox">
+        <input type="button" class="CalibrationPt" id="CPt18" (click)="changeButtonColor(18)" >
+        <input type="button" class="CalibrationPt" id="CPt19" (click)="changeButtonColor(19)" >
+        <input type="button" class="CalibrationPt" id="CPt20" (click)="changeButtonColor(20)" >
+        <input type="button" class="CalibrationPt" id="CPt21" (click)="changeButtonColor(21)" >
+        <input type="button" class="CalibrationPt" id="CPt22" (click)="changeButtonColor(22)" >
+        <input type="button" class="CalibrationPt" id="CPt23" (click)="changeButtonColor(23)" >
+    </div>
+    </div>
+
+
+    <div *ngIf="calibrationDone">
+
+        <div *ngIf="showPopup"> 
+            <div class="Popup">
+                <div class="popup-header">
+                    <span>Calibration was successful!</span>
+                    <button class="Popup-close" (click)="showPopup=false;">×</button>
+                </div>
+                Now, your eyes are being tracked :)
+            </div>
+        </div>
+
+        <div class="Flexbox">
+            <div class="TestPt" id="TestPt1"></div>
+            <div class="TestPt" id="TestPt2"></div>
+            <div class="TestPt" id="TestPt3"></div>
+            <div class="TestPt" id="TestPt4"></div>
+        </div>
     </div>
 </div>

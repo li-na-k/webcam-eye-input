@@ -1,3 +1,4 @@
+
 .Flexbox {
     display: flex;
     justify-content: space-between;
@@ -31,10 +32,11 @@
     right: 20px;
     margin-left: 20px;
     max-width: 300px;
-    border: 2px solid black; 
+    color: white;
     border-radius: 15px; 
-    padding: 20px; 
+    padding: 50px; 
     background-color: var(--blue); 
+    z-index: 3;
 }
 
 .Popup-close{
@@ -43,7 +45,6 @@
     right: 15px;
     cursor: pointer;
     background-color: transparent;
-    color: #000;
     font-size: 30px;
 }
 
@@ -51,3 +52,30 @@
     padding: 20px 0px;
     font-size: 30px;
   }
+
+.loading{
+    max-width: 300px;
+    color: #fff;
+    border-radius: 15px; 
+    padding: 50px; 
+    background-color: var(--blue); 
+    text-align: center;
+}
+
+.mat-spinner{
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom: 50px;
+}
+
+#popup-background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+}  
