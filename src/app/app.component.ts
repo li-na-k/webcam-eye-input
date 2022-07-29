@@ -130,6 +130,7 @@ export class AppComponent implements OnInit{
   }
 
 
+
   public interval : any;
   checkWebGazerLoaded = () => {
     this.interval = setInterval(() => {
@@ -196,6 +197,11 @@ export class AppComponent implements OnInit{
 
   public previousExplanation(){
     this.explanationNr = this.explanationNr-1; 
+  }
+
+  public showExplanation(){
+    this.showPopup=true;
+    this.explanationNr = 0;
   }
 
 
