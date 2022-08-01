@@ -108,10 +108,7 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
         </div>
 
         <div class="Flexbox">
-            <div class="TestPt" id="TestPt1"></div>
-            <div class="TestPt" id="TestPt2"></div>
-            <div class="TestPt" id="TestPt3"></div>
-            <div class="TestPt" id="TestPt4"></div>
+            <div *ngFor="let p of poi;" class="TestPt" id="{{ 'TestPt' + p }}"></div>
         </div>
     </div>
 </div>
