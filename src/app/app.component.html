@@ -33,18 +33,35 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
             </div>
             <div class="Popup">
                 <div class="popup-header">
-                    <span>Calibration</span>
                     <button class="Popup-close" (click)="showPopup=false;">×</button>
                 </div>
                 <div *ngIf="explanationNr==0">
-                    Click on every dot while looking at it until they turn green.
+                    Before you start, please click through this short guide and read it carefully. 
+                    If you want to review the instructions later, click on the XXXXXX question mark icon.
+                    <div style="margin-top: 15px;">Now click on "Continue".</div>
                 </div>
                 <div *ngIf="explanationNr==1">
-                    Make sure you keep your head still and stay in that position after the calibration is done.
+                    In the upper right corner you can see the recording of your webcam. 
+                    <div style="text-align: left; margin-top: 15px;">
+                        Please make sure ... 
+                        <ul>
+                            <li>that your face is always inside the green square. Ideally, your face should fill the square completely.</li>
+                            <li>that your face is well illuminated.</li>
+                            <li>that the square always remains green. A red square indicates that your face position is wrong.</li>
+                        </ul>
+                    </div>
+                    Now find a comfortable position for the calibration that meets these criteria and maintain this position for the entire experiment.
+                    Keep your head still and try not to move it.
+                    <div style="margin-top: 15px;">Now click on "Continue".</div>
                 </div>
                 <div *ngIf="explanationNr==2">
-                    In the video display, your face should be inside the rectangle. <br>
-                    The rectangle should always be green to indicate that the tracking is working.
+                    The red circle shows where the system assumes your eye-gaze. To ensure that the prediction is as accurate as possible, the system must first be calibrated.
+                    <div style="margin-top: 15px;">Now click on "Continue".</div>
+                </div>
+                <div *ngIf="explanationNr==3">
+                    For the calibration, click each point xxxxx times until all points are completely green.
+                    While clicking, fixate the points with your eyes.
+                    <div style="margin-top: 15px;">To start the calibration, close this window with "OK".</div>
                 </div>
                 <div style="margin-top: 25px;">
                     <button mat-icon-button style="display: block; float: right;" type="button" (click)="nextExplanation();"> 
@@ -110,5 +127,16 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
         <div class="Flexbox">
             <div *ngFor="let p of poi;" class="TestPt" id="{{ 'TestPt' + p }}"></div>
         </div>
+
+        <canvas baseChart
+            [type]="'pie'"
+            [datasets]="pieChartDatasets"
+            [labels]="pieChartLabels"
+            [options]="pieChartOptions"
+            [plugins]="pieChartPlugins"
+            [legend]="pieChartLegend">
+        </canvas>
+
+        <div id="my_dataviz"></div>
     </div>
 </div>

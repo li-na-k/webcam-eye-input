@@ -5,9 +5,11 @@ import { AppState } from './state/app.state';
 import { selectCurrentEyePos } from './state/eyetracking.selector';
 import { changeXPos } from './state/eyetracking.action';
 import { changeYPos } from './state/eyetracking.action';
+import { ChartOptions } from 'chart.js';
 
 
 declare var webgazer: any;
+declare var Chart: any;
 
 @Component({
   selector: 'app-root',
@@ -32,7 +34,7 @@ export class AppComponent implements OnInit{
 
   //current state
   public webgazerLoaded : boolean = false;
-  public calibrationDone : boolean = true;
+  public calibrationDone : boolean = false;
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   public greenPtCount : number = 0;
   public currentEyePos$ : Observable<number[]> = this.store.select(selectCurrentEyePos);
@@ -92,9 +94,6 @@ export class AppComponent implements OnInit{
             console.log('webgazer loaded: ',webgazer)
             clearInterval(this.interval)
         }
-        else {
-            console.log('webgazer not loaded ____')
-        }
     },1000)
 }
 
@@ -140,9 +139,9 @@ export class AppComponent implements OnInit{
     }
   }
 
-  public numberSlides : number = 2;
+  public numberInstructions : number = 4;
   public nextExplanation(){
-    if(this.explanationNr >= this.numberSlides){
+    if(this.explanationNr >= (this.numberInstructions-1)){
       this.showPopup=false;
     }
     this.explanationNr = this.explanationNr+1; 
@@ -156,6 +155,20 @@ export class AppComponent implements OnInit{
     this.showPopup=true;
     this.explanationNr = 0;
   }
+
+
+    // Pie
+    public pieChartOptions: ChartOptions<'pie'> = {
+      responsive: false,
+    };
+    public pieChartLabels = [ [ '1' ], [ '2' ], '3' ];
+    public pieChartDatasets = [ {
+      data: [ 300, 500, 100 ]
+    } ];
+    public pieChartLegend = true;
+    public pieChartPlugins = [];
+
+
 
 
 }  
