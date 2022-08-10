@@ -32,4 +32,5 @@ button:hover{
     right: 0px !important;
     left: auto !important;
     transform-origin: top right;
+    z-index: 4;
 }
