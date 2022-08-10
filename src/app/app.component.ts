@@ -5,9 +5,11 @@ import { AppState } from './state/app.state';
 import { selectCurrentEyePos } from './state/eyetracking.selector';
 import { changeXPos } from './state/eyetracking.action';
 import { changeYPos } from './state/eyetracking.action';
+import { ChartOptions } from 'chart.js';
 
 
 declare var webgazer: any;
+declare var Chart: any;
 
 @Component({
   selector: 'app-root',
@@ -23,6 +25,8 @@ export class AppComponent implements OnInit{
       this.startWebgazer();
       this.checkWebGazerLoaded();
   }
+
+  public poi = [0,1,2,3,4,5,6,7];
 
   //settings
   public clickGoal = 2;
@@ -49,6 +53,7 @@ export class AppComponent implements OnInit{
     //store.dispatch(changeYPos({newy: 123.0}));
     //var rect2 = document.getElementById("TestPt2")?.getBoundingClientRect();
     //console.log(rect2?.top + " / " + rect2?.right + " / " + rect2?.bottom + " / " + rect2?.left)
+    var poi = this.poi;
     webgazer.setGazeListener(function(data : any, elapsedTime : any) {
         if (data == null) {
             return;
@@ -58,76 +63,27 @@ export class AppComponent implements OnInit{
         if(xDisplay){xDisplay.innerHTML = data.x;}
         if(yDisplay){yDisplay.innerHTML = data.y;}
 
-        var rect2 = document.getElementById("TestPt2")?.getBoundingClientRect();
-        if(rect2){
-          if(rect2.left <= data.x && rect2.right >= data.x && rect2.top <= data.y && rect2.bottom >= data.y){ 
-            var el = document.getElementById("TestPt2")
-            if(el){
-              el.style.backgroundColor = "var(--apricot)";
+        for (var p in poi){
+          var rect = document.getElementById("TestPt" + p)?.getBoundingClientRect();
+          if(rect){
+            var el = document.getElementById("TestPt" + p);
+            if(rect.left <= data.x && rect.right >= data.x && rect.top <= data.y && rect.bottom >= data.y){
+              if(el){
+                el.style.backgroundColor = "var(--apricot)";
+              }
             }
+            else{
+              if(el){
+                el.style.backgroundColor = "var(--blue)";
+              }
           }
-          else{
-            var el = document.getElementById("TestPt2")
-            if(el){
-              el.style.backgroundColor = "var(--blue)";
-            }
-          }
-        }
-
-        var rect1 = document.getElementById("TestPt1")?.getBoundingClientRect();
-        if(rect1){
-          if(rect1.left <= data.x && rect1.right >= data.x && rect1.top <= data.y && rect1.bottom >= data.y){ 
-            var el = document.getElementById("TestPt1")
-            if(el){
-              el.style.backgroundColor = "var(--apricot)";
-            }
-          }
-          else{
-            var el = document.getElementById("TestPt1")
-            if(el){
-              el.style.backgroundColor = "var(--blue)";
-            }
           }
         }
-
-        var rect3 = document.getElementById("TestPt3")?.getBoundingClientRect();
-        if(rect3){
-          if(rect3.left <= data.x && rect3.right >= data.x && rect3.top <= data.y && rect3.bottom >= data.y){ 
-            var el = document.getElementById("TestPt3")
-            if(el){
-              el.style.backgroundColor = "var(--apricot)";
-            }
-          }
-          else{
-            var el = document.getElementById("TestPt3")
-            if(el){
-              el.style.backgroundColor = "var(--blue)";
-            }
-          }
-        }
-        
-        var rect4 = document.getElementById("TestPt4")?.getBoundingClientRect();
-        if(rect4){
-          if(rect4.left <= data.x && rect4.right >= data.x && rect4.top <= data.y && rect4.bottom >= data.y){ 
-            var el = document.getElementById("TestPt4")
-            if(el){
-              el.style.backgroundColor = "var(--apricot)";
-            }
-          }
-          else{
-            var el = document.getElementById("TestPt4")
-            if(el){
-              el.style.backgroundColor = "var(--blue)";
-            }
-          }
-        }
-        
-
-       
         //store.dispatch(changeXPos(data.x));
         //store.dispatch(changeYPos({newy: 123.0}));
     }).begin()
   }
+
 
 
   public interval : any;
@@ -137,9 +93,6 @@ export class AppComponent implements OnInit{
             this.webgazerLoaded = true;
             console.log('webgazer loaded: ',webgazer)
             clearInterval(this.interval)
-        }
-        else {
-            console.log('webgazer not loaded ____')
         }
     },1000)
 }
@@ -186,9 +139,9 @@ export class AppComponent implements OnInit{
     }
   }
 
-  public numberSlides : number = 2;
+  public numberInstructions : number = 4;
   public nextExplanation(){
-    if(this.explanationNr >= this.numberSlides){
+    if(this.explanationNr >= (this.numberInstructions-1)){
       this.showPopup=false;
     }
     this.explanationNr = this.explanationNr+1; 
@@ -197,6 +150,25 @@ export class AppComponent implements OnInit{
   public previousExplanation(){
     this.explanationNr = this.explanationNr-1; 
   }
+
+  public showExplanation(){
+    this.showPopup=true;
+    this.explanationNr = 0;
+  }
+
+
+    // Pie
+    public pieChartOptions: ChartOptions<'pie'> = {
+      responsive: false,
+    };
+    public pieChartLabels = [ [ '1' ], [ '2' ], '3' ];
+    public pieChartDatasets = [ {
+      data: [ 300, 500, 100 ]
+    } ];
+    public pieChartLegend = true;
+    public pieChartPlugins = [];
+
+
 
 
 }  

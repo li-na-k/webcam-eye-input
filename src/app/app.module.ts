@@ -11,6 +11,7 @@ import { eyetrackingReducer } from './state/eyetracking.reducer';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import { NgChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {MatButtonModule} from '@angular/material/button';
     MatButtonModule,
     StoreModule.forRoot({
       eyetrackingData : eyetrackingReducer
-    })
+    }),
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
