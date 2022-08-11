@@ -26,7 +26,7 @@
               "src/styles.css",
               "src/mat-theme.scss"
             ],
-            "scripts": [] 
+            "scripts": ["src/assets/webgazer.js"] 
           },
           "configurations": {
             "production": {
@@ -93,7 +93,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": ["src/assets/webgazer.js"]
           }
         }
       }
