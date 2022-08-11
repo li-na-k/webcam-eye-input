@@ -1,0 +1,24 @@
+.clickArea{
+    background-color: var(--blue);
+    margin: 20px;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    color: white;
+    border-radius: 15px;
+}
+
+.small{
+    width: 150px;
+    height: 40px;
+}
+
+.medium{
+    width: 300px;
+    height: 80px;
+}
+
+.large{
+    width: 600px;
+    height: 160px;
+}

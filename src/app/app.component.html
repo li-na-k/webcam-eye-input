@@ -14,21 +14,29 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
 
 <div *ngIf="webgazerLoaded" style="padding: 30px;">
     <h1>Eye Input for Visualization</h1>
-    <div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px; width: 230px;">
+    <div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px; width: 270px;">
         <div>x: <span id="x"></span></div>
         <div>y: <span id="y"></span></div>
+
+        <!-- <div>Store:</div>
+        <div>x: <span>{{(currentEyePos$ | async).x}}</span></div>
+        <div>y: <span>{{(currentEyePos$ | async).y}}</span></div> -->
+
         <span *ngIf="!paused">
             <button  mat-icon-button style="margin: 20px 0px;" type="button" (click)="pauseWebgazer()">
                 <mat-icon>pause_circle_outline</mat-icon>
             </button>
         </span>
         <span *ngIf="paused">
-            <button mat-icon-button style="margin: 20px 0px;" type="button" (click)="pauseWebgazer()">
+            <button mat-icon-button style="margin: 20px 10px;" type="button" (click)="pauseWebgazer()">
                 <mat-icon>play_circle_outline</mat-icon>
             </button>
         </span>
-        <button mat-icon-button style="margin: 20px;" type="button" (click)="showExplanation();">
+        <button mat-icon-button style="margin: 20px 10px;" type="button" (click)="showExplanation();">
             <mat-icon>help_outline</mat-icon>
+        </button>
+        <button style="margin: 20px 10px;" type="button" 
+        (click)="calibrationDone = true;">Skip callibration
         </button>
     </div>
 
@@ -42,8 +50,8 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
                 </div>
                 <div *ngIf="explanationNr==0">
                     Before you start, please click through this short guide and read it carefully. 
-                    If you want to review the instructions later, click on the XXXXXX question mark icon.
-                    <div style="margin-top: 15px;">Now click on "Continue".</div>
+                    If you want to review the instructions later, click on the question mark icon ( <mat-icon style="vertical-align: middle;">help_outline</mat-icon> ).
+                    <div style="margin-top: 15px;">Now click on "Next".</div>
                 </div>
                 <div *ngIf="explanationNr==1">
                     In the upper right corner you can see the recording of your webcam. 
@@ -57,11 +65,11 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
                     </div>
                     Now find a comfortable position for the calibration that meets these criteria and maintain this position for the entire experiment.
                     Keep your head still and try not to move it.
-                    <div style="margin-top: 15px;">Now click on "Continue".</div>
+                    <div style="margin-top: 15px;">Now click on "Next".</div>
                 </div>
                 <div *ngIf="explanationNr==2">
                     The red circle shows where the system assumes your eye-gaze. To ensure that the prediction is as accurate as possible, the system must first be calibrated.
-                    <div style="margin-top: 15px;">Now click on "Continue".</div>
+                    <div style="margin-top: 15px;">Now click on "Next".</div>
                 </div>
                 <div *ngIf="explanationNr==3">
                     For the calibration, click each point {{clickGoal}} times until all points are completely green.
@@ -69,14 +77,13 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
                     <div style="margin-top: 15px;">To start the calibration, close this window with "OK".</div>
                 </div>
                 <div style="margin-top: 25px;">
-                    <button mat-icon-button style="display: block; float: right;" type="button" (click)="nextExplanation();"> 
-                        <mat-icon fontIcon="arrow_forward"></mat-icon>
+                    <button style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
+                        Next <mat-icon style="margin-left: 5px;" fontIcon="arrow_forward"></mat-icon>
                     </button>
-                    <button mat-icon-button *ngIf="explanationNr!=0" style="display: block; float: left;" type="button" (click)="previousExplanation();">
-                        <mat-icon fontIcon="arrow_back"></mat-icon>
+                    <button *ngIf="explanationNr!=0" style="display: flex; align-items: center; float: left;" type="button" (click)="previousExplanation();">
+                        <mat-icon style="margin-right: 5px;" fontIcon="arrow_back"></mat-icon> Back
                     </button>
                 </div>
-                <button style="display: block; margin-top: 20px; margin-left: auto; margin-right: auto;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
             </div>
         </div>
         
@@ -117,6 +124,21 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
 
     <div *ngIf="calibrationDone">
 
+        <!-- Drop Down InputType -->
+        <select [(ngModel)]="selectedInputType" (change)="selectInputType()"> 
+            <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
+        </select>
+
+        <!-- Drop Down Task -->
+        <select [(ngModel)]="selectedTask"(change)="selectTask()"> 
+            <option *ngFor="let item of TaskType | keyvalue">{{item.value}}</option>
+        </select>
+
+        <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
+        <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>
+        <app-scroll *ngIf="(selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
+        
+
         <div *ngIf="showPopup" style="display:flex;justify-content:center;">
             <div class="popup-background">
             </div> 
@@ -129,19 +151,9 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
             </div>
         </div>
 
-        <div class="Flexbox">
+        <!-- <div class="Flexbox">
             <div *ngFor="let p of poi;" class="TestPt" id="{{ 'TestPt' + p }}"></div>
-        </div>
+        </div> -->
 
-        <canvas baseChart
-            [type]="'pie'"
-            [datasets]="pieChartDatasets"
-            [labels]="pieChartLabels"
-            [options]="pieChartOptions"
-            [plugins]="pieChartPlugins"
-            [legend]="pieChartLegend">
-        </canvas>
-
-        <div id="my_dataviz"></div>
     </div>
 </div>
