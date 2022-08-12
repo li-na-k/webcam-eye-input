@@ -18,8 +18,11 @@ export class ClickComponent implements OnInit {
     var el = document.getElementById("rect");
     const dwellTime = 1000;
     var wentInsideAt : number|null = null; 
+    var inside : boolean = false;
     setInterval(() => {
-      var inside : boolean | undefined = this.eyesOnlyInput.checkIfInsideRect();
+      if(el){
+        inside = this.eyesOnlyInput.checkIfInsideElement(el);
+      }
       if (inside == true && el){
         if (!wentInsideAt) {
           wentInsideAt = Date.now()

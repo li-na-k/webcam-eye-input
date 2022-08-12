@@ -18,8 +18,11 @@ export class HoverComponent implements OnInit {
 
   ngOnInit(): void {
     var el = document.getElementById("rect");
+    var inside : boolean | undefined = false;
     setInterval(() => {
-      var inside : boolean | undefined = this.eyesOnlyInput.checkIfInsideRect();
+      if(el){
+        inside = this.eyesOnlyInput.checkIfInsideElement(el);
+      }
       if (inside == true && el){
         el.style.backgroundColor = "var(--apricot)";
       }
