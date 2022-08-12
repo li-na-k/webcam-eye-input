@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentEyePos } from 'src/app/state/eyetracking/eyetracking.selector';
@@ -8,7 +8,7 @@ import { AppState } from 'src/app/state/app.state';
 @Injectable({
   providedIn: 'root'
 })
-export class EyesOnlyInputService {
+export class EyesOnlyInputService implements OnDestroy {
 
   public currentEyePos$ : Observable<any> = this.store.select(selectCurrentEyePos);
 
@@ -35,6 +35,10 @@ export class EyesOnlyInputService {
     else{
       return undefined;
     }  
+  }
+
+  ngOnDestroy(): void{
+    //todo: cancel subscribe
   }
 
 
