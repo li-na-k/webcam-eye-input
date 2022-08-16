@@ -15,6 +15,7 @@ export class ScrollComponent implements OnInit {
   constructor(private store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { }
 
   ngOnInit(): void {
+
     var scrollAreas = document.getElementsByClassName("scroll-area");
     var inside : boolean = false;
     setInterval(() => {
@@ -25,10 +26,18 @@ export class ScrollComponent implements OnInit {
           inside = this.eyesOnlyInput.checkIfInsideElement(el);
         }
         if (inside == true && el){
-          window.scrollBy(0, 10)
-        }
-        else if(inside == false && el){
-          //do nothing
+          if(el.classList.contains("bottom")){
+            window.scrollBy(0, 10);
+          }
+          if(el.classList.contains("top")){
+            window.scrollBy(0, -10);
+          }
+          if(el.classList.contains("left")){
+            window.scrollBy(-10, 0);
+          }
+          if(el.classList.contains("right")){
+            window.scrollBy(10, 0);
+          }
         }
       }
     }, 100)

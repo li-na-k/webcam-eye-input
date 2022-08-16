@@ -22,43 +22,23 @@ export class EyesOnlyInputService implements OnDestroy {
       y = d.y;
     });
 
+    var clientWidth = document.documentElement.clientWidth;
+    var clientHeight = document.documentElement.clientHeight;
+
+
     var boundingBox = el.getBoundingClientRect();
     if(
-      (boundingBox.left <= x || boundingBox.left == 0) && 
-      (boundingBox.right >= x || boundingBox.right == 0) && 
-      (boundingBox.top <= y || boundingBox.top == 0) && 
-      (boundingBox.bottom >= y || boundingBox.bottom == 0)){
+      (boundingBox.left <= x || boundingBox.left <= 0) && 
+      (boundingBox.right >= x || boundingBox.right >= clientWidth) && 
+      (boundingBox.top <= y || boundingBox.top <= 0) && 
+      (boundingBox.bottom >= y || boundingBox.bottom >= clientHeight)){ //e.g. if element is on very bottom of screen, count in gaze that looks even below screen
       return true;
     }
+
     else{
       return false;   
     }
   }
-
-
-
-
-  // public checkIfInsideClassElements(classname : string) : boolean | undefined{
-  //   var x = 0.0;
-  //   var y = 0.0;
-  //   this.currentEyePos$.subscribe(d => {
-  //     x = d.x;
-  //     y = d.y;
-  //   });
-
-  //   var elements : HTMLCollectionOf<Element> = document.getElementsByClassName(classname);
-  //   for(var i = 0; i < elements.length; i++){
-  //     var el = elements[i];
-  //     var boundingBox = el.getBoundingClientRect();
-  //     if(boundingBox.left <= x && boundingBox.right >= x && boundingBox.top <= y && boundingBox.bottom >= y){
-  //       return true;
-  //     }
-  //     else{
-  //       return false;
-  //     }
-  //   } 
-  //   return undefined;
-  // }
 
   ngOnDestroy(): void{
     //todo: cancel subscribe
