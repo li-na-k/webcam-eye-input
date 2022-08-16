@@ -1,8 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { selectCurrentEyePos } from '../state/eyetracking/eyetracking.selector';
-import { AppState } from '../state/app.state';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
 
 @Component({
@@ -10,17 +6,21 @@ import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
   templateUrl: './hover.component.html',
   styleUrls: ['./hover.component.css']
 })
-export class HoverComponent implements OnInit {
+export class HoverComponent implements OnInit, OnDestroy {
 
-  public currentEyePos$ : Observable<any> = this.store.select(selectCurrentEyePos);
+  public interval : any;
 
-  constructor(private store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { }
+  constructor(private eyesOnlyInput : EyesOnlyInputService) { }
 
   ngOnInit(): void {
+
     var el = document.getElementById("rect");
     var inside : boolean | undefined = false;
-    setInterval(() => {
+
+    this.interval = setInterval(() => {
       if(el){
+        console.log("inside interval: ");
+        console.log(el?.getBoundingClientRect())
         inside = this.eyesOnlyInput.checkIfInsideElement(el);
       }
       if (inside == true && el){
@@ -31,5 +31,9 @@ export class HoverComponent implements OnInit {
       }
     }, 100);
   }
+
+  ngOnDestroy(): void {
+    clearInterval(this.interval)
+}
 
 }

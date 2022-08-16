@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { selectCurrentEyePos } from '../state/eyetracking/eyetracking.selector';
-import { AppState } from '../state/app.state';
+import { Timer } from 'd3';
 import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
 
 @Component({
@@ -10,16 +7,20 @@ import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
   templateUrl: './click.component.html',
   styleUrls: ['./click.component.css']
 })
-export class ClickComponent implements OnInit {
+export class ClickComponent implements OnInit, OnDestroy {
 
-  constructor(private store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { }
+  public interval : any;
+
+  constructor(private eyesOnlyInput : EyesOnlyInputService) { }
+
+
 
   ngOnInit(): void {
     var el = document.getElementById("rect");
     const dwellTime = 1000;
     var wentInsideAt : number|null = null; 
     var inside : boolean = false;
-    setInterval(() => {
+    this.interval = setInterval(() => {
       if(el){
         inside = this.eyesOnlyInput.checkIfInsideElement(el);
       }
@@ -36,6 +37,10 @@ export class ClickComponent implements OnInit {
         el.style.backgroundColor = "var(--blue)";
       }
     }, 100);
+  }
+
+  ngOnDestroy(): void {
+      clearInterval(this.interval)
   }
 
 

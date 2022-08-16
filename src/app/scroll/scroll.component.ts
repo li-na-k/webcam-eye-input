@@ -1,8 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { selectCurrentEyePos } from '../state/eyetracking/eyetracking.selector';
-import { AppState } from '../state/app.state';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
 
 @Component({
@@ -10,15 +6,17 @@ import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
   templateUrl: './scroll.component.html',
   styleUrls: ['./scroll.component.css']
 })
-export class ScrollComponent implements OnInit {
+export class ScrollComponent implements OnInit, OnDestroy {
 
-  constructor(private store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { }
+  public interval : any;
+
+  constructor(private eyesOnlyInput : EyesOnlyInputService) { }
 
   ngOnInit(): void {
 
     var scrollAreas = document.getElementsByClassName("scroll-area");
     var inside : boolean = false;
-    setInterval(() => {
+    this.interval = setInterval(() => {
       for(var i = 0; i < scrollAreas.length; i++){
         var el : HTMLElement = scrollAreas[i] as HTMLElement;
     
@@ -43,6 +41,10 @@ export class ScrollComponent implements OnInit {
     }, 100)
 
   }
+
+  ngOnDestroy(): void {
+    clearInterval(this.interval)
+  } 
 }
 
 
