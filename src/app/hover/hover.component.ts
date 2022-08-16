@@ -57,15 +57,19 @@ public stopEyeInput(){
 
 public activateSelectedInputType(){
   if(this.selectedInputType == InputType.EYE){
+    this.stopEyeInput();
     this.checkEyeInput();
   }
   if(this.selectedInputType == InputType.MOUSE){
     this.stopEyeInput();
+    this.stopEyeInput();
   }
   if(this.selectedInputType == InputType.MIX1){
+    this.stopEyeInput();
     console.log("mix1")
   }
   if(this.selectedInputType == InputType.MIX2){
+    this.stopEyeInput();
     console.log("mix2")
   }
 }

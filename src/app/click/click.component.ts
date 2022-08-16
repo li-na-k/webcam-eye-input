@@ -70,7 +70,8 @@ export class ClickComponent implements OnInit, OnDestroy {
       if(el){
         inside = this.eyesOnlyInput.checkIfInsideElement(el);
       }
-      if (inside == true && el){ //click
+      if (inside == true && el){ //click, Problem mit interval wenn nicht genau zum richtigen Zeitpunkt
+        //eher - bei click event schauen ob augen drauf
         el.style.backgroundColor = "var(--apricot)";
       }
       else if(inside == false && el){ //Click
@@ -98,7 +99,7 @@ export class ClickComponent implements OnInit, OnDestroy {
     }
   }
 
-  //immer erst eyestop, damit intervall gecancelt
+  //todo bei anderen Cimmer erst eyestop, damit intervall gecancelt
 
 
 
