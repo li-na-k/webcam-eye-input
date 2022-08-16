@@ -14,13 +14,11 @@ export class HoverComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    var el = document.getElementById("rect");
+    var el = document.getElementById("recthover");
     var inside : boolean | undefined = false;
 
     this.interval = setInterval(() => {
       if(el){
-        console.log("inside interval: ");
-        console.log(el?.getBoundingClientRect())
         inside = this.eyesOnlyInput.checkIfInsideElement(el);
       }
       if (inside == true && el){
