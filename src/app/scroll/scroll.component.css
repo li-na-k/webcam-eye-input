@@ -32,4 +32,5 @@
 
 .scroll-area{
     border: solid 1px rgb(213, 211, 211);
+    pointer-events: none;
 }

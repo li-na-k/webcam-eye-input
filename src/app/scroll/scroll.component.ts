@@ -1,5 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
+import { AppState } from '../state/app.state';
+import { selectInputType } from '../state/expConditions/expconditions.selector';
+import { InputType } from '../enums/input-type';
 
 @Component({
   selector: 'app-scroll',
@@ -9,11 +14,30 @@ import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
 export class ScrollComponent implements OnInit, OnDestroy {
 
   public interval : any;
+  public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
+  public selectedInputType : InputType = InputType.EYE;
+  public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+  
 
-  constructor(private eyesOnlyInput : EyesOnlyInputService) { }
+
+  constructor(private store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { }
 
   ngOnInit(): void {
+    this.selectedInputType$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(d => this.selectedInputType = d);
+    this.activateSelectedInputType();
+  }
 
+  ngOnDestroy(): void {
+    clearInterval(this.interval)
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  } 
+
+
+
+  public checkEyeInput(){
     var scrollAreas = document.getElementsByClassName("scroll-area");
     var inside : boolean = false;
     this.interval = setInterval(() => {
@@ -39,13 +63,30 @@ export class ScrollComponent implements OnInit, OnDestroy {
         }
       }
     }, 100)
-
   }
 
-  ngOnDestroy(): void {
-    clearInterval(this.interval)
-  } 
+  public stopEyeInput(){
+    clearInterval(this.interval);
+  }
+
+  public activateSelectedInputType(){
+    if(this.selectedInputType == InputType.EYE){
+      this.checkEyeInput();
+    }
+    if(this.selectedInputType == InputType.MOUSE){
+      this.stopEyeInput();
+    }
+    if(this.selectedInputType == InputType.MIX1){
+      console.log("mix1")
+    }
+    if(this.selectedInputType == InputType.MIX2){
+      console.log("mix2")
+    }
+  }
 }
+
+
+
 
 
 
