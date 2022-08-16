@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentEyePos } from 'src/app/state/eyetracking/eyetracking.selector';
 import { AppState } from 'src/app/state/app.state';
@@ -12,12 +12,16 @@ export class EyesOnlyInputService implements OnDestroy {
 
   public currentEyePos$ : Observable<any> = this.store.select(selectCurrentEyePos);
 
+  public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+
   constructor(private store : Store<AppState>) { }
 
   public checkIfInsideElement(el : HTMLElement) : boolean{
     var x = 0.0;
     var y = 0.0;
-    this.currentEyePos$.subscribe(d => {
+    this.currentEyePos$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(d => {
       x = d.x;
       y = d.y;
     });
@@ -41,7 +45,8 @@ export class EyesOnlyInputService implements OnDestroy {
   }
 
   ngOnDestroy(): void{
-    //todo: cancel subscribe
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
 
