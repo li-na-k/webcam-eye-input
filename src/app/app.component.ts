@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { ignoreElements, Observable } from 'rxjs';
 import { AppState } from './state/app.state';
 import { InputType } from './enums/input-type';
 import { Tasks } from './enums/tasks';
@@ -8,6 +8,10 @@ import {changeXPos, changeYPos} from './state/eyetracking/eyetracking.action'
 import { changeInputType, changeTask } from './state/expConditions/expconditions.action';
 import { selectTask } from './state/expConditions/expconditions.selector';
 import { selectInputType } from './state/expConditions/expconditions.selector';
+import { ScrollComponent } from './scroll/scroll.component';
+import { HoverComponent } from './hover/hover.component';
+import { ClickComponent } from './click/click.component';
+
 
 
 
@@ -22,13 +26,16 @@ declare var webgazer: any;
 
 export class AppComponent implements OnInit{
   title = 'eye-input-visualization';
+  @ViewChild(ScrollComponent) scrollComponent!: ScrollComponent;
+  @ViewChild(HoverComponent) hoverComponent!: ScrollComponent;
+  @ViewChild(ClickComponent) clickComponent!: ScrollComponent;
 
   ngOnInit(): void {
       this.showPopup = true;
-      if(!this.paused){
+      //if(!this.paused){
         this.startWebgazer();
         this.checkWebGazerLoaded();
-      }
+      //}
   }
 
   public poi = [0,1,2,3,4,5,6,7];
@@ -41,8 +48,8 @@ export class AppComponent implements OnInit{
 
   //current state webgazer
   public webgazerLoaded : boolean = true; //false;
-  public paused = true; //false;
-  public calibrationDone : boolean = false;
+  public paused = false;
+  public calibrationDone : boolean = true; //false;
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   public greenPtCount : number = 0;
   public showPopup = false;
@@ -50,7 +57,7 @@ export class AppComponent implements OnInit{
   public xprediction = 0.0;
   public yprediction = 0.0;
 
-  //experiment - only for dispatching into store
+  //experiment - only for dispatching into store && default value?? todo
   public selectedTask : Tasks = Tasks.SELECT;
   public selectedInputType : InputType = InputType.EYE;
   //store
@@ -80,41 +87,41 @@ export class AppComponent implements OnInit{
         if(xDisplay){xDisplay.innerHTML = data.x;}
         if(yDisplay){yDisplay.innerHTML = data.y;}
 
-        //Test in app.component.html
-        for (var p in poi){
-          var rect = document.getElementById("TestPt" + p)?.getBoundingClientRect();
-          if(rect){
-            var el = document.getElementById("TestPt" + p);
-            if(rect.left <= data.x && rect.right >= data.x && rect.top <= data.y && rect.bottom >= data.y){
-              if(el){
-                el.style.backgroundColor = "var(--apricot)";
-              }
-            }
-            else{
-              if(el){
-                el.style.backgroundColor = "var(--blue)";
-              }
-          }
-          }
-        }
+        // //Test in app.component.html
+        // for (var p in poi){
+        //   var rect = document.getElementById("TestPt" + p)?.getBoundingClientRect();
+        //   if(rect){
+        //     var el = document.getElementById("TestPt" + p);
+        //     if(rect.left <= data.x && rect.right >= data.x && rect.top <= data.y && rect.bottom >= data.y){
+        //       if(el){
+        //         el.style.backgroundColor = "var(--apricot)";
+        //       }
+        //     }
+        //     else{
+        //       if(el){
+        //         el.style.backgroundColor = "var(--blue)";
+        //       }
+        //   }
+        //   }
+        // }
 
-        //hover component
-        for (let i = 0; i < 3; i++){
-          var rect = document.getElementById("HoverPt" + i)?.getBoundingClientRect();
-          if(rect){
-            var el = document.getElementById("HoverPt" + i);
-            if(rect.left <= data.x && rect.right >= data.x && rect.top <= data.y && rect.bottom >= data.y){
-              if(el){
-                el.style.backgroundColor = "var(--apricot)";
-              }
-            }
-            else{
-              if(el){
-                el.style.backgroundColor = "var(--blue)";
-              }
-          }
-          }
-        }
+        // //hover component
+        // for (let i = 0; i < 3; i++){
+        //   var rect = document.getElementById("HoverPt" + i)?.getBoundingClientRect();
+        //   if(rect){
+        //     var el = document.getElementById("HoverPt" + i);
+        //     if(rect.left <= data.x && rect.right >= data.x && rect.top <= data.y && rect.bottom >= data.y){
+        //       if(el){
+        //         el.style.backgroundColor = "var(--apricot)";
+        //       }
+        //     }
+        //     else{
+        //       if(el){
+        //         el.style.backgroundColor = "var(--blue)";
+        //       }
+        //   }
+        //   }
+        // }
         
     }).begin()
   }
@@ -187,6 +194,15 @@ export class AppComponent implements OnInit{
 
   public selectInputType(){
     this.store.dispatch(changeInputType({newInputType: this.selectedInputType}));
+    if(this.scrollComponent){
+      this.scrollComponent.activateSelectedInputType();
+    }
+    if(this.hoverComponent){
+      this.hoverComponent.activateSelectedInputType();
+    }
+    if(this.clickComponent){
+      this.clickComponent.activateSelectedInputType();
+    }
   }
 
 

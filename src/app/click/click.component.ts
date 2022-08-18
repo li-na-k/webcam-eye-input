@@ -57,49 +57,56 @@ export class ClickComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
-  public stopEyeInput(){
-    clearInterval(this.interval);
-  }
+  public binded_startMix1Input = this.startMix1Input.bind(this);
 
-  
   public startMix1Input(){
+    console.log("clicked");
     var el = document.getElementById("rect");
     var inside : boolean = false;
-
-    this.interval = setInterval(() => {
-      if(el){
-        inside = this.eyesOnlyInput.checkIfInsideElement(el);
-      }
-      if (inside == true && el){ //click, Problem mit interval wenn nicht genau zum richtigen Zeitpunkt
-        //eher - bei click event schauen ob augen drauf
+    if(el){    
+      inside = this.eyesOnlyInput.checkIfInsideElement(el);
+      if (inside == true){ 
         el.style.backgroundColor = "var(--apricot)";
       }
-      else if(inside == false && el){ //Click
+      else if(inside == false){
         el.style.backgroundColor = "var(--blue)";
       }
-    }, 100);
+    }
+    else{
+      console.log("el undefined")
+    }
+  }
+
+  public stopOtherInputs(){
+    var el = document.getElementById("rect");
+    el!.style.backgroundColor = "var(--blue)";
+    //end Eye Input
+    clearInterval(this.interval);
+    //end Mix1 click event
+    el!.removeEventListener('click', this.binded_startMix1Input)
   }
 
   public activateSelectedInputType(){
     if(this.selectedInputType == InputType.EYE){
-      this.stopEyeInput();
+      this.stopOtherInputs();
       this.checkEyeInput();
     }
     if(this.selectedInputType == InputType.MOUSE){
-      this.stopEyeInput();
+      this.stopOtherInputs();
     }
     if(this.selectedInputType == InputType.MIX1){
-      this.stopEyeInput();
-      this.startMix1Input();
+      this.stopOtherInputs();
+      var el = document.getElementById("rect");
+      el!.addEventListener('click', this.binded_startMix1Input);
       console.log("mix1")
     }
     if(this.selectedInputType == InputType.MIX2){
-      this.stopEyeInput();
+      this.stopOtherInputs();
       console.log("mix2")
     }
   }
 
-  //todo bei anderen Cimmer erst eyestop, damit intervall gecancelt
+  //todo bei anderen C immer erst eyestop, damit intervall gecancelt
 
 
 
