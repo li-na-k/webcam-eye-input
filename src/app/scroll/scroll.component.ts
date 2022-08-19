@@ -35,14 +35,13 @@ export class ScrollComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   } 
 
-
+  public scrollAreas = document.getElementsByClassName("scroll-area");
 
   public checkEyeInput(){
-    var scrollAreas = document.getElementsByClassName("scroll-area");
     var inside : boolean = false;
     this.interval = setInterval(() => {
-      for(var i = 0; i < scrollAreas.length; i++){
-        var el : HTMLElement = scrollAreas[i] as HTMLElement;
+      for(var i = 0; i < this.scrollAreas.length; i++){
+        var el : HTMLElement = this.scrollAreas[i] as HTMLElement;
     
         if(el){
           inside = this.eyesOnlyInput.checkIfInsideElement(el);
@@ -65,28 +64,61 @@ export class ScrollComponent implements OnInit, OnDestroy {
     }, 100)
   }
 
-  public stopEyeInput(){
-    clearInterval(this.interval);
-  }
 
-  public activateSelectedInputType(){
-    if(this.selectedInputType == InputType.EYE){
-      this.stopEyeInput();
-      this.checkEyeInput();
-    }
-    if(this.selectedInputType == InputType.MOUSE){
-      this.stopEyeInput();
-      this.stopEyeInput();
-    }
-    if(this.selectedInputType == InputType.MIX1){
-      this.stopEyeInput();
-      console.log("mix1")
-    }
-    if(this.selectedInputType == InputType.MIX2){
-      this.stopEyeInput();
-      console.log("mix2")
+public binded_startMix1Input = this.startMix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
+
+public startMix1Input(e : any){
+  if(e.keyCode == 13){
+    for(var i = 0; i < this.scrollAreas.length; i++){
+      var el : HTMLElement = this.scrollAreas[i] as HTMLElement;
+      var inside : boolean = false;
+      if(el){    
+        inside = this.eyesOnlyInput.checkIfInsideElement(el);
+        if (inside == true){ 
+          if(el.classList.contains("bottom")){
+            window.scrollBy(0, 10);
+          }
+          if(el.classList.contains("top")){
+            window.scrollBy(0, -10);
+          }
+          if(el.classList.contains("left")){
+            window.scrollBy(-10, 0);
+          }
+          if(el.classList.contains("right")){
+            window.scrollBy(10, 0);
+          }
+        }
+      }
     }
   }
+}
+
+public stopOtherInputs(){
+  window.scrollTo(0,0);
+  //end Eye Input
+  clearInterval(this.interval);
+  //end Mix1 click event
+  document.body.removeEventListener('keydown', this.binded_startMix1Input);
+}
+
+public activateSelectedInputType(){
+  if(this.selectedInputType == InputType.EYE){
+    this.stopOtherInputs();
+    this.checkEyeInput();
+  }
+  if(this.selectedInputType == InputType.MOUSE){
+    this.stopOtherInputs();
+  }
+  if(this.selectedInputType == InputType.MIX1){
+    this.stopOtherInputs();
+    document.body.addEventListener('keydown', this.binded_startMix1Input); 
+  }
+  if(this.selectedInputType == InputType.MIX2){
+    this.stopOtherInputs();
+    console.log("mix2")
+    //TODO
+  }
+}
 }
 
 

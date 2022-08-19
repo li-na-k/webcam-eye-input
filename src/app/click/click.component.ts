@@ -57,24 +57,26 @@ export class ClickComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
-  public binded_startMix1Input = this.startMix1Input.bind(this);
+  public binded_startMix1Input = this.startMix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
 
-  public startMix1Input(){
-    console.log("clicked");
-    var el = document.getElementById("rect");
-    var inside : boolean = false;
-    if(el){    
-      inside = this.eyesOnlyInput.checkIfInsideElement(el);
-      if (inside == true){ 
-        el.style.backgroundColor = "var(--apricot)";
-      }
-      else if(inside == false){
-        el.style.backgroundColor = "var(--blue)";
+  public startMix1Input(e : any){
+    if(e.keyCode == 13){
+      var el = document.getElementById("rect");
+      var inside : boolean = false;
+      if(el){    
+        inside = this.eyesOnlyInput.checkIfInsideElement(el);
+        if (inside == true){ 
+          el.style.backgroundColor = "var(--apricot)";
+        }
+        else if(inside == false){
+          el.style.backgroundColor = "var(--blue)";
+        }
       }
     }
-    else{
-      console.log("el undefined")
-    }
+  }
+
+  public startMouseInput(){
+    document.getElementById("rect")!.style.backgroundColor = "var(--apricot)"
   }
 
   public stopOtherInputs(){
@@ -83,7 +85,10 @@ export class ClickComponent implements OnInit, OnDestroy {
     //end Eye Input
     clearInterval(this.interval);
     //end Mix1 click event
-    el!.removeEventListener('click', this.binded_startMix1Input)
+    //window.removeEventListener('click', this.binded_startMix1Input)
+    document.body.removeEventListener('keydown', this.binded_startMix1Input); 
+    //remove click event MOUSE input
+    document.getElementById("rect")?.removeEventListener('click', this.startMouseInput);
   }
 
   public activateSelectedInputType(){
@@ -93,20 +98,21 @@ export class ClickComponent implements OnInit, OnDestroy {
     }
     if(this.selectedInputType == InputType.MOUSE){
       this.stopOtherInputs();
+      document.getElementById("rect")?.addEventListener('click', this.startMouseInput);
     }
     if(this.selectedInputType == InputType.MIX1){
       this.stopOtherInputs();
-      var el = document.getElementById("rect");
-      el!.addEventListener('click', this.binded_startMix1Input);
-      console.log("mix1")
+      //window.addEventListener('click', this.binded_startMix1Input);
+      document.body.addEventListener('keydown', this.binded_startMix1Input); 
     }
     if(this.selectedInputType == InputType.MIX2){
       this.stopOtherInputs();
       console.log("mix2")
+      //TODO
     }
   }
 
-  //todo bei anderen C immer erst eyestop, damit intervall gecancelt
+
 
 
 

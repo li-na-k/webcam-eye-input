@@ -122,7 +122,7 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
     </div>
 
 
-    <div *ngIf="calibrationDone">
+    <div id="experimentSandbox" *ngIf="calibrationDone">
 
         <!-- Drop Down InputType -->
         <select [(ngModel)]="selectedInputType" (change)="selectInputType()"> 

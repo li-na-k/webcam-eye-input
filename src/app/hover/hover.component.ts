@@ -51,26 +51,94 @@ public checkEyeInput(){
   }, 100);
 }
 
-public stopEyeInput(){
+public binded_startMix1Input = this.startMix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
+
+public startMix1Input(e : any){
+  if(e.keyCode == 13){
+    var el = document.getElementById("recthover");
+    var inside : boolean = false;
+    if(el){    
+      console.log("clicked");
+      inside = this.eyesOnlyInput.checkIfInsideElement(el);
+      if (inside == true){ 
+        el.style.backgroundColor = "var(--apricot)";
+      }
+      else if(inside == false){
+        el.style.backgroundColor = "var(--blue)";
+      }
+    }
+  }
+}
+//TODO: after hover, switch to blue again
+
+
+public startMouseInput(){
+  document.getElementById("recthover")!.style.backgroundColor = "var(--apricot)"
+}
+
+public startMix2Input(){
+  const all = document.getElementById("experimentSandbox");
+  all!.style.cursor = 'none';
+  all!.addEventListener('mousemove', this.moveArrowWithMouse);
+  const arrow = document.getElementById("arrow");
+  arrow!.style.left = "10px";
+  arrow!.style.top = "10px";
+}
+
+public moveArrowWithMouse(e : any){
+  const all = document.getElementById("experimentSandbox");
+  all!.removeEventListener('mousemove', this.moveArrowWithMouse);
+  const arrow = document.getElementById("arrow");
+  arrow!.style.visibility = "visible";
+  var x = e.movementX;
+  var y = e.movementY;
+  var currentx = arrow!.style.left;
+  var currenty = arrow!.style.top;
+  var newx = parseInt(currentx, 10) + x;
+  var newy = parseInt(currenty, 10) + y;
+  arrow!.style.left = newx + "px";
+  arrow!.style.top = newy + "px";
+  console.log(arrow!.style.left);
+
+  // console.log(arrow?.style.left);
+  // console.log(e.clientX);
+  // arrow!.style.left = e.clientX + "px";
+  // arrow!.style.top = e.clientY + "px";
+}
+
+public stopOtherInputs(){
+  var el = document.getElementById("recthover");
+  el!.style.backgroundColor = "var(--blue)";
+  //end Eye Input
   clearInterval(this.interval);
+  //end Mix1 click event
+  //window.removeEventListener('click', this.binded_startMix1Input)
+  document.body.removeEventListener('keydown', this.binded_startMix1Input); 
+  document.getElementById("recthover")?.removeEventListener('hover', this.startMouseInput);
+  //MIX2
+  const all = document.getElementById("experimentSandbox");
+  all!.removeEventListener('mousemove', this.moveArrowWithMouse);
 }
 
 public activateSelectedInputType(){
   if(this.selectedInputType == InputType.EYE){
-    this.stopEyeInput();
+    this.stopOtherInputs();
     this.checkEyeInput();
   }
   if(this.selectedInputType == InputType.MOUSE){
-    this.stopEyeInput();
-    this.stopEyeInput();
+    this.stopOtherInputs();
+    document.getElementById("recthover")?.addEventListener('hover', this.startMouseInput);
   }
   if(this.selectedInputType == InputType.MIX1){
-    this.stopEyeInput();
-    console.log("mix1")
+    this.stopOtherInputs();
+    //window.addEventListener('click', this.binded_startMix1Input);
+    document.body.addEventListener('keydown', this.binded_startMix1Input); 
   }
   if(this.selectedInputType == InputType.MIX2){
-    this.stopEyeInput();
+    this.stopOtherInputs();
     console.log("mix2")
+    this.startMix2Input();
+    //TODO
   }
 }
 
