@@ -124,15 +124,24 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
 
     <div id="experimentSandbox" *ngIf="calibrationDone">
 
-        <!-- Drop Down InputType -->
-        <select [(ngModel)]="selectedInputType" (change)="selectInputType()"> 
-            <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
-        </select>
-
         <!-- Drop Down Task -->
-        <select [(ngModel)]="selectedTask"(change)="selectTask()"> 
-            <option *ngFor="let item of TaskType | keyvalue">{{item.value}}</option>
-        </select>
+        <div>
+            <span class="dropdown-label">Task: </span>
+            <select [(ngModel)]="selectedTask"(change)="selectTask()"> 
+                <option *ngFor="let item of TaskType | keyvalue">{{item.value}}</option>
+            </select>
+        </div>
+        
+
+        <!-- Drop Down InputType -->
+        <div>
+            <span class="dropdown-label">Input variant: </span>
+            <select [(ngModel)]="selectedInputType" (change)="selectInputType()"> 
+                <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
+            </select>
+        </div>
+        
+        
 
         <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
         <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>

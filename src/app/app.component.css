@@ -77,3 +77,8 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
 }  
+
+.dropdown-label{
+    font-size: 15px;
+    font-weight: bold;
+}
