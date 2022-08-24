@@ -52,13 +52,13 @@ public checkEyeInput(){
 }
 
 public binded_startMix1Input = this.startMix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
+public binded_moveArrowWithMouse = this.moveArrowWithMouse.bind(this);
 
 public startMix1Input(e : any){
   if(e.keyCode == 13){
     var el = document.getElementById("recthover");
     var inside : boolean = false;
     if(el){    
-      console.log("clicked");
       inside = this.eyesOnlyInput.checkIfInsideElement(el);
       if (inside == true){ 
         el.style.backgroundColor = "var(--apricot)";
@@ -76,32 +76,50 @@ public startMouseInput(){
   document.getElementById("recthover")!.style.backgroundColor = "var(--apricot)"
 }
 
+public mouseInput : boolean = false;
+public timeOutAfterMouseInput : any;
+public arrow : HTMLElement | null = null;
+
 public startMix2Input(){
+  this.arrow = document.getElementById("arrow");
+  this.arrow!.style.visibility = "visible";
   const all = document.getElementById("experimentSandbox");
   all!.style.cursor = 'none';
-  all!.addEventListener('mousemove', this.moveArrowWithMouse);
-  const arrow = document.getElementById("arrow");
-  arrow!.style.left = "10px";
-  arrow!.style.top = "10px";
+  this.interval = setInterval(() => {
+    if(!this.mouseInput){
+      this.arrow!.classList.add("smoothTransition");
+      this.eyesOnlyInput.moveArrowWithEyes();
+    }
+    else{
+      this.arrow!.classList.remove("smoothTransition");
+    }
+  }, 100);
+  all!.addEventListener('mousemove', this.binded_moveArrowWithMouse);
+  this.arrow!.style.left = "10px";
+  this.arrow!.style.top = "10px";
 }
 
-public moveArrowWithMouse(e : any){
-  const all = document.getElementById("experimentSandbox");
-  all!.removeEventListener('mousemove', this.moveArrowWithMouse);
-  const arrow = document.getElementById("arrow");
-  arrow!.style.visibility = "visible";
-  var x = e.movementX;
-  var y = e.movementY;
-  var currentx = arrow!.style.left;
-  var currenty = arrow!.style.top;
-  var newx = parseInt(currentx, 10) + x;
-  var newy = parseInt(currenty, 10) + y;
-  arrow!.style.left = newx + "px";
-  arrow!.style.top = newy + "px";
-  console.log(arrow!.style.left);
 
-  // console.log(arrow?.style.left);
-  // console.log(e.clientX);
+public moveArrowWithMouse(e : any){
+  this.mouseInput = true;
+  // const all = document.getElementById("experimentSandbox");
+  // all!.removeEventListener('mousemove', this.binded_moveArrowWithMouse);
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  var x = parseInt(this.arrow!.style.left, 10) + e.movementX;
+  var y = parseInt(this.arrow!.style.top, 10) + e.movementY;
+  if (x > w-24) {
+    x = w-24
+  }
+  if (y > h-24) {
+      y = h-24
+  }
+  this.arrow!.style.left = x + "px";
+  this.arrow!.style.top = y + "px";
+  this.timeOutAfterMouseInput = setTimeout(() => {
+    this.mouseInput = false;
+  }, 1000)
+
   // arrow!.style.left = e.clientX + "px";
   // arrow!.style.top = e.clientY + "px";
 }
@@ -109,7 +127,7 @@ public moveArrowWithMouse(e : any){
 public stopOtherInputs(){
   var el = document.getElementById("recthover");
   el!.style.backgroundColor = "var(--blue)";
-  //end Eye Input
+  //end Eye Input & MIX2 interval
   clearInterval(this.interval);
   //end Mix1 click event
   //window.removeEventListener('click', this.binded_startMix1Input)
@@ -117,7 +135,7 @@ public stopOtherInputs(){
   document.getElementById("recthover")?.removeEventListener('hover', this.startMouseInput);
   //MIX2
   const all = document.getElementById("experimentSandbox");
-  all!.removeEventListener('mousemove', this.moveArrowWithMouse);
+  all!.removeEventListener('mousemove', this.binded_moveArrowWithMouse);
 }
 
 public activateSelectedInputType(){

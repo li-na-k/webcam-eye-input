@@ -122,7 +122,7 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
     </div>
 
 
-    <div id="experimentSandbox" *ngIf="calibrationDone">
+    <div *ngIf="calibrationDone">
 
         <!-- Drop Down Task -->
         <div>
@@ -142,10 +142,12 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
         </div>
         
         
-
-        <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
-        <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>
-        <app-scroll *ngIf="(selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
+        <div id="experimentSandbox">
+            <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
+            <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>
+            <app-scroll *ngIf="(selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
+        </div>
+        
         
 
         <div *ngIf="showPopup" style="display:flex;justify-content:center;">
