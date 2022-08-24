@@ -16,7 +16,7 @@ export class EyesOnlyInputService implements OnDestroy {
 
   constructor(private store : Store<AppState>) { }
 
-  public checkIfInsideElement(el : HTMLElement) : boolean{
+  public areEyesInsideElement(el : HTMLElement) : boolean{
     var x = 0.0;
     var y = 0.0;
     this.currentEyePos$
@@ -26,9 +26,27 @@ export class EyesOnlyInputService implements OnDestroy {
       y = d.y;
     });
 
+    return this.isInside(el, x, y)
+
+    // var clientWidth = document.documentElement.clientWidth;
+    // var clientHeight = document.documentElement.clientHeight;
+
+    // var boundingBox = el.getBoundingClientRect();
+    // if(
+    //   (boundingBox.left <= x || boundingBox.left <= 0) && 
+    //   (boundingBox.right >= x || boundingBox.right >= clientWidth) && 
+    //   (boundingBox.top <= y || boundingBox.top <= 0) && 
+    //   (boundingBox.bottom >= y || boundingBox.bottom >= clientHeight)){ //e.g. if element is on very bottom of screen, count in gaze that looks even below screen
+    //   return true;
+    // }
+    // else{
+    //   return false;   
+    // }
+  }
+
+  public isInside(el : HTMLElement, x : number, y: number){
     var clientWidth = document.documentElement.clientWidth;
     var clientHeight = document.documentElement.clientHeight;
-
     var boundingBox = el.getBoundingClientRect();
     if(
       (boundingBox.left <= x || boundingBox.left <= 0) && 
@@ -55,6 +73,37 @@ export class EyesOnlyInputService implements OnDestroy {
     var arrow = document.getElementById("arrow");
     arrow!.style.left = x + "px";
     arrow!.style.top = y + "px"
+  }
+  
+
+  public moveArrowWithMouse(e : any, arrow : HTMLElement, sandbox : HTMLElement){
+    //clearTimeout(this.timeOutAfterMouseInput);
+    //this.mouseInput = true;
+    var x = parseInt(arrow!.style.left, 10) + e.movementX;
+    var y = parseInt(arrow!.style.top, 10) + e.movementY;
+    const sbRight = sandbox!.getBoundingClientRect().right;
+    const sbBottom = sandbox!.getBoundingClientRect().bottom;
+    const sbLeft = sandbox!.getBoundingClientRect().left;
+    const sbTop = sandbox!.getBoundingClientRect().top;
+    if (x > sbRight) {
+      x = sbRight
+    }
+    if (x < sbLeft) {
+      x = sbLeft
+    }
+    if (y > sbBottom) {
+      y = sbBottom
+    }
+    if (y < sbTop) {
+      y = sbTop
+    }
+    
+    arrow!.style.left = x + "px";
+    arrow!.style.top = y + "px";
+    // this.timeOutAfterMouseInput = setTimeout(() => {
+    //   this.mouseInput = false;
+    //   this.sandbox!.style.backgroundColor = "white";
+    // }, 1500)
   }
 
 

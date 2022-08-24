@@ -40,7 +40,7 @@ public checkEyeInput(){
   var inside : boolean | undefined = false;
   this.interval = setInterval(() => {
     if(el){
-      inside = this.eyesOnlyInput.checkIfInsideElement(el);
+      inside = this.eyesOnlyInput.areEyesInsideElement(el);
     }
     if (inside == true && el){
       el.style.backgroundColor = "var(--apricot)";
@@ -52,14 +52,14 @@ public checkEyeInput(){
 }
 
 public binded_startMix1Input = this.startMix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
-public binded_moveArrowWithMouse = this.moveArrowWithMouse.bind(this);
+public binded_mouseTakeover = this.mouseTakeover.bind(this);
 
 public startMix1Input(e : any){
   if(e.keyCode == 13){
     var el = document.getElementById("recthover");
     var inside : boolean = false;
     if(el){    
-      inside = this.eyesOnlyInput.checkIfInsideElement(el);
+      inside = this.eyesOnlyInput.areEyesInsideElement(el);
       if (inside == true){ 
         el.style.backgroundColor = "var(--apricot)";
       }
@@ -79,12 +79,15 @@ public startMouseInput(){
 public mouseInput : boolean = false;
 public timeOutAfterMouseInput : any;
 public arrow : HTMLElement | null = null;
+public sandbox = document.getElementById("experimentSandbox");
 
 public startMix2Input(){
   this.arrow = document.getElementById("arrow");
+  this.sandbox = document.getElementById("experimentSandbox");
+  //switching cursor visibility
   this.arrow!.style.visibility = "visible";
-  const all = document.getElementById("experimentSandbox");
-  all!.style.cursor = 'none';
+  this.sandbox!.style.cursor = 'none';
+  //activate eye input
   this.interval = setInterval(() => {
     if(!this.mouseInput){
       this.arrow!.classList.add("smoothTransition");
@@ -94,34 +97,29 @@ public startMix2Input(){
       this.arrow!.classList.remove("smoothTransition");
     }
   }, 100);
-  all!.addEventListener('mousemove', this.binded_moveArrowWithMouse);
-  this.arrow!.style.left = "10px";
-  this.arrow!.style.top = "10px";
+  //activate mouse input
+  this.sandbox!.addEventListener('mousemove', this.binded_mouseTakeover);
+  //hover color effect
+  var el = document.getElementById("recthover");
+  var inside : boolean | undefined = false;
+  this.interval = setInterval(() => {
+    inside = this.eyesOnlyInput.isInside(el!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
+    if (inside == true && el){
+      el.style.backgroundColor = "var(--apricot)";
+    }
+    else if(inside == false && el){
+      el.style.backgroundColor = "var(--blue)";
+    }
+  }, 100);
 }
 
-
-public moveArrowWithMouse(e : any){
+public mouseTakeover(e : any){
+  clearTimeout(this.timeOutAfterMouseInput);
   this.mouseInput = true;
-  // const all = document.getElementById("experimentSandbox");
-  // all!.removeEventListener('mousemove', this.binded_moveArrowWithMouse);
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  var x = parseInt(this.arrow!.style.left, 10) + e.movementX;
-  var y = parseInt(this.arrow!.style.top, 10) + e.movementY;
-  if (x > w-24) {
-    x = w-24
-  }
-  if (y > h-24) {
-      y = h-24
-  }
-  this.arrow!.style.left = x + "px";
-  this.arrow!.style.top = y + "px";
+  this.eyesOnlyInput.moveArrowWithMouse(e, this.arrow!, this.sandbox!);
   this.timeOutAfterMouseInput = setTimeout(() => {
     this.mouseInput = false;
-  }, 1000)
-
-  // arrow!.style.left = e.clientX + "px";
-  // arrow!.style.top = e.clientY + "px";
+  }, 1500)
 }
 
 public stopOtherInputs(){
@@ -134,8 +132,8 @@ public stopOtherInputs(){
   document.body.removeEventListener('keydown', this.binded_startMix1Input); 
   document.getElementById("recthover")?.removeEventListener('hover', this.startMouseInput);
   //MIX2
-  const all = document.getElementById("experimentSandbox");
-  all!.removeEventListener('mousemove', this.binded_moveArrowWithMouse);
+  const sandbox = document.getElementById("experimentSandbox");
+  sandbox!.removeEventListener('mousemove', this.binded_mouseTakeover);
 }
 
 public activateSelectedInputType(){

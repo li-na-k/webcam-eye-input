@@ -44,7 +44,7 @@ export class ScrollComponent implements OnInit, OnDestroy {
         var el : HTMLElement = this.scrollAreas[i] as HTMLElement;
     
         if(el){
-          inside = this.eyesOnlyInput.checkIfInsideElement(el);
+          inside = this.eyesOnlyInput.areEyesInsideElement(el);
         }
         if (inside == true && el){
           if(el.classList.contains("bottom")){
@@ -73,7 +73,7 @@ public startMix1Input(e : any){
       var el : HTMLElement = this.scrollAreas[i] as HTMLElement;
       var inside : boolean = false;
       if(el){    
-        inside = this.eyesOnlyInput.checkIfInsideElement(el);
+        inside = this.eyesOnlyInput.areEyesInsideElement(el);
         if (inside == true){ 
           if(el.classList.contains("bottom")){
             window.scrollBy(0, 10);
