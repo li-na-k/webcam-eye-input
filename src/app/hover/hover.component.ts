@@ -22,70 +22,73 @@ export class HoverComponent implements OnInit, OnDestroy {
 
   constructor(private store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { }
 
+  public taskElementID : string = "recthover";
+  public taskElement : HTMLElement | null = document.getElementById(this.taskElementID);
+
   ngOnInit(): void {
+    this.taskElement = document.getElementById(this.taskElementID);
+    this.arrow = document.getElementById("arrow");
+    this.sandbox = document.getElementById("experimentSandbox");
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => this.selectedInputType = d);
     this.activateSelectedInputType();
-
   }
 
   ngOnDestroy(): void {
     clearInterval(this.interval);
     this.destroy$.next(true);
     this.destroy$.complete();
-}
+  } 
 
-public checkEyeInput(){
-  var el = document.getElementById("recthover");
-  var inside : boolean | undefined = false;
-  this.interval = setInterval(() => {
-    if(el){
-      inside = this.eyesOnlyInput.areEyesInsideElement(el);
-    }
-    if (inside == true && el){
-      el.style.backgroundColor = "var(--apricot)";
-    }
-    else if(inside == false && el){
-      el.style.backgroundColor = "var(--blue)";
-    }
-  }, 100);
-}
+  
+  public startMouseInput = this.changeElApricot.bind(this);
+  //todo switch back to blue afterwards
+  
+  public changeElApricot(){
+    this.taskElement!.style.backgroundColor = "var(--apricot)";
+  }
 
-public binded_startMix1Input = this.startMix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
-public binded_mouseTakeover = this.mouseTakeover.bind(this);
+  public changeElBlue(){
+    this.taskElement!.style.backgroundColor = "var(--blue)";
+  }
 
+  public startEyeInput(){
+    var inside : boolean | undefined = false;
+    this.interval = setInterval(() => {
+      inside = this.eyesOnlyInput.areEyesInsideElement(this.taskElement!);
+      if (inside == true && this.taskElement){
+        this.changeElApricot();
+      }
+      else if(inside == false && this.taskElement){
+        this.changeElBlue();
+      }
+    }, 100);
+  }
+
+public binded_startMix1Input = this.startMix1Input.bind(this);
 public startMix1Input(e : any){
   if(e.keyCode == 13){
-    var el = document.getElementById("recthover");
     var inside : boolean = false;
-    if(el){    
-      inside = this.eyesOnlyInput.areEyesInsideElement(el);
+    if(this.taskElement){    
+      inside = this.eyesOnlyInput.areEyesInsideElement(this.taskElement);
       if (inside == true){ 
-        el.style.backgroundColor = "var(--apricot)";
+        this.changeElApricot()
       }
       else if(inside == false){
-        el.style.backgroundColor = "var(--blue)";
+        this.changeElBlue()
       }
     }
   }
 }
-//TODO: after hover, switch to blue again
-
-
-public startMouseInput(){
-  document.getElementById("recthover")!.style.backgroundColor = "var(--apricot)"
-}
+//TODO: after hover, switch to blue again (timeout?)
 
 public mouseInput : boolean = false;
 public timeOutAfterMouseInput : any;
 public arrow : HTMLElement | null = null;
-public sandbox = document.getElementById("experimentSandbox");
+public sandbox : HTMLElement | null = null;
 
 public startMix2Input(){
-  this.arrow = document.getElementById("arrow");
-  this.sandbox = document.getElementById("experimentSandbox");
-  //switching cursor visibility
   this.arrow!.style.visibility = 'visible';
   this.sandbox!.style.cursor = 'none';
   //activate eye input
@@ -101,19 +104,19 @@ public startMix2Input(){
   //activate mouse input
   window.document.addEventListener('mousemove', this.binded_mouseTakeover);
   //hover color effect
-  var el = document.getElementById("recthover");
   var inside : boolean | undefined = false;
   this.interval = setInterval(() => {
-    inside = this.eyesOnlyInput.isInside(el!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
-    if (inside == true && el){
-      el.style.backgroundColor = "var(--apricot)";
+    inside = this.eyesOnlyInput.isInside(this.taskElement!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
+    if (inside == true){
+      this.changeElApricot();
     }
-    else if(inside == false && el){
-      el.style.backgroundColor = "var(--blue)";
+    else if(inside == false){
+      this.changeElBlue();
     }
   }, 100);
 }
 
+public binded_mouseTakeover = this.mouseTakeover.bind(this);
 public mouseTakeover(e : any){
   clearTimeout(this.timeOutAfterMouseInput);
   this.mouseInput = true;
@@ -124,32 +127,29 @@ public mouseTakeover(e : any){
 }
 
 public stopOtherInputs(){
-  var el = document.getElementById("recthover");
-  el!.style.backgroundColor = "var(--blue)";
-  //end Eye Input & MIX2 interval
+  this.taskElement!.style.backgroundColor = "var(--blue)";
+  //EYE & MIX2 interval
   clearInterval(this.interval);
-  //end Mix1 click event
-  //window.removeEventListener('click', this.binded_startMix1Input)
+  //MOUSE
+  this.taskElement?.removeEventListener('hover', this.changeElApricot);
+  //MIX1
   document.body.removeEventListener('keydown', this.binded_startMix1Input); 
-  document.getElementById("recthover")?.removeEventListener('hover', this.startMouseInput);
   //MIX2
   window.document.removeEventListener('mousemove', this.binded_mouseTakeover);
   this.arrow = document.getElementById("arrow");
   this.arrow!.style.visibility = 'hidden';
   this.sandbox!.style.cursor = '';
-  console.log(this.sandbox?.style.cursor)
   clearTimeout(this.timeOutAfterMouseInput);
-  clearInterval(this.interval);
   clearInterval(this.moveArrowinterval);
 }
 
 public activateSelectedInputType(){
   this.stopOtherInputs();
   if(this.selectedInputType == InputType.EYE){
-    this.checkEyeInput();
+    this.startEyeInput();
   }
   if(this.selectedInputType == InputType.MOUSE){
-    document.getElementById("recthover")?.addEventListener('hover', this.startMouseInput);
+    this.taskElement?.addEventListener('mouseover', this.startMouseInput);
   }
   if(this.selectedInputType == InputType.MIX1){
     document.body.addEventListener('keydown', this.binded_startMix1Input); 
