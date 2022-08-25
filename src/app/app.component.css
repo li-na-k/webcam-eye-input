@@ -28,15 +28,15 @@
 
 .Popup{
     position: absolute;
-    top: 30%;
-    left: 35%;
+    top: 20%;
+    left: 30%;
     color: white;
     border-radius: 15px; 
     padding: 50px; 
     background-color: var(--blue); 
     z-index: 3;
     text-align: center;
-    width: 30%;
+    width: 40%;
 }
 
 .Popup-close{
@@ -78,7 +78,11 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
-}  
+} 
+
+.calibrationPoints{
+    margin-top: 200px;
+}
 
 .dropdown-label{
     font-size: 15px;

@@ -146,7 +146,6 @@ export class ClickComponent implements OnInit, OnDestroy {
     this.arrow = document.getElementById("arrow");
     this.arrow!.style.visibility = 'hidden';
     this.sandbox!.style.cursor = '';
-    console.log(this.sandbox?.style.cursor)
     clearTimeout(this.timeOutAfterMouseInput);
     clearInterval(this.interval);
     clearInterval(this.moveArrowInterval);
