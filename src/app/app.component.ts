@@ -32,10 +32,10 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
       this.showPopup = true;
-      //if(!this.paused){
+      if(!this.paused){
         this.startWebgazer();
         this.checkWebGazerLoaded();
-      //}
+      }
   }
 
   public poi = [0,1,2,3,4,5,6,7];
@@ -47,9 +47,9 @@ export class AppComponent implements OnInit{
   public numberOfCPt = 6*4;
 
   //current state webgazer
-  public webgazerLoaded : boolean = true; //false;
+  public webgazerLoaded : boolean = false;
   public paused = false;
-  public calibrationDone : boolean = true; //false;
+  public calibrationDone : boolean = false;
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   public greenPtCount : number = 0;
   public showPopup = false;

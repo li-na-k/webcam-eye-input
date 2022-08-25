@@ -15,6 +15,7 @@ import { selectInputType } from '../state/expConditions/expconditions.selector';
 export class HoverComponent implements OnInit, OnDestroy {
 
   public interval : any;
+  public moveArrowinterval : any;
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   public selectedInputType : InputType = InputType.EYE;
   public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
@@ -85,10 +86,10 @@ public startMix2Input(){
   this.arrow = document.getElementById("arrow");
   this.sandbox = document.getElementById("experimentSandbox");
   //switching cursor visibility
-  this.arrow!.style.visibility = "visible";
+  this.arrow!.style.visibility = 'visible';
   this.sandbox!.style.cursor = 'none';
   //activate eye input
-  this.interval = setInterval(() => {
+  this.moveArrowinterval = setInterval(() => {
     if(!this.mouseInput){
       this.arrow!.classList.add("smoothTransition");
       this.eyesOnlyInput.moveArrowWithEyes();
@@ -133,27 +134,28 @@ public stopOtherInputs(){
   document.getElementById("recthover")?.removeEventListener('hover', this.startMouseInput);
   //MIX2
   window.document.removeEventListener('mousemove', this.binded_mouseTakeover);
+  this.arrow = document.getElementById("arrow");
+  this.arrow!.style.visibility = 'hidden';
+  this.sandbox!.style.cursor = '';
+  console.log(this.sandbox?.style.cursor)
+  clearTimeout(this.timeOutAfterMouseInput);
+  clearInterval(this.interval);
+  clearInterval(this.moveArrowinterval);
 }
 
 public activateSelectedInputType(){
+  this.stopOtherInputs();
   if(this.selectedInputType == InputType.EYE){
-    this.stopOtherInputs();
     this.checkEyeInput();
   }
   if(this.selectedInputType == InputType.MOUSE){
-    this.stopOtherInputs();
     document.getElementById("recthover")?.addEventListener('hover', this.startMouseInput);
   }
   if(this.selectedInputType == InputType.MIX1){
-    this.stopOtherInputs();
-    //window.addEventListener('click', this.binded_startMix1Input);
     document.body.addEventListener('keydown', this.binded_startMix1Input); 
   }
   if(this.selectedInputType == InputType.MIX2){
-    this.stopOtherInputs();
-    console.log("mix2")
     this.startMix2Input();
-    //TODO
   }
 }
 

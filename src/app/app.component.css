@@ -86,10 +86,10 @@
 }
 
 #experimentSandbox{
-    margin-top: 20px;
+    margin-top: 100px;
     height: 600px;
-    padding: 10px;
-    border: 1px solid grey;
-    border-radius: 15px;
+    /* padding: 10px; */
+    /* border: 1px solid grey;
+    border-radius: 15px; */
     z-index: 0;
 }

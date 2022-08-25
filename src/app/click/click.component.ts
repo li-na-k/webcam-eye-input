@@ -14,6 +14,7 @@ import { selectInputType } from '../state/expConditions/expconditions.selector';
 export class ClickComponent implements OnInit, OnDestroy {
 
   public interval : any;
+  public moveArrowInterval : any;
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   public selectedInputType : InputType = InputType.EYE;
   public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
@@ -92,7 +93,7 @@ export class ClickComponent implements OnInit, OnDestroy {
     this.arrow!.style.visibility = "visible";
     this.sandbox!.style.cursor = 'none';
     //activate eye input
-    this.interval = setInterval(() => {
+    this.moveArrowInterval = setInterval(() => {
       if(!this.mouseInput){
         this.arrow!.classList.add("smoothTransition");
         this.eyesOnlyInput.moveArrowWithEyes();
@@ -141,7 +142,14 @@ export class ClickComponent implements OnInit, OnDestroy {
     document.getElementById("rect")?.removeEventListener('click', this.startMouseInput);
     //MIX2
     window.document.removeEventListener('mousemove', this.binded_mouseTakeover);
-    window.document.removeEventListener('click', this.binded_clickEffect); 
+    window.document.removeEventListener('click', this.binded_clickEffect);
+    this.arrow = document.getElementById("arrow");
+    this.arrow!.style.visibility = 'hidden';
+    this.sandbox!.style.cursor = '';
+    console.log(this.sandbox?.style.cursor)
+    clearTimeout(this.timeOutAfterMouseInput);
+    clearInterval(this.interval);
+    clearInterval(this.moveArrowInterval);
   }
 
   public activateSelectedInputType(){
