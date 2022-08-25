@@ -1,15 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ignoreElements, Observable } from 'rxjs';
 import { AppState } from './state/app.state';
-import { selectCurrentEyePos } from './state/eyetracking.selector';
-import { changeXPos } from './state/eyetracking.action';
-import { changeYPos } from './state/eyetracking.action';
-import { ChartOptions } from 'chart.js';
+import { InputType } from './enums/input-type';
+import { Tasks } from './enums/tasks';
+import {changeXPos, changeYPos} from './state/eyetracking/eyetracking.action'
+import { changeInputType, changeTask } from './state/expConditions/expconditions.action';
+import { selectTask } from './state/expConditions/expconditions.selector';
+import { selectInputType } from './state/expConditions/expconditions.selector';
+import { ScrollComponent } from './scroll/scroll.component';
+import { HoverComponent } from './hover/hover.component';
+import { ClickComponent } from './click/click.component';
+
+
+
 
 
 declare var webgazer: any;
-declare var Chart: any;
 
 @Component({
   selector: 'app-root',
@@ -19,29 +26,44 @@ declare var Chart: any;
 
 export class AppComponent implements OnInit{
   title = 'eye-input-visualization';
+  @ViewChild(ScrollComponent) scrollComponent!: ScrollComponent;
+  @ViewChild(HoverComponent) hoverComponent!: ScrollComponent;
+  @ViewChild(ClickComponent) clickComponent!: ScrollComponent;
 
   ngOnInit(): void {
       this.showPopup = true;
-      this.startWebgazer();
-      this.checkWebGazerLoaded();
+      if(!this.paused){
+        this.startWebgazer();
+        this.checkWebGazerLoaded();
+      }
   }
 
   public poi = [0,1,2,3,4,5,6,7];
+  public InputType = InputType;
+  public TaskType = Tasks;
 
   //settings
   public clickGoal = 2;
   public numberOfCPt = 6*4;
 
-  //current state
+  //current state webgazer
   public webgazerLoaded : boolean = false;
+  public paused = false;
   public calibrationDone : boolean = false;
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   public greenPtCount : number = 0;
-  public currentEyePos$ : Observable<number[]> = this.store.select(selectCurrentEyePos);
   public showPopup = false;
 
   public xprediction = 0.0;
   public yprediction = 0.0;
+
+  //experiment - only for dispatching into store && default value?? todo
+  public selectedTask : Tasks = Tasks.SELECT;
+  public selectedInputType : InputType = InputType.EYE;
+  //store
+  public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
+  public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
+
 
   //explanation
   public explanationNr : number = 0;
@@ -49,38 +71,58 @@ export class AppComponent implements OnInit{
   constructor(private store : Store<AppState>){}
 
   public startWebgazer(){
-    //var store = this.store
-    //store.dispatch(changeYPos({newy: 123.0}));
-    //var rect2 = document.getElementById("TestPt2")?.getBoundingClientRect();
-    //console.log(rect2?.top + " / " + rect2?.right + " / " + rect2?.bottom + " / " + rect2?.left)
+    var store = this.store;
     var poi = this.poi;
     webgazer.setGazeListener(function(data : any, elapsedTime : any) {
         if (data == null) {
             return;
         }
+        //store current x and y pos
+        store.dispatch(changeXPos({newx: data.x}));
+        store.dispatch(changeYPos({newy: data.y}));
+
+        //display current x and y
         var xDisplay = document.getElementById("x");
         var yDisplay = document.getElementById("y");
         if(xDisplay){xDisplay.innerHTML = data.x;}
         if(yDisplay){yDisplay.innerHTML = data.y;}
 
-        for (var p in poi){
-          var rect = document.getElementById("TestPt" + p)?.getBoundingClientRect();
-          if(rect){
-            var el = document.getElementById("TestPt" + p);
-            if(rect.left <= data.x && rect.right >= data.x && rect.top <= data.y && rect.bottom >= data.y){
-              if(el){
-                el.style.backgroundColor = "var(--apricot)";
-              }
-            }
-            else{
-              if(el){
-                el.style.backgroundColor = "var(--blue)";
-              }
-          }
-          }
-        }
-        //store.dispatch(changeXPos(data.x));
-        //store.dispatch(changeYPos({newy: 123.0}));
+        // //Test in app.component.html
+        // for (var p in poi){
+        //   var rect = document.getElementById("TestPt" + p)?.getBoundingClientRect();
+        //   if(rect){
+        //     var el = document.getElementById("TestPt" + p);
+        //     if(rect.left <= data.x && rect.right >= data.x && rect.top <= data.y && rect.bottom >= data.y){
+        //       if(el){
+        //         el.style.backgroundColor = "var(--apricot)";
+        //       }
+        //     }
+        //     else{
+        //       if(el){
+        //         el.style.backgroundColor = "var(--blue)";
+        //       }
+        //   }
+        //   }
+        // }
+
+        // //hover component
+        // for (let i = 0; i < 3; i++){
+        //   var rect = document.getElementById("HoverPt" + i)?.getBoundingClientRect();
+        //   if(rect){
+        //     var el = document.getElementById("HoverPt" + i);
+        //     if(rect.left <= data.x && rect.right >= data.x && rect.top <= data.y && rect.bottom >= data.y){
+        //       if(el){
+        //         el.style.backgroundColor = "var(--apricot)";
+        //       }
+        //     }
+        //     else{
+        //       if(el){
+        //         el.style.backgroundColor = "var(--blue)";
+        //       }
+        //   }
+        //   }
+        // }
+        
     }).begin()
   }
 
@@ -97,18 +139,7 @@ export class AppComponent implements OnInit{
     },1000)
 }
 
-
-  public paused = false;
-
   public pauseWebgazer(){
-    var rect1 = document.getElementById("TestPt1")?.getBoundingClientRect();
-    var rect2 = document.getElementById("TestPt2")?.getBoundingClientRect();
-    var point = document.getElementById("webgazerGazeDot")?.getBoundingClientRect();
-    console.log("x1: " + rect1?.left + " - " + rect1?.right)
-    console.log("y1: " + rect1?.top + " - " + rect1?.bottom)
-    console.log("x2: " + rect2?.left + " - " + rect2?.right)
-    console.log("y2: " + rect2?.top + " - " + rect2?.bottom)
-    console.log(point?.x + " / " + point?.y)
     if(this.paused){
       this.paused = false;
       webgazer.resume()
@@ -156,17 +187,23 @@ export class AppComponent implements OnInit{
     this.explanationNr = 0;
   }
 
+  public selectTask(){
+    this.store.dispatch(changeTask({newTask: this.selectedTask}));
+  }
 
-    // Pie
-    public pieChartOptions: ChartOptions<'pie'> = {
-      responsive: false,
-    };
-    public pieChartLabels = [ [ '1' ], [ '2' ], '3' ];
-    public pieChartDatasets = [ {
-      data: [ 300, 500, 100 ]
-    } ];
-    public pieChartLegend = true;
-    public pieChartPlugins = [];
+
+  public selectInputType(){
+    this.store.dispatch(changeInputType({newInputType: this.selectedInputType}));
+    if(this.scrollComponent){
+      this.scrollComponent.activateSelectedInputType();
+    }
+    if(this.hoverComponent){
+      this.hoverComponent.activateSelectedInputType();
+    }
+    if(this.clickComponent){
+      this.clickComponent.activateSelectedInputType();
+    }
+  }
 
 
 

@@ -27,14 +27,16 @@
 }
 
 .Popup{
-    position: fixed;
+    position: absolute;
+    top: 20%;
+    left: 30%;
     color: white;
     border-radius: 15px; 
     padding: 50px; 
     background-color: var(--blue); 
     z-index: 3;
     text-align: center;
-    width: 500px;
+    width: 40%;
 }
 
 .Popup-close{
@@ -63,7 +65,7 @@
 .mat-spinner{
     margin-left:auto;
     margin-right:auto;
-    margin-bottom: 50px;
+    margin-bottom: 15px;
 }
 
 .popup-background {
@@ -76,4 +78,22 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
-}  
+} 
+
+.calibrationPoints{
+    margin-top: 200px;
+}
+
+.dropdown-label{
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#experimentSandbox{
+    margin-top: 100px;
+    height: 600px;
+    /* padding: 10px; */
+    /* border: 1px solid grey;
+    border-radius: 15px; */
+    z-index: 0;
+}

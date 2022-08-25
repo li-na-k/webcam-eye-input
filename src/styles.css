@@ -17,7 +17,7 @@ button{
     color: #fff;
     border-radius: 20px;
     border: none;
-    padding: 5px 10px;
+    padding: 5px 15px;
     margin: 2px;
 }
 
@@ -32,4 +32,5 @@ button:hover{
     right: 0px !important;
     left: auto !important;
     transform-origin: top right;
+    z-index: 4;
 }

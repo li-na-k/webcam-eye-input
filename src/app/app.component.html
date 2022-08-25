@@ -2,28 +2,41 @@
 style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;">
     <div class="loading">
         <mat-spinner [diameter]="30" ></mat-spinner>
-        Please wait. Everything is being prepared...
+        <div>
+            Please wait. Everything is being prepared...
+        </div>
+        <div style="padding-top: 30px; font-weight: bold;">
+            If your browser asks for permission to use your camera, please click "Allow".
+        </div>
     </div>
 </div>
 
 
 <div *ngIf="webgazerLoaded" style="padding: 30px;">
-    <h1>Eye Input for Visualization</h1>
-    <div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px; width: 230px;">
+    <!-- <h1>Eye Input for Visualization</h1> -->
+    <div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px; width: 270px;">
         <div>x: <span id="x"></span></div>
         <div>y: <span id="y"></span></div>
+
+        <!-- <div>Store:</div>
+        <div>x: <span>{{(currentEyePos$ | async).x}}</span></div>
+        <div>y: <span>{{(currentEyePos$ | async).y}}</span></div> -->
+
         <span *ngIf="!paused">
             <button  mat-icon-button style="margin: 20px 0px;" type="button" (click)="pauseWebgazer()">
                 <mat-icon>pause_circle_outline</mat-icon>
             </button>
         </span>
         <span *ngIf="paused">
-            <button mat-icon-button style="margin: 20px 0px;" type="button" (click)="pauseWebgazer()">
+            <button mat-icon-button style="margin: 20px 10px;" type="button" (click)="pauseWebgazer()">
                 <mat-icon>play_circle_outline</mat-icon>
             </button>
         </span>
-        <button mat-icon-button style="margin: 20px;" type="button" (click)="showExplanation();">
+        <button mat-icon-button style="margin: 20px 10px;" type="button" (click)="showExplanation();">
             <mat-icon>help_outline</mat-icon>
+        </button>
+        <button style="margin: 20px 10px;" type="button" *ngIf="!calibrationDone"
+        (click)="calibrationDone = true;">Skip callibration
         </button>
     </div>
 
@@ -37,8 +50,8 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
                 </div>
                 <div *ngIf="explanationNr==0">
                     Before you start, please click through this short guide and read it carefully. 
-                    If you want to review the instructions later, click on the XXXXXX question mark icon.
-                    <div style="margin-top: 15px;">Now click on "Continue".</div>
+                    If you want to review the instructions later, click on the question mark icon ( <mat-icon style="vertical-align: middle;">help_outline</mat-icon> ).
+                    <div style="margin-top: 15px;">Now click on "Next".</div>
                 </div>
                 <div *ngIf="explanationNr==1">
                     In the upper right corner you can see the recording of your webcam. 
@@ -52,65 +65,92 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
                     </div>
                     Now find a comfortable position for the calibration that meets these criteria and maintain this position for the entire experiment.
                     Keep your head still and try not to move it.
-                    <div style="margin-top: 15px;">Now click on "Continue".</div>
+                    <div style="margin-top: 15px;">Now click on "Next".</div>
                 </div>
                 <div *ngIf="explanationNr==2">
                     The red circle shows where the system assumes your eye-gaze. To ensure that the prediction is as accurate as possible, the system must first be calibrated.
-                    <div style="margin-top: 15px;">Now click on "Continue".</div>
+                    <div style="margin-top: 15px;">Now click on "Next".</div>
                 </div>
                 <div *ngIf="explanationNr==3">
-                    For the calibration, click each point xxxxx times until all points are completely green.
+                    For the calibration, click each point {{clickGoal}} times until all points are completely green.
                     While clicking, fixate the points with your eyes.
                     <div style="margin-top: 15px;">To start the calibration, close this window with "OK".</div>
                 </div>
                 <div style="margin-top: 25px;">
-                    <button mat-icon-button style="display: block; float: right;" type="button" (click)="nextExplanation();"> 
-                        <mat-icon fontIcon="arrow_forward"></mat-icon>
+                    <button style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
+                        Next <mat-icon style="margin-left: 5px;" fontIcon="arrow_forward"></mat-icon>
                     </button>
-                    <button mat-icon-button *ngIf="explanationNr!=0" style="display: block; float: left;" type="button" (click)="previousExplanation();">
-                        <mat-icon fontIcon="arrow_back"></mat-icon>
+                    <button *ngIf="explanationNr!=0" style="display: flex; align-items: center; float: left;" type="button" (click)="previousExplanation();">
+                        <mat-icon style="margin-right: 5px;" fontIcon="arrow_back"></mat-icon> Back
                     </button>
                 </div>
-                <button style="display: block; margin-top: 20px; margin-left: auto; margin-right: auto;" type="button" (click)="calibrationDone = true;">Skip callibration (not recommended)</button>
             </div>
         </div>
-        
-    <div class="Flexbox">
-        <input type="button" class="CalibrationPt" id="CPt0" (click)="changeButtonColor(0)" >
-        <input type="button" class="CalibrationPt" id="CPt1" (click)="changeButtonColor(1)" >
-        <input type="button" class="CalibrationPt" id="CPt2" (click)="changeButtonColor(2)" >
-        <input type="button" class="CalibrationPt" id="CPt3" (click)="changeButtonColor(3)" >
-        <input type="button" class="CalibrationPt" id="CPt4" (click)="changeButtonColor(4)" >
-        <input type="button" class="CalibrationPt" id="CPt5" (click)="changeButtonColor(5)" >
-    </div>
-    <div class="Flexbox">
-        <input type="button" class="CalibrationPt" id="CPt6" (click)="changeButtonColor(6)" >
-        <input type="button" class="CalibrationPt" id="CPt7" (click)="changeButtonColor(7)" >
-        <input type="button" class="CalibrationPt" id="CPt8" (click)="changeButtonColor(8)" >
-        <input type="button" class="CalibrationPt" id="CPt9" (click)="changeButtonColor(9)" >
-        <input type="button" class="CalibrationPt" id="CPt10" (click)="changeButtonColor(10)" >
-        <input type="button" class="CalibrationPt" id="CPt11" (click)="changeButtonColor(11)" >
-    </div>
-    <div class="Flexbox">
-        <input type="button" class="CalibrationPt" id="CPt12" (click)="changeButtonColor(12)" >
-        <input type="button" class="CalibrationPt" id="CPt13" (click)="changeButtonColor(13)" >
-        <input type="button" class="CalibrationPt" id="CPt14" (click)="changeButtonColor(14)" >
-        <input type="button" class="CalibrationPt" id="CPt15" (click)="changeButtonColor(15)" >
-        <input type="button" class="CalibrationPt" id="CPt16" (click)="changeButtonColor(16)" >
-        <input type="button" class="CalibrationPt" id="CPt17" (click)="changeButtonColor(17)" >
-    </div>
-    <div class="Flexbox">
-        <input type="button" class="CalibrationPt" id="CPt18" (click)="changeButtonColor(18)" >
-        <input type="button" class="CalibrationPt" id="CPt19" (click)="changeButtonColor(19)" >
-        <input type="button" class="CalibrationPt" id="CPt20" (click)="changeButtonColor(20)" >
-        <input type="button" class="CalibrationPt" id="CPt21" (click)="changeButtonColor(21)" >
-        <input type="button" class="CalibrationPt" id="CPt22" (click)="changeButtonColor(22)" >
-        <input type="button" class="CalibrationPt" id="CPt23" (click)="changeButtonColor(23)" >
-    </div>
+
+        <div class="calibrationPoints">
+            <div class="Flexbox">
+                <input type="button" class="CalibrationPt" id="CPt0" (click)="changeButtonColor(0)" >
+                <input type="button" class="CalibrationPt" id="CPt1" (click)="changeButtonColor(1)" >
+                <input type="button" class="CalibrationPt" id="CPt2" (click)="changeButtonColor(2)" >
+                <input type="button" class="CalibrationPt" id="CPt3" (click)="changeButtonColor(3)" >
+                <input type="button" class="CalibrationPt" id="CPt4" (click)="changeButtonColor(4)" >
+                <input type="button" class="CalibrationPt" id="CPt5" (click)="changeButtonColor(5)" >
+            </div>
+            <div class="Flexbox">
+                <input type="button" class="CalibrationPt" id="CPt6" (click)="changeButtonColor(6)" >
+                <input type="button" class="CalibrationPt" id="CPt7" (click)="changeButtonColor(7)" >
+                <input type="button" class="CalibrationPt" id="CPt8" (click)="changeButtonColor(8)" >
+                <input type="button" class="CalibrationPt" id="CPt9" (click)="changeButtonColor(9)" >
+                <input type="button" class="CalibrationPt" id="CPt10" (click)="changeButtonColor(10)" >
+                <input type="button" class="CalibrationPt" id="CPt11" (click)="changeButtonColor(11)" >
+            </div>
+            <div class="Flexbox">
+                <input type="button" class="CalibrationPt" id="CPt12" (click)="changeButtonColor(12)" >
+                <input type="button" class="CalibrationPt" id="CPt13" (click)="changeButtonColor(13)" >
+                <input type="button" class="CalibrationPt" id="CPt14" (click)="changeButtonColor(14)" >
+                <input type="button" class="CalibrationPt" id="CPt15" (click)="changeButtonColor(15)" >
+                <input type="button" class="CalibrationPt" id="CPt16" (click)="changeButtonColor(16)" >
+                <input type="button" class="CalibrationPt" id="CPt17" (click)="changeButtonColor(17)" >
+            </div>
+            <div class="Flexbox">
+                <input type="button" class="CalibrationPt" id="CPt18" (click)="changeButtonColor(18)" >
+                <input type="button" class="CalibrationPt" id="CPt19" (click)="changeButtonColor(19)" >
+                <input type="button" class="CalibrationPt" id="CPt20" (click)="changeButtonColor(20)" >
+                <input type="button" class="CalibrationPt" id="CPt21" (click)="changeButtonColor(21)" >
+                <input type="button" class="CalibrationPt" id="CPt22" (click)="changeButtonColor(22)" >
+                <input type="button" class="CalibrationPt" id="CPt23" (click)="changeButtonColor(23)" >
+            </div>
+        </div>
     </div>
 
 
     <div *ngIf="calibrationDone">
+
+        <!-- Drop Down Task -->
+        <div>
+            <span class="dropdown-label">Task: </span>
+            <select [(ngModel)]="selectedTask"(change)="selectTask()"> 
+                <option *ngFor="let item of TaskType | keyvalue">{{item.value}}</option>
+            </select>
+        </div>
+        
+
+        <!-- Drop Down InputType -->
+        <div>
+            <span class="dropdown-label">Input variant: </span>
+            <select [(ngModel)]="selectedInputType" (change)="selectInputType()"> 
+                <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
+            </select>
+        </div>
+        
+        
+        <div id="experimentSandbox">
+            <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
+            <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>
+            <app-scroll *ngIf="(selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
+        </div>
+        
+        
 
         <div *ngIf="showPopup" style="display:flex;justify-content:center;">
             <div class="popup-background">
@@ -124,19 +164,9 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
             </div>
         </div>
 
-        <div class="Flexbox">
+        <!-- <div class="Flexbox">
             <div *ngFor="let p of poi;" class="TestPt" id="{{ 'TestPt' + p }}"></div>
-        </div>
+        </div> -->
 
-        <canvas baseChart
-            [type]="'pie'"
-            [datasets]="pieChartDatasets"
-            [labels]="pieChartLabels"
-            [options]="pieChartOptions"
-            [plugins]="pieChartPlugins"
-            [legend]="pieChartLegend">
-        </canvas>
-
-        <div id="my_dataviz"></div>
     </div>
 </div>

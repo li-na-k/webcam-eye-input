@@ -1,22 +1,34 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
 
 import { StoreModule } from '@ngrx/store';
 
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { eyetrackingReducer } from './state/eyetracking.reducer';
+import { eyetrackingReducer } from './state/eyetracking/eyetracking.reducer';
+import { expConditionsReducer } from './state/expConditions/expconditions.reducer';
 
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import { NgChartsModule } from 'ng2-charts';
+import {MatSelectModule} from '@angular/material/select';
+
+import { ClickComponent } from './click/click.component';
+import { HoverComponent } from './hover/hover.component';
+import { ScrollComponent } from './scroll/scroll.component';
+
+
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ClickComponent,
+    HoverComponent,
+    ScrollComponent
   ],
   imports: [
     BrowserModule,
@@ -24,10 +36,13 @@ import { NgChartsModule } from 'ng2-charts';
     MatProgressSpinnerModule,
     MatIconModule,
     MatButtonModule,
+    MatSelectModule,
     StoreModule.forRoot({
-      eyetrackingData : eyetrackingReducer
+      eyetrackingData : eyetrackingReducer,
+      expConditionsData : expConditionsReducer
     }),
-    NgChartsModule
+    BrowserAnimationsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
