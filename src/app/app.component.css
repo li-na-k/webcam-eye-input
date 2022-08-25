@@ -97,3 +97,7 @@
     border-radius: 15px; */
     z-index: 0;
 }
+
+.instructions{
+    width: 50%;
+}
