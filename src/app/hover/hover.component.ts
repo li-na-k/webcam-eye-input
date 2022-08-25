@@ -98,7 +98,7 @@ public startMix2Input(){
     }
   }, 100);
   //activate mouse input
-  this.sandbox!.addEventListener('mousemove', this.binded_mouseTakeover);
+  window.document.addEventListener('mousemove', this.binded_mouseTakeover);
   //hover color effect
   var el = document.getElementById("recthover");
   var inside : boolean | undefined = false;
@@ -132,8 +132,7 @@ public stopOtherInputs(){
   document.body.removeEventListener('keydown', this.binded_startMix1Input); 
   document.getElementById("recthover")?.removeEventListener('hover', this.startMouseInput);
   //MIX2
-  const sandbox = document.getElementById("experimentSandbox");
-  sandbox!.removeEventListener('mousemove', this.binded_mouseTakeover);
+  window.document.removeEventListener('mousemove', this.binded_mouseTakeover);
 }
 
 public activateSelectedInputType(){

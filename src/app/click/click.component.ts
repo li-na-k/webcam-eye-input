@@ -102,15 +102,13 @@ export class ClickComponent implements OnInit, OnDestroy {
       }
     }, 100);
     //activate mouse input
-    this.sandbox!.addEventListener('mousemove', this.binded_mouseTakeover);
+    window.document.addEventListener('mousemove', this.binded_mouseTakeover);
     //click color effect
-    var el = document.getElementById("rect");
-    el?.addEventListener('click', this.binded_clickEffect); //todo: remove
+    window.document.addEventListener('click', this.binded_clickEffect); 
   }
 
   public binded_clickEffect = this.clickEffect.bind(this); 
   public clickEffect(){
-    console.log("clickEffect")
     var el = document.getElementById("rect");
     var inside : boolean | undefined = false;
     inside = this.eyesOnlyInput.isInside(el!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
@@ -142,8 +140,8 @@ export class ClickComponent implements OnInit, OnDestroy {
     //remove click event MOUSE input
     document.getElementById("rect")?.removeEventListener('click', this.startMouseInput);
     //MIX2
-    const sandbox = document.getElementById("experimentSandbox");
-    sandbox!.removeEventListener('mousemove', this.binded_mouseTakeover);
+    window.document.removeEventListener('mousemove', this.binded_mouseTakeover);
+    window.document.removeEventListener('click', this.binded_clickEffect); 
   }
 
   public activateSelectedInputType(){
