@@ -41,6 +41,7 @@ export class AppComponent implements OnInit{
   public poi = [0,1,2,3,4,5,6,7];
   public InputType = InputType;
   public TaskType = Tasks;
+  public instructions : string = "Please select a task first, then the input method!";
 
   //settings
   public clickGoal = 2;
@@ -86,43 +87,6 @@ export class AppComponent implements OnInit{
         var yDisplay = document.getElementById("y");
         if(xDisplay){xDisplay.innerHTML = data.x;}
         if(yDisplay){yDisplay.innerHTML = data.y;}
-
-        // //Test in app.component.html
-        // for (var p in poi){
-        //   var rect = document.getElementById("TestPt" + p)?.getBoundingClientRect();
-        //   if(rect){
-        //     var el = document.getElementById("TestPt" + p);
-        //     if(rect.left <= data.x && rect.right >= data.x && rect.top <= data.y && rect.bottom >= data.y){
-        //       if(el){
-        //         el.style.backgroundColor = "var(--apricot)";
-        //       }
-        //     }
-        //     else{
-        //       if(el){
-        //         el.style.backgroundColor = "var(--blue)";
-        //       }
-        //   }
-        //   }
-        // }
-
-        // //hover component
-        // for (let i = 0; i < 3; i++){
-        //   var rect = document.getElementById("HoverPt" + i)?.getBoundingClientRect();
-        //   if(rect){
-        //     var el = document.getElementById("HoverPt" + i);
-        //     if(rect.left <= data.x && rect.right >= data.x && rect.top <= data.y && rect.bottom >= data.y){
-        //       if(el){
-        //         el.style.backgroundColor = "var(--apricot)";
-        //       }
-        //     }
-        //     else{
-        //       if(el){
-        //         el.style.backgroundColor = "var(--blue)";
-        //       }
-        //   }
-        //   }
-        // }
-        
     }).begin()
   }
 
@@ -191,6 +155,63 @@ export class AppComponent implements OnInit{
     this.store.dispatch(changeTask({newTask: this.selectedTask}));
   }
 
+  public setInstruction(){
+    var input = this.selectedInputType;
+    var task = this.selectedTask;
+    if(input == InputType.EYE){
+      switch(task){
+        case Tasks.HOVER:
+          this.instructions = "Look at the button to make it switch color."
+          break;
+        case Tasks.SCROLL:
+          this.instructions = "Look at the edges of the screen to scroll in the respective direction."
+          break;
+        case Tasks.SELECT:
+            this.instructions = "Look at the button for some seconds to select it."
+            break;
+      }
+    }
+    if(input == InputType.MIX1){
+      switch(task){
+        case Tasks.HOVER:
+          this.instructions = "Look at the button and confirm with ENTER."
+          break;
+        case Tasks.SCROLL:
+          this.instructions = "Look at the edges of the screen and confirm with ENTER to scroll in the respective direction."
+          break;
+        case Tasks.SELECT:
+            this.instructions = "Look at the button and confirm with ENTER."
+            break;
+      }
+    }
+    if(input == InputType.MIX2){
+      switch(task){
+        case Tasks.HOVER:
+          this.instructions = "Use your eyes to move the cursor near the button. With the mouse, you can override eye movements and thus do the finetuning of the movement."
+          break;
+        case Tasks.SCROLL:
+          this.instructions = "Use your eyes to move the cursor near the button. With the mouse, you can override eye movements and thus do the finetuning of the movement. Move the cursor to the screen borders to scroll in the respective direction."
+          break;
+        case Tasks.SELECT:
+            this.instructions = "Use your eyes to move the cursor near the button. With the mouse, you can override eye movements and thus do the finetuning of the movement. Click to select the button."
+            break;
+      }
+    }
+    if(input == InputType.MOUSE){
+      switch(task){
+        case Tasks.HOVER:
+          this.instructions = "Use the mouse to hover over the button."
+          break;
+        case Tasks.SCROLL:
+          this.instructions = "Use the mouse to scroll the page."
+          break;
+        case Tasks.SELECT:
+            this.instructions = "Use the mouse to click the button."
+            break;
+      }
+    }
+  }
+
 
   public selectInputType(){
     this.store.dispatch(changeInputType({newInputType: this.selectedInputType}));
@@ -203,6 +224,7 @@ export class AppComponent implements OnInit{
     if(this.clickComponent){
       this.clickComponent.activateSelectedInputType();
     }
+    this.setInstruction();
   }
 
 
