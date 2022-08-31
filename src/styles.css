@@ -34,3 +34,21 @@ button:hover{
     transform-origin: top right;
     z-index: 4;
 }
+
+.arrow {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 20px;
+    visibility: hidden; 
+    pointer-events: none;
+    z-index: 1000;
+    -webkit-filter: drop-shadow(2px 4px 6px black);
+    filter: drop-shadow(2px 4px 6px black);
+}
+
+.smoothTransition{
+    -webkit-filter: none;
+    filter: none;
+    transition: all 0.5s linear;
+}

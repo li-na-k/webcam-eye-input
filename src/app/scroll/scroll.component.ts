@@ -17,12 +17,14 @@ export class ScrollComponent implements OnInit, OnDestroy {
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   public selectedInputType : InputType = InputType.EYE;
   public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
-  
+  public scrollAreas = document.getElementsByClassName("scroll-area");
 
 
   constructor(private store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { }
 
   ngOnInit(): void {
+    this.arrow = document.getElementById("arrow");
+    this.sandbox = document.getElementById("experimentSandbox");
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => this.selectedInputType = d);
@@ -35,30 +37,29 @@ export class ScrollComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   } 
 
-  public scrollAreas = document.getElementsByClassName("scroll-area");
+  public scroll(scrollArea : HTMLElement){
+    if(scrollArea.classList.contains("bottom")){
+      window.scrollBy(0, 10);
+    }
+    if(scrollArea.classList.contains("top")){
+      window.scrollBy(0, -10);
+    }
+    if(scrollArea.classList.contains("left")){
+      window.scrollBy(-10, 0);
+    }
+    if(scrollArea.classList.contains("right")){
+      window.scrollBy(10, 0);
+    }
+  }
 
   public checkEyeInput(){
     var inside : boolean = false;
     this.interval = setInterval(() => {
       for(var i = 0; i < this.scrollAreas.length; i++){
         var el : HTMLElement = this.scrollAreas[i] as HTMLElement;
-    
-        if(el){
-          inside = this.eyesOnlyInput.areEyesInsideElement(el);
-        }
-        if (inside == true && el){
-          if(el.classList.contains("bottom")){
-            window.scrollBy(0, 10);
-          }
-          if(el.classList.contains("top")){
-            window.scrollBy(0, -10);
-          }
-          if(el.classList.contains("left")){
-            window.scrollBy(-10, 0);
-          }
-          if(el.classList.contains("right")){
-            window.scrollBy(10, 0);
-          }
+        inside = this.eyesOnlyInput.areEyesInsideElement(el!);
+        if (inside == true){
+          this.scroll(el);
         }
       }
     }, 100)
@@ -66,32 +67,64 @@ export class ScrollComponent implements OnInit, OnDestroy {
 
 
 public binded_startMix1Input = this.startMix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
-
 public startMix1Input(e : any){
   if(e.keyCode == 13){
     for(var i = 0; i < this.scrollAreas.length; i++){
       var el : HTMLElement = this.scrollAreas[i] as HTMLElement;
       var inside : boolean = false;
-      if(el){    
+      if(el){     
         inside = this.eyesOnlyInput.areEyesInsideElement(el);
         if (inside == true){ 
-          if(el.classList.contains("bottom")){
-            window.scrollBy(0, 10);
-          }
-          if(el.classList.contains("top")){
-            window.scrollBy(0, -10);
-          }
-          if(el.classList.contains("left")){
-            window.scrollBy(-10, 0);
-          }
-          if(el.classList.contains("right")){
-            window.scrollBy(10, 0);
-          }
+          this.scroll(el);
         }
       }
     }
   }
 }
+
+public mouseInput : boolean = false;
+public timeOutAfterMouseInput : any;
+public arrow : HTMLElement | null = null;
+public sandbox : HTMLElement | null = null;
+public moveArrowinterval : any;
+
+public startMix2Input(){
+  this.arrow!.style.visibility = 'visible';
+  this.sandbox!.style.cursor = 'none';
+  //activate eye input
+  this.moveArrowinterval = setInterval(() => {
+    if(!this.mouseInput){
+      this.arrow!.classList.add("smoothTransition");
+      this.eyesOnlyInput.moveArrowWithEyes();
+    }
+    else{
+      this.arrow!.classList.remove("smoothTransition");
+    }
+  }, 100);
+  //activate mouse input
+  window.document.addEventListener('mousemove', this.binded_mouseTakeover);
+  var inside : boolean | undefined = false;
+  this.interval = setInterval(() => {
+    for(var i = 0; i < this.scrollAreas.length; i++){
+      var el : HTMLElement = this.scrollAreas[i] as HTMLElement;
+      inside = this.eyesOnlyInput.isInside(el, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
+      if (inside == true){
+        this.scroll(el);
+      }
+  }
+  }, 100);
+}
+
+public binded_mouseTakeover = this.mouseTakeover.bind(this);
+public mouseTakeover(e : any){
+  clearTimeout(this.timeOutAfterMouseInput);
+  this.mouseInput = true;
+  this.eyesOnlyInput.moveArrowWithMouse(e, this.arrow!, this.sandbox!);
+  this.timeOutAfterMouseInput = setTimeout(() => {
+    this.mouseInput = false;
+  }, 1500)
+}
+
 
 public stopOtherInputs(){
   window.scrollTo(0,0);
@@ -99,6 +132,13 @@ public stopOtherInputs(){
   clearInterval(this.interval);
   //end Mix1 click event
   document.body.removeEventListener('keydown', this.binded_startMix1Input);
+  //MIX2
+  window.document.removeEventListener('mousemove', this.binded_mouseTakeover);
+  this.arrow = document.getElementById("arrow");
+  this.arrow!.style.visibility = 'hidden';
+  this.sandbox!.style.cursor = '';
+  clearTimeout(this.timeOutAfterMouseInput);
+  clearInterval(this.moveArrowinterval);
 }
 
 public activateSelectedInputType(){
@@ -115,8 +155,7 @@ public activateSelectedInputType(){
   }
   if(this.selectedInputType == InputType.MIX2){
     this.stopOtherInputs();
-    console.log("mix2")
-    //TODO
+    this.startMix2Input();
   }
 }
 }

@@ -14,7 +14,7 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
 
 <div *ngIf="webgazerLoaded" style="padding: 30px;">
     <!-- <h1>Eye Input for Visualization</h1> -->
-    <p *ngIf="calibrationDone" class="instructions">{{this.instructions}}</p>
+    <div *ngIf="calibrationDone" class="instructions">{{this.instructions}}</div>
     <div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px; width: 270px;">
         <div>x: <span id="x"></span></div>
         <div>y: <span id="y"></span></div>
@@ -149,6 +149,7 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
             <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
             <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>
             <app-scroll *ngIf="(selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
+            <img id="arrow" class="arrow" src="/assets/arrow.png" />
         </div>
         
         

@@ -26,22 +26,7 @@ export class EyesOnlyInputService implements OnDestroy {
       y = d.y;
     });
 
-    return this.isInside(el, x, y)
-
-    // var clientWidth = document.documentElement.clientWidth;
-    // var clientHeight = document.documentElement.clientHeight;
-
-    // var boundingBox = el.getBoundingClientRect();
-    // if(
-    //   (boundingBox.left <= x || boundingBox.left <= 0) && 
-    //   (boundingBox.right >= x || boundingBox.right >= clientWidth) && 
-    //   (boundingBox.top <= y || boundingBox.top <= 0) && 
-    //   (boundingBox.bottom >= y || boundingBox.bottom >= clientHeight)){ //e.g. if element is on very bottom of screen, count in gaze that looks even below screen
-    //   return true;
-    // }
-    // else{
-    //   return false;   
-    // }
+    return this.isInside(el, x, y);
   }
 
   public isInside(el : HTMLElement, x : number, y: number){
@@ -77,8 +62,6 @@ export class EyesOnlyInputService implements OnDestroy {
   
 
   public moveArrowWithMouse(e : any, arrow : HTMLElement, sandbox : HTMLElement){
-    //clearTimeout(this.timeOutAfterMouseInput);
-    //this.mouseInput = true;
     var x = parseInt(arrow!.style.left, 10) + e.movementX;
     var y = parseInt(arrow!.style.top, 10) + e.movementY;
     const sbRight = sandbox!.getBoundingClientRect().right;
@@ -100,13 +83,7 @@ export class EyesOnlyInputService implements OnDestroy {
     
     arrow!.style.left = x + "px";
     arrow!.style.top = y + "px";
-    // this.timeOutAfterMouseInput = setTimeout(() => {
-    //   this.mouseInput = false;
-    //   this.sandbox!.style.backgroundColor = "white";
-    // }, 1500)
   }
-
-
 
   ngOnDestroy(): void{
     this.destroy$.next(true);
