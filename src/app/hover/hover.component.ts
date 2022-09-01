@@ -19,6 +19,15 @@ export class HoverComponent implements OnInit, OnDestroy {
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   public selectedInputType : InputType = InputType.EYE;
   public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+  
+  public pointerLockedStopped() : boolean {
+    if(this.selectedInputType == InputType.MIX2){
+      return !(document.pointerLockElement === this.sandbox);
+    }
+    else{
+      return false;
+    }
+  }
 
   constructor(private store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { }
 
@@ -89,8 +98,10 @@ public arrow : HTMLElement | null = null;
 public sandbox : HTMLElement | null = null;
 
 public startMix2Input(){
+  this.sandbox!.requestPointerLock();
+  console.log(document.pointerLockElement === this.sandbox);
+
   this.arrow!.style.visibility = 'visible';
-  this.sandbox!.style.cursor = 'none';
   //activate eye input
   this.moveArrowinterval = setInterval(() => {
     if(!this.mouseInput){
