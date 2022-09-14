@@ -1,11 +1,12 @@
 .clickArea{
     background-color: var(--blue);
     margin: 20px;
-    display:flex;
+    display:flex; 
     justify-content: center;
     align-items:center;
     color: white;
     border-radius: 15px;
+    position: relative;
 }
 
 .small{
@@ -39,4 +40,33 @@
     -webkit-filter: none;
     filter: none;
     transition: all 0.5s linear;
+}
+
+
+.tooltip{
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    border-radius: 15px;
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    top: 110%;
+    /* Fade in tooltip */
+    opacity: 0; 
+    transition: opacity 0.3s;
+}
+
+.tooltip::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #555 transparent;
 }

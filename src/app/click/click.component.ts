@@ -1,12 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
 import { Store } from '@ngrx/store';
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { InputType } from '../enums/input-type';
 import { AppState } from '../state/app.state';
-import { selectInputType } from '../state/expConditions/expconditions.selector';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
-
 @Component({
   selector: 'app-click',
   templateUrl: './click.component.html',
@@ -19,7 +15,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
 
   public moveArrowInterval : any;
 
-  constructor(private eyesOnlyInput : EyesOnlyInputService, store : Store<AppState>) {  //TODO: service auch in super class
+  constructor(private eyesOnlyInput : EyesOnlyInputService, store : Store<AppState>) {
    super(store)
   }
 
