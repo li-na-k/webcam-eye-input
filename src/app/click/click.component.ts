@@ -19,7 +19,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
 
   public moveArrowInterval : any;
 
-  constructor(private eyesOnlyInput : EyesOnlyInputService, store : Store<AppState>) { 
+  constructor(private eyesOnlyInput : EyesOnlyInputService, store : Store<AppState>) {  //TODO: service auch in super class
    super(store)
   }
 
