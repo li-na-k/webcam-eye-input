@@ -139,7 +139,7 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
         <!-- Drop Down InputType -->
         <div>
             <span class="dropdown-label">Input variant: </span>
-            <select [(ngModel)]="selectedInputType" (change)="selectInputType()"> 
+            <select [(ngModel)]="selectedInputType" (change)="selectInputType()" > 
                 <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
             </select>
         </div>

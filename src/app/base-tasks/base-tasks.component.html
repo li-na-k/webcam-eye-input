@@ -1,0 +1,13 @@
+<p>base-tasks works!</p>
+
+<div *ngIf="pointerLockedStopped()" style="display:flex;justify-content:center;">
+    <div class="popup-background">
+    </div> 
+    <div class="Popup">
+        <div class="popup-header">
+            <span>Pointer Lock was stopped</span>
+        </div>
+        <div>To resume with the task, please enable it again.</div>
+        <button style="margin-top: 20px;" (click)="startMix2Input()">Enable Pointer Lock</button>
+    </div>
+</div>

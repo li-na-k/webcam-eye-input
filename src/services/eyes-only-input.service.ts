@@ -11,8 +11,14 @@ import { AppState } from 'src/app/state/app.state';
 export class EyesOnlyInputService implements OnDestroy {
 
   public currentEyePos$ : Observable<any> = this.store.select(selectCurrentEyePos);
-
   public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+  // properties for Mix 2
+  public mouseInput : boolean = false;
+  public timeOutAfterMouseInput : any;
+  public moveArrowInterval : any;
+  public arrow : HTMLElement | null = null;
+  public sandbox : HTMLElement | null = null;
+  public timeout : number = 0;
 
   constructor(private store : Store<AppState>) { }
 
@@ -25,7 +31,6 @@ export class EyesOnlyInputService implements OnDestroy {
       x = d.x;
       y = d.y;
     });
-
     return this.isInside(el, x, y);
   }
 
@@ -37,7 +42,7 @@ export class EyesOnlyInputService implements OnDestroy {
       (boundingBox.left <= x || boundingBox.left <= 0) && 
       (boundingBox.right >= x || boundingBox.right >= clientWidth) && 
       (boundingBox.top <= y || boundingBox.top <= 0) && 
-      (boundingBox.bottom >= y || boundingBox.bottom >= clientHeight)){ //e.g. if element is on very bottom of screen, count in gaze that looks even below screen
+      (boundingBox.bottom >= y || boundingBox.bottom >= clientHeight)){ //e.g. if element is on very bottom of screen, also include gaze that looks even below screen
       return true;
     }
     else{
@@ -45,7 +50,7 @@ export class EyesOnlyInputService implements OnDestroy {
     }
   }
 
-  public moveArrowWithEyes(){
+  public moveArrowWithEyes(arrow : HTMLElement | null){
     var x = 0.0;
     var y = 0.0;
     this.currentEyePos$
@@ -54,12 +59,14 @@ export class EyesOnlyInputService implements OnDestroy {
       x = d.x;
       y = d.y;
     });
-
-    var arrow = document.getElementById("arrow");
-    arrow!.style.left = x + "px";
-    arrow!.style.top = y + "px"
-  }
-  
+    if(this.arrow){
+      arrow!.style.left = x + "px";
+      arrow!.style.top = y + "px"
+    }
+    else{
+      throw Error("Provided arrow is null.")
+    }
+  } 
 
   public moveArrowWithMouse(e : any, arrow : HTMLElement, sandbox : HTMLElement){
     var x = parseInt(arrow!.style.left, 10) + e.movementX;
@@ -80,9 +87,54 @@ export class EyesOnlyInputService implements OnDestroy {
     if (y < sbTop) {
       y = sbTop
     }
-    
     arrow!.style.left = x + "px";
     arrow!.style.top = y + "px";
+  }
+
+  public activateMix2Input(sandbox : HTMLElement | null, arrow : HTMLElement | null, timeout: number){
+    //lock original cursor, add fake arrow instead
+    if(!sandbox){
+      throw Error("Provided sandbox is null.")
+    }
+    if(!arrow){
+      throw Error("Provided arrow is null.")
+    }
+    //assign method parameters to instance properties to be able to use them in mouseTakeover()
+    this.sandbox = sandbox; 
+    this.arrow = arrow;
+    this.timeout = timeout;
+    this.sandbox!.requestPointerLock(); 
+    this.arrow!.style.visibility = 'visible';
+    //eye input
+    this.moveArrowInterval = setInterval(() => {
+      if(!this.mouseInput){
+        this.arrow!.classList.add("smoothTransition");
+        this.moveArrowWithEyes(this.arrow);
+    }
+    else{
+      this.arrow!.classList.remove("smoothTransition");
+    }
+    }, 100);
+    window.document.addEventListener('mousemove', this.bound_mouseTakeover); 
+  }
+
+  private bound_mouseTakeover = this.mouseTakeover.bind(this);
+  private mouseTakeover(e : any){
+    clearTimeout(this.timeOutAfterMouseInput);
+    this.mouseInput = true;
+    this.moveArrowWithMouse(e, this.arrow!, this.sandbox!);
+    this.timeOutAfterMouseInput = setTimeout(() => {
+      this.mouseInput = false;
+    }, this.timeout)
+  }
+  
+  public stopMix2Input(sandbox : HTMLElement | null, arrow : HTMLElement | null){
+    document.exitPointerLock();
+    window.document.removeEventListener('mousemove', this.bound_mouseTakeover);
+    arrow!.style.visibility = 'hidden';
+    sandbox!.style.cursor = '';
+    clearTimeout(this.timeOutAfterMouseInput);
+    clearInterval(this.moveArrowInterval);
   }
 
   ngOnDestroy(): void{

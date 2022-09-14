@@ -59,8 +59,8 @@ export class AppComponent implements OnInit{
   public yprediction = 0.0;
 
   //experiment - only for dispatching into store && default value?? todo
-  public selectedTask : Tasks = Tasks.SELECT;
-  public selectedInputType : InputType = InputType.EYE;
+  public selectedTask : Tasks | null = null; //Tasks.SELECT;
+  public selectedInputType : InputType | null = null; //InputType.EYE;
   //store
   public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
@@ -152,7 +152,9 @@ export class AppComponent implements OnInit{
   }
 
   public selectTask(){
-    this.store.dispatch(changeTask({newTask: this.selectedTask}));
+    if(this.selectedTask){
+      this.store.dispatch(changeTask({newTask: this.selectedTask}));
+    }
   }
 
   public setInstruction(){
@@ -214,9 +216,11 @@ export class AppComponent implements OnInit{
 
 
   public selectInputType(){
-    this.store.dispatch(changeInputType({newInputType: this.selectedInputType}));
+    if(this.selectedInputType){
+      this.store.dispatch(changeInputType({newInputType: this.selectedInputType}));
+    }
     if(this.scrollComponent){
-      this.scrollComponent.activateSelectedInputType();
+      this.scrollComponent.activateSelectedInputType(); //TODO: wird doch schon von Base aufgerufen?
     }
     if(this.hoverComponent){
       this.hoverComponent.activateSelectedInputType();

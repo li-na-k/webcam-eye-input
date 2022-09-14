@@ -19,6 +19,8 @@ import {MatSelectModule} from '@angular/material/select';
 import { ClickComponent } from './click/click.component';
 import { HoverComponent } from './hover/hover.component';
 import { ScrollComponent } from './scroll/scroll.component';
+import { BaseTasksComponent } from './base-tasks/base-tasks.component';
+import { PopupPointerLockStopComponent } from './popup-pointer-lock-stop/popup-pointer-lock-stop.component';
 
 
 
@@ -28,7 +30,8 @@ import { ScrollComponent } from './scroll/scroll.component';
     AppComponent,
     ClickComponent,
     HoverComponent,
-    ScrollComponent
+    ScrollComponent,
+    PopupPointerLockStopComponent
   ],
   imports: [
     BrowserModule,
