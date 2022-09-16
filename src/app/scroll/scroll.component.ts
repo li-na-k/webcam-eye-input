@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
-
+import { trigger, style, animate, transition } from '@angular/animations';
 @Component({
   selector: 'app-scroll',
   templateUrl: './scroll.component.html',
@@ -87,6 +87,19 @@ public startMix2Input(){
       }
   }
   }, 100);
+}
+
+public target1Reached : boolean = false;
+@ViewChild('target1', { static: true }) target1!: ElementRef;
+
+public isHeadingInTargetArea(heading : HTMLElement): boolean{
+  const targetArea = document.getElementById("target-area")
+  var boundingBox = heading.getBoundingClientRect();
+  var inside = this.eyesOnlyInput.isInside(targetArea!, undefined, boundingBox.top)
+  if(heading == this.target1.nativeElement && inside){
+    this.target1Reached = true;
+  }
+  return inside
 }
 
 

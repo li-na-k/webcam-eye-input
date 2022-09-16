@@ -34,20 +34,35 @@ export class EyesOnlyInputService implements OnDestroy {
     return this.isInside(el, x, y);
   }
 
-  public isInside(el : HTMLElement, x : number, y: number){
+  public isInside(el : HTMLElement, x? : number, y?: number){
     var clientWidth = document.documentElement.clientWidth;
     var clientHeight = document.documentElement.clientHeight;
     var boundingBox = el.getBoundingClientRect();
-    if(
+    var lr_inside = false;
+    var tb_inside = false;
+    if(x){
+      if(
       (boundingBox.left <= x || boundingBox.left <= 0) && 
-      (boundingBox.right >= x || boundingBox.right >= clientWidth) && 
-      (boundingBox.top <= y || boundingBox.top <= 0) && 
-      (boundingBox.bottom >= y || boundingBox.bottom >= clientHeight)){ //e.g. if element is on very bottom of screen, also include gaze that looks even below screen
-      return true;
+      (boundingBox.right >= x || boundingBox.right >= clientWidth)
+      ){
+        lr_inside = true;
+      }
     }
     else{
-      return false;   
+      lr_inside = true;
     }
+    if(y){
+      if(
+      (boundingBox.top <= y || boundingBox.top <= 0) && 
+      (boundingBox.bottom >= y || boundingBox.bottom >= clientHeight)
+      ){
+        tb_inside = true;
+      }
+    }
+    else{
+      tb_inside = true;
+    }
+    return (tb_inside && lr_inside)
   }
 
   public moveArrowWithEyes(arrow : HTMLElement | null){
