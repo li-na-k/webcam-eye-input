@@ -8,6 +8,17 @@
     line-height: 150%;
 }
 
+@font-face {
+    font-family: "Ribes-Black";
+    src: local("Ribes-Black"), url(./assets/fonts/Ribes-Black.woff) format("woff"),
+                                url(./assets/fonts/Ribes-Black.woff2) format("woff2");
+}
+
+body{
+    margin: 0px;
+    background-color: var(--apricot);
+}
+
 h1{
     color: var(--blue);
 }
@@ -28,11 +39,16 @@ button:hover{
 
 
 #webgazerVideoContainer{
-    transform: scale(0.7);
-    right: 0px !important;
+    transform: scale(0.5);
+    right: 20px !important;
     left: auto !important;
+    top: 10px !important;
     transform-origin: top right;
     z-index: 4;
+}
+
+#webgazerVideoFeed{
+    border-radius: 15px !important;
 }
 
 .arrow {

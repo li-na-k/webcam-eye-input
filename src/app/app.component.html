@@ -1,3 +1,8 @@
+<app-header></app-header>
+
+<div class="content">
+
+
 <div *ngIf="!webgazerLoaded" 
 style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;">
     <div class="loading">
@@ -15,29 +20,22 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
 <div *ngIf="webgazerLoaded" style="padding: 30px;">
     <!-- <h1>Eye Input for Visualization</h1> -->
     <div *ngIf="calibrationDone" class="instructions">{{this.instructions}}</div>
-    <div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px; width: 270px;">
-        <div>x: <span id="x"></span></div>
-        <div>y: <span id="y"></span></div>
-
-        <!-- <div>Store:</div>
-        <div>x: <span>{{(currentEyePos$ | async).x}}</span></div>
-        <div>y: <span>{{(currentEyePos$ | async).y}}</span></div> -->
-
+    <div class="button-header-container">
+        <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
+            (click)="calibrationDone = true;">Skip callibration
+        </button>
         <span *ngIf="!paused">
-            <button  mat-icon-button style="margin: 20px 0px;" type="button" (click)="pauseWebgazer()">
-                <mat-icon>pause_circle_outline</mat-icon>
+            <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="pauseWebgazer()">
+                <mat-icon>pause</mat-icon>
             </button>
         </span>
         <span *ngIf="paused">
-            <button mat-icon-button style="margin: 20px 10px;" type="button" (click)="pauseWebgazer()">
-                <mat-icon>play_circle_outline</mat-icon>
+            <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="pauseWebgazer()">
+                <mat-icon>play_arrow</mat-icon>
             </button>
         </span>
-        <button mat-icon-button style="margin: 20px 10px;" type="button" (click)="showExplanation();">
-            <mat-icon>help_outline</mat-icon>
-        </button>
-        <button style="margin: 20px 10px;" type="button" *ngIf="!calibrationDone"
-        (click)="calibrationDone = true;">Skip callibration
+        <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="showExplanation();">
+            <mat-icon>question_mark</mat-icon>
         </button>
     </div>
 
@@ -167,4 +165,5 @@ style="display:flex;justify-content:center;align-items:center;width:100%;height:
         </div>
 
     </div>
+</div>
 </div>

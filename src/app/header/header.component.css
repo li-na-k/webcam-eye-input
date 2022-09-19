@@ -1,0 +1,29 @@
+.title{
+    font-family: "Ribes-Black", Arial, Helvetica, sans-serif;
+    font-size: 30px;  
+    color: black;
+    padding-top: 5px;
+}
+
+.subtitle{
+    letter-spacing: 0.25em;
+    color: black;
+}
+
+.header-container{
+    height: 100px;
+}
+
+.waves{
+    z-index: -2;
+    width: 100%;/*650px;*/
+    height: 100%;
+    margin-bottom: -50px;
+}
+
+.title-container{
+    padding: 20px;
+    /* position:absolute;
+    top: 20px;
+    left: 20px; */
+}
