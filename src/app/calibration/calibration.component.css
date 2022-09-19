@@ -1,0 +1,30 @@
+.Flexbox {
+    display: flex;
+    justify-content: space-between;
+    margin: 110px 10px 10px 10px;
+}
+
+.CalibrationPt {
+    width: 25px;
+    height: 25px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background-color: var(--red);
+    border-color: var(--red);
+    border-style: solid;
+}
+
+.CalibrationPt:hover {
+    cursor: pointer;
+}
+
+.TestPt{
+    background-color: var(--blue);
+    width: 400px;
+    height: 400px;
+}
+
+.calibrationPoints{
+    margin-top: -100px;
+}

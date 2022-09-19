@@ -11,6 +11,7 @@ import { selectInputType } from './state/expConditions/expconditions.selector';
 import { ScrollComponent } from './scroll/scroll.component';
 import { HoverComponent } from './hover/hover.component';
 import { ClickComponent } from './click/click.component';
+import { CalibrationComponent } from './calibration/calibration.component';
 
 
 
@@ -38,7 +39,7 @@ export class AppComponent implements OnInit{
       }
   }
 
-  public poi = [0,1,2,3,4,5,6,7];
+  @ViewChild(CalibrationComponent) calibrationCmp : CalibrationComponent = new CalibrationComponent();
   public InputType = InputType;
   public TaskType = Tasks;
   public instructions : string = "Please select a task first, then the input method!";
@@ -66,14 +67,12 @@ export class AppComponent implements OnInit{
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
 
-  //explanation
-  public explanationNr : number = 0;
+  
 
   constructor(private store : Store<AppState>){}
 
   public startWebgazer(){
     var store = this.store;
-    var poi = this.poi;
     webgazer.setGazeListener(function(data : any, elapsedTime : any) {
         if (data == null) {
             return;
@@ -114,41 +113,12 @@ export class AppComponent implements OnInit{
     }
   }
 
-
-  public changeButtonColor(buttonNr: number){
-    this.buttonClicks[buttonNr]++
-    var button = document.getElementById("CPt"+buttonNr)
-    if(button && this.buttonClicks[buttonNr] == this.clickGoal){ //turns green
-      button.style.backgroundColor = "var(--green)"
-      this.greenPtCount++;
-      if(this.greenPtCount == this.numberOfCPt){
-        this.calibrationDone = true;
-        this.showPopup=true;
-      }
-    }
-    else if(button){
-      button.style.opacity = "1.0";
-      button.style.borderColor = "var(--green)";
-      var newBorderWidth = this.buttonClicks[buttonNr] + 2;
-      button.style.borderWidth = String(newBorderWidth)+"px";
-    }
-  }
-
-  public numberInstructions : number = 4;
-  public nextExplanation(){
-    if(this.explanationNr >= (this.numberInstructions-1)){
-      this.showPopup=false;
-    }
-    this.explanationNr = this.explanationNr+1; 
-  }
-
-  public previousExplanation(){
-    this.explanationNr = this.explanationNr-1; 
-  }
-
   public showExplanation(){
-    this.showPopup=true;
-    this.explanationNr = 0;
+    this.calibrationCmp.showExplanation();
+  }
+
+  public setCalibrationDone(done : boolean){
+    this.calibrationDone = done;
   }
 
   public selectTask(){

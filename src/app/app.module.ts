@@ -22,6 +22,7 @@ import { ScrollComponent } from './scroll/scroll.component';
 import { BaseTasksComponent } from './base-tasks/base-tasks.component';
 import { PopupPointerLockStopComponent } from './popup-pointer-lock-stop/popup-pointer-lock-stop.component';
 import { HeaderComponent } from './header/header.component';
+import { CalibrationComponent } from './calibration/calibration.component';
 
 
 
@@ -33,7 +34,8 @@ import { HeaderComponent } from './header/header.component';
     HoverComponent,
     ScrollComponent,
     PopupPointerLockStopComponent,
-    HeaderComponent
+    HeaderComponent,
+    CalibrationComponent
   ],
   imports: [
     BrowserModule,
