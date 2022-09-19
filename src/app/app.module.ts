@@ -15,6 +15,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
+import {MatCardModule} from '@angular/material/card';
 
 import { ClickComponent } from './click/click.component';
 import { HoverComponent } from './hover/hover.component';
@@ -44,6 +45,7 @@ import { CalibrationComponent } from './calibration/calibration.component';
     MatIconModule,
     MatButtonModule,
     MatSelectModule,
+    MatCardModule,
     StoreModule.forRoot({
       eyetrackingData : eyetrackingReducer,
       expConditionsData : expConditionsReducer

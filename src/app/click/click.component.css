@@ -1,11 +1,12 @@
 .clickArea{
-    background-color: var(--blue);
+    border: 2px solid var(--blue);
     margin: 20px;
-    display:flex;
-    justify-content: center;
-    align-items:center;
-    color: white;
     border-radius: 15px;
+    padding: 20px;
+}
+
+mat-card-title{
+    padding-bottom: 10px;
 }
 
 .small{
