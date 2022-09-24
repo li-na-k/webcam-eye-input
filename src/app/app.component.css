@@ -34,25 +34,47 @@
     z-index: 0;
 }
 
-.instructions{
-    width: 50%;
-}
-
 .button-header{
     color: black;
     background-color: transparent;
-    border: black 1px solid;
+    border: black 2px solid;
 }
 
 .button-header:hover{
-    border: black 2px solid;
+    border: black 3px solid;
 }
 
 .button-header-container{
     position: absolute; 
-    top: 5px; 
-    left: auto;
-    right: 150px; 
+    top: 80px; 
+    left: 200px;
+    right: auto; 
     padding: 15px; 
     width: 270px;
 }
+
+.instructions{
+    position: absolute; 
+    top: 10px; 
+    left: auto;
+    right: 200px; 
+    padding: 10px 20px; 
+    height: 50px;
+    width: 270px;
+}
+
+.angle{
+    position: absolute;
+    top: 20px;
+    left: auto;
+    right: 490px;
+    font-size: 60px;
+    padding-right: 10px;
+}
+
+/* .dropdowns{
+    position: absolute; 
+    top: 10px; 
+    left: auto;
+    right: 250px; 
+} */

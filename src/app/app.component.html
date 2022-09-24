@@ -1,7 +1,6 @@
 <app-header></app-header>
             <!-- Drop Down Task -->
-        <div style="margin-left: 20px;" *ngIf="calibrationDone">
-            <div class="instructions">{{this.instructions}}</div>
+        <div class="dropdowns" style="margin-left: 20px;" *ngIf="calibrationDone">
             <div>
                 <span class="dropdown-label">Task: </span>
                 <select [(ngModel)]="selectedTask"(change)="selectTask()"> 
@@ -53,6 +52,9 @@
 
 <!-- content -->
 <div class="content" *ngIf="webgazerLoaded">
+
+    <span class="angle">❯</span>
+    <div class="instructions">{{this.instructions}}</div>
 
     <app-calibration *ngIf="!calibrationDone" 
         (calibrationDoneEvent)="setCalibrationDone($event)">

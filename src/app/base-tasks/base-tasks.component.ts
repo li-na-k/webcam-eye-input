@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { InputType } from '../enums/input-type';
@@ -19,11 +19,10 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   public moveArrowinterval : any;
   public arrow : HTMLElement | null = document.getElementById("arrow");
   public sandbox : HTMLElement | null = document.getElementById("experimentSandbox");
-  public abstract taskElementID : string;
-  public taskElement : HTMLElement | null = null;
+
   public timeOutAfterMouseInput : number = 1500; //TODO: ev. überschreiben je Komponent?
 
-  constructor(protected store : Store<AppState>) { }  
+  constructor(protected store : Store<AppState>, private cdRef: ChangeDetectorRef) { }  
   
   ngOnInit(): void {
     this.selectedInputType$
@@ -48,7 +47,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   abstract stopOtherInputs() : void;
 
   public activateSelectedInputType(){
-    this.taskElement = document.getElementById(this.taskElementID)
+    this.cdRef.detectChanges();
     this.stopOtherInputs();
     if(this.selectedInputType == InputType.EYE){
       this.startEyeInput();
@@ -64,13 +63,12 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
     }
   }
 
-  //TODO: switch back to blue afterwards
-  public bound_changeElApricot = this.changeApricot.bind(this);
-  public changeApricot(){
-    this.taskElement!.style.backgroundColor = "var(--apricot)";
+
+  public changeApricot(el : HTMLElement){
+    el.style.backgroundColor = "var(--apricot)";
   }
   
   public changeBlue(el : HTMLElement){
-    el!.style.backgroundColor = "var(--blue)";
+    el.style.backgroundColor = "var(--blue)";
   }
 }

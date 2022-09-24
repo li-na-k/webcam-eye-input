@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
 import { AppState } from '../state/app.state';
@@ -15,8 +15,8 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   public scrollAreas = document.getElementsByClassName("scroll-area");
 
 
-  constructor(store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) {
-    super(store)
+  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) {
+    super(store, cdRef)
    }
 
   public scroll(scrollArea : HTMLElement){
@@ -85,7 +85,7 @@ public startMix2Input(){
       if (inside == true){
         this.scroll(el);
       }
-  }
+    }
   }, 100);
 }
 

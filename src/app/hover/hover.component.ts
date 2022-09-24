@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
@@ -12,13 +12,19 @@ import { Tooltip } from 'chart.js';
 export class HoverComponent extends BaseTasksComponent implements OnInit, OnDestroy {
 
   public taskElementID : string = "hover-task";
+  public taskElement : HTMLElement | null = null;
+
   public tooltipDuration : number = 1500; //TODO: must be longer for eye input!!
   public tooltip : HTMLElement | null = null;
   public tooltipTimer : any;
 
 
-  constructor(store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { 
-    super(store)
+  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { 
+    super(store, cdRef)
+  }
+
+  override ngAfterViewInit(): void {
+    this.taskElement = document.getElementById(this.taskElementID)
   }
 
   public showTooltip(){
@@ -47,7 +53,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     this.interval = setInterval(() => {
       inside = this.eyesOnlyInput.areEyesInsideElement(this.taskElement!);
       if (inside == true && this.taskElement){
-        this.changeApricot();
+        this.changeApricot(this.taskElement!);
         this.showTooltip();
       }
       else if(inside == false && this.taskElement){ //TODO: needed?
@@ -64,7 +70,7 @@ public Mix1Input(e : any){
     if(this.taskElement){   
       inside = this.eyesOnlyInput.areEyesInsideElement(this.taskElement);
       if (inside == true){
-        this.changeApricot()
+        this.changeApricot(this.taskElement!)
         this.showTooltip();
       }
       else if(inside == false){
@@ -86,7 +92,7 @@ public startMix2Input(){
   this.interval = setInterval(() => {
     inside = this.eyesOnlyInput.isInside(this.taskElement!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
     if (inside == true){
-      this.changeApricot();
+      this.changeApricot(this.taskElement!);
       this.showTooltip()
     }
     else if(inside == false){
@@ -110,6 +116,8 @@ public stopOtherInputs(){
   //MIX2
   this.eyesOnlyInput.stopMix2Input(this.sandbox, this.arrow);
 }
+
+public bound_changeElApricot = this.changeApricot.bind(this, this.taskElement!);
 
 }
 

@@ -1,8 +1,17 @@
+.success{
+    font-size: 70px;
+    color: var(--green);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin: 50px;
+}
+
 .clickArea{
     border: 2px solid var(--blue);
-    margin: 20px;
+    margin: 30px 150px;
     border-radius: 15px;
-    padding: 20px;
+    padding: 30px;
 }
 
 mat-card-title{
