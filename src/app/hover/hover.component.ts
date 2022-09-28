@@ -118,6 +118,14 @@ public stopAllInputs(){
 }
 
 public bound_changeElApricot = this.changeApricot.bind(this, this.taskElement!);
+public changeApricot(el : HTMLElement){
+  el.style.backgroundColor = "var(--apricot)";
+}
+
+public changeBlue(el : HTMLElement){
+  el.style.backgroundColor = "var(--blue)";
+}
+
 
 }
 

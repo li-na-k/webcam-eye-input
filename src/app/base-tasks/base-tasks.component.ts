@@ -5,6 +5,7 @@ import { InputType } from '../enums/input-type';
 import { AppState } from '../state/app.state';
 import { selectInputType } from '../state/expConditions/expconditions.selector';
 
+declare var webgazer: any;
 @Component({
   selector: 'app-base-tasks',
   templateUrl: './base-tasks.component.html',
@@ -48,12 +49,16 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   abstract stopAllInputs() : void;
 
   public activateSelectedInputType(){
+    webgazer.resume();
+    document.getElementById("webgazerGazeDot")!.style.display = "block";
     this.cdRef.detectChanges();
     this.stopAllInputs();
     if(this.selectedInputType == InputType.EYE){
       this.startEyeInput();
     }
     if(this.selectedInputType == InputType.MOUSE){
+      webgazer.pause();
+      document.getElementById("webgazerGazeDot")!.style.display = "none";
       this.startMouseInput()
     }
     if(this.selectedInputType == InputType.MIX1){
@@ -62,14 +67,5 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
     if(this.selectedInputType == InputType.MIX2){
       this.startMix2Input();
     }
-  }
-
-
-  public changeApricot(el : HTMLElement){
-    el.style.backgroundColor = "var(--apricot)";
-  }
-  
-  public changeBlue(el : HTMLElement){
-    el.style.backgroundColor = "var(--blue)";
   }
 }
