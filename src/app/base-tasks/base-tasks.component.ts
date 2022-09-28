@@ -11,7 +11,7 @@ import { selectInputType } from '../state/expConditions/expconditions.selector';
   styleUrls: ['./base-tasks.component.css']
 })
 export abstract class BaseTasksComponent implements OnInit, OnDestroy {
-  
+
   readonly InputType = InputType;
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   public selectedInputType : InputType = InputType.EYE; 
@@ -45,11 +45,11 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   abstract startMouseInput() : void;
   abstract startMix1Input() : void;
   abstract startMix2Input() : void;
-  abstract stopOtherInputs() : void;
+  abstract stopAllInputs() : void;
 
   public activateSelectedInputType(){
     this.cdRef.detectChanges();
-    this.stopOtherInputs();
+    this.stopAllInputs();
     if(this.selectedInputType == InputType.EYE){
       this.startEyeInput();
     }

@@ -102,7 +102,7 @@ public startMix2Input(){
   }, 100);
 }
 
-public stopOtherInputs(){
+public stopAllInputs(){
   this.taskElement!.style.backgroundColor = "var(--blue)";
   this.hideTooltip()
   //EYE & MIX2 interval

@@ -41,7 +41,7 @@
 <div *ngIf="clicked" class="success">
     <div *ngIf="!error"> ✓ </div>
     <div *ngIf="error" style="color: var(--red)"> ✖ </div>
-    <button style="display: block; margin-top: 50px;" (click)="stopOtherInputs(); activateSelectedInputType()">Back</button>
+    <button style="display: block; margin-top: 50px;" (click)="stopAllInputs(); activateSelectedInputType()">Back</button>
 </div>
 
 <app-popup-pointer-lock-stop (closeCallback)="startMix2Input()"></app-popup-pointer-lock-stop>

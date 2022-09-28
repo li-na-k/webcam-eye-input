@@ -103,7 +103,7 @@ public isHeadingInTargetArea(heading : HTMLElement): boolean{
 }
 
 
-public stopOtherInputs(){
+public stopAllInputs(){
   window.scrollTo(0,0);
   //end Eye Input
   clearInterval(this.interval);

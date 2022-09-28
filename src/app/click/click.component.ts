@@ -126,7 +126,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     document.addEventListener('click', this.bound_changeOnClick); 
   }
 
-  public stopOtherInputs(){
+  public stopAllInputs(){
     //TODO: more necessary back sets needed?
     //end Eye Input
     for(let i of this.intervals){clearInterval(i)};
