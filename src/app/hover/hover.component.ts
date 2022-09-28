@@ -122,7 +122,7 @@ public stopAllInputs(){
   //EYE & MIX2 interval
   clearInterval(this.interval);
   //MOUSE
-  this.taskElement?.removeEventListener('mouseover', this.bound_changeElApricot);
+  this.taskElement?.removeEventListener('mouseover', this.showTooltip);
   this.taskElement?.removeEventListener('mouseleave', this.hideTooltip)
   clearTimeout(this.tooltipTimer)
   //MIX1

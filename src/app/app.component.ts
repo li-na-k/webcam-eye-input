@@ -98,7 +98,7 @@ export class AppComponent implements OnInit{
     },1000)
 }
 
-  public pauseWebgazer(){
+  public pauseWebgazer(){ //TODO move this into service and call when mouse input activated!
     if(this.paused){
       this.paused = false;
       webgazer.resume()
@@ -106,6 +106,7 @@ export class AppComponent implements OnInit{
     else{
       this.paused = true;
       webgazer.pause()
+      document.getElementById("webgazerGazeDot")!.style.display = "none";
     }
   }
 

@@ -48,9 +48,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   abstract stopAllInputs() : void;
 
   public activateSelectedInputType(){
-    console.log("activated")
     webgazer.resume();
-    document.getElementById("webgazerGazeDot")!.style.display = "block";
     this.cdRef.detectChanges();
     this.stopAllInputs();
     if(this.selectedInputType == InputType.EYE){
@@ -58,7 +56,6 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
     }
     if(this.selectedInputType == InputType.MOUSE){
       webgazer.pause();
-      document.getElementById("webgazerGazeDot")!.style.display = "none";
       this.startMouseInput()
     }
     if(this.selectedInputType == InputType.MIX1){
