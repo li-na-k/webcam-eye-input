@@ -3,10 +3,10 @@ import { EyeInputService } from 'src/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
-import { Timer } from 'd3';
 import { InputType } from '../enums/input-type';
 @Component({
   selector: 'app-click',
+  providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],
   templateUrl: './click.component.html',
   styleUrls: ['./click.component.css']
 })
@@ -37,7 +37,6 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
         this.intervals[i] = setInterval(() => {
           if(clickArea){
             inside = this.eyeInputService.areEyesInsideElement(clickArea);
-            console.log(inside)
             if (inside == true){
               if (!wentInsideAt) {
                 wentInsideAt = Date.now()
@@ -61,7 +60,6 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
 
   public bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
   public Mix1Input(e : any){
-    console.log(this.clickAreas!.length)
     if(e.keyCode == 13){
       for (var i = 0; i < this.clickAreas!.length; i++){
         var clickArea = this.clickAreas![i] as HTMLElement;

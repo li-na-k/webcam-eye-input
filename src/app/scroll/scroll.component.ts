@@ -6,6 +6,7 @@ import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { trigger, style, animate, transition } from '@angular/animations';
 @Component({
   selector: 'app-scroll',
+  providers: [{ provide: BaseTasksComponent, useExisting: ScrollComponent }],
   templateUrl: './scroll.component.html',
   styleUrls: ['./scroll.component.css']
 })

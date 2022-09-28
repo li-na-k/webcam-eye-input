@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ignoreElements, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AppState } from './state/app.state';
 import { InputType } from './enums/input-type';
 import { Tasks } from './enums/tasks';
@@ -8,10 +8,8 @@ import {changeXPos, changeYPos} from './state/eyetracking/eyetracking.action'
 import { changeInputType, changeTask } from './state/expConditions/expconditions.action';
 import { selectTask } from './state/expConditions/expconditions.selector';
 import { selectInputType } from './state/expConditions/expconditions.selector';
-import { ScrollComponent } from './scroll/scroll.component';
-import { HoverComponent } from './hover/hover.component';
-import { ClickComponent } from './click/click.component';
 import { CalibrationComponent } from './calibration/calibration.component';
+import { BaseTasksComponent } from './base-tasks/base-tasks.component';
 
 
 
@@ -27,9 +25,7 @@ declare var webgazer: any;
 
 export class AppComponent implements OnInit{
   title = 'eye-input-visualization';
-  @ViewChild(ScrollComponent) scrollComponent!: ScrollComponent;
-  @ViewChild(HoverComponent) hoverComponent!: ScrollComponent;
-  @ViewChild(ClickComponent) clickComponent!: ScrollComponent;
+  @ViewChild(BaseTasksComponent) baseTaskComponent! : BaseTasksComponent;
 
   ngOnInit(): void {
       this.showPopup = true;
@@ -189,15 +185,7 @@ export class AppComponent implements OnInit{
     if(this.selectedInputType){
       this.store.dispatch(changeInputType({newInputType: this.selectedInputType}));
     }
-    if(this.scrollComponent){
-      this.scrollComponent.activateSelectedInputType(); //TODO: wird doch schon von Base aufgerufen?
-    }
-    if(this.hoverComponent){
-      this.hoverComponent.activateSelectedInputType();
-    }
-    if(this.clickComponent){
-      this.clickComponent.activateSelectedInputType();
-    }
+    this.baseTaskComponent.activateSelectedInputType();
     this.setInstruction();
   }
 

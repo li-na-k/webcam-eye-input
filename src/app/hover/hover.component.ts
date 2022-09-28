@@ -3,9 +3,10 @@ import { EyeInputService } from 'src/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
-import { Tooltip } from 'chart.js';
+
 @Component({
   selector: 'app-hover',
+  providers: [{ provide: BaseTasksComponent, useExisting: HoverComponent }],
   templateUrl: './hover.component.html',
   styleUrls: ['./hover.component.css']
 })
@@ -14,7 +15,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   public taskElementID : string = "hover-task";
   public taskElement : HTMLElement | null = null;
 
-  public tooltipDuration : number = 1500; //TODO: must be longer for eye input!!
+  public tooltipDuration : number = 2000;
   public tooltip : HTMLElement | null = null;
   public tooltipTimer : any;
 
@@ -29,18 +30,23 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
 
   public showTooltip(){
     this.tooltip = document.getElementById("tooltip")
-    clearTimeout(this.tooltipTimer)
     if(this.tooltip){
-      this.tooltip.style.visibility = "visible"
-      this.tooltip.style.opacity = "1"
+      this.tooltip!.style.visibility = "visible"
+      this.tooltip!.style.opacity = "1"
+    }
+    else{
+      console.error("Tooltip element not found.", this.tooltip)
     }
   }
   
   public hideTooltip(){
-    this.tooltipTimer = setTimeout(() => {
+    if(this.tooltip){
       this.tooltip!.style.visibility = "hidden"
       this.tooltip!.style.opacity = "0"
-  }, this.tooltipDuration)
+    }
+    else{
+      console.error("Tooltip element not found.")
+    }
   }
   
   public startMouseInput(){
@@ -50,15 +56,23 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
 
   public startEyeInput(){
     var inside : boolean | undefined = false;
+    var visible : boolean = false;
     this.interval = setInterval(() => {
       inside = this.eyeInputService.areEyesInsideElement(this.taskElement!);
-      if (inside == true && this.taskElement){
+      if (inside){
+        visible = true;
+        clearTimeout(this.tooltipTimer)
         this.changeApricot(this.taskElement!);
         this.showTooltip();
       }
-      else if(inside == false && this.taskElement){ //TODO: needed?
+      else { 
         this.changeBlue(this.taskElement!);
-        this.hideTooltip();
+        if(visible){
+          this.tooltipTimer = setTimeout(() => {
+            this.hideTooltip();
+          }, this.tooltipDuration)
+        }
+        visible = false;
       }
     }, 100);
   }

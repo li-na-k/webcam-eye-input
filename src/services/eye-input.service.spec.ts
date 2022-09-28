@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EyeInputService } from './eyes-only-input.service';
+import { EyeInputService } from './eye-input.service';
 
 describe('EyeInputService', () => {
   let service: EyeInputService;

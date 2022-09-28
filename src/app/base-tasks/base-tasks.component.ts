@@ -33,7 +33,6 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit(){
-    this.activateSelectedInputType();
   }
 
   ngOnDestroy(): void {
@@ -49,6 +48,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   abstract stopAllInputs() : void;
 
   public activateSelectedInputType(){
+    console.log("activated")
     webgazer.resume();
     document.getElementById("webgazerGazeDot")!.style.display = "block";
     this.cdRef.detectChanges();
