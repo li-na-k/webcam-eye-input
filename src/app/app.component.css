@@ -10,15 +10,6 @@
     line-height: 0px;
 }
 
-.loading{
-    max-width: 300px;
-    color: #fff;
-    border-radius: 15px; 
-    padding: 50px; 
-    background-color: var(--blue); 
-    text-align: center;
-}
-
 .mat-spinner{
     margin-left:auto;
     margin-right:auto;
