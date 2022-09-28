@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
+import { EyeInputService } from 'src/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
@@ -21,7 +21,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   public clicked : boolean = false;
   public error : boolean = false;
 
-  constructor(cdRef: ChangeDetectorRef, private eyesOnlyInput : EyesOnlyInputService, store : Store<AppState>) {
+  constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>) {
    super(store, cdRef)
   }
 
@@ -36,7 +36,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
         let inside : boolean = false;
         this.intervals[i] = setInterval(() => {
           if(clickArea){
-            inside = this.eyesOnlyInput.areEyesInsideElement(clickArea);
+            inside = this.eyeInputService.areEyesInsideElement(clickArea);
             console.log(inside)
             if (inside == true){
               if (!wentInsideAt) {
@@ -67,7 +67,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
         var clickArea = this.clickAreas![i] as HTMLElement;
         var inside : boolean = false;
         if(clickArea){    
-          inside = this.eyesOnlyInput.areEyesInsideElement(clickArea);
+          inside = this.eyeInputService.areEyesInsideElement(clickArea);
           if (inside == true){ 
             this.clicked = true;
             if(clickArea.id != this.taskElementID){
@@ -92,7 +92,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     if(this.selectedInputType == InputType.MIX2){
       for (var i = 0; i < this.clickAreas!.length; i++){
         let clickArea = this.clickAreas![i] as HTMLElement;
-        let inside = this.eyesOnlyInput.isInside(clickArea, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
+        let inside = this.eyeInputService.isInside(clickArea, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
         if(inside){
           currentClickArea = clickArea;
           break; //exit for loop as soon as clicked area found
@@ -122,7 +122,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
   public startMix2Input(){
-    this.eyesOnlyInput.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+    this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
     document.addEventListener('click', this.bound_changeOnClick); 
   }
 
@@ -138,7 +138,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
       clickArea.removeEventListener('click', this.bound_changeOnClick)
     }
     //MIX2
-    this.eyesOnlyInput.stopMix2Input(this.sandbox, this.arrow);
+    this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
     document.removeEventListener('click', this.bound_changeOnClick); 
     //view port resets
     this.clicked = false;

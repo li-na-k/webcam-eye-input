@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EyesOnlyInputService } from './eyes-only-input.service';
+import { EyeInputService } from './eyes-only-input.service';
 
-describe('EyesOnlyInputService', () => {
-  let service: EyesOnlyInputService;
+describe('EyeInputService', () => {
+  let service: EyeInputService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(EyesOnlyInputService);
+    service = TestBed.inject(EyeInputService);
   });
 
   it('should be created', () => {

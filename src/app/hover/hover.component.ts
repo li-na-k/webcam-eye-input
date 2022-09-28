@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
+import { EyeInputService } from 'src/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
@@ -19,7 +19,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   public tooltipTimer : any;
 
 
-  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { 
+  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService) { 
     super(store, cdRef)
   }
 
@@ -51,7 +51,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   public startEyeInput(){
     var inside : boolean | undefined = false;
     this.interval = setInterval(() => {
-      inside = this.eyesOnlyInput.areEyesInsideElement(this.taskElement!);
+      inside = this.eyeInputService.areEyesInsideElement(this.taskElement!);
       if (inside == true && this.taskElement){
         this.changeApricot(this.taskElement!);
         this.showTooltip();
@@ -68,7 +68,7 @@ public Mix1Input(e : any){
   if(e.keyCode == 13){
     var inside : boolean = false;
     if(this.taskElement){   
-      inside = this.eyesOnlyInput.areEyesInsideElement(this.taskElement);
+      inside = this.eyeInputService.areEyesInsideElement(this.taskElement);
       if (inside == true){
         this.changeApricot(this.taskElement!)
         this.showTooltip();
@@ -86,11 +86,11 @@ public startMix1Input(): void {
 }
 
 public startMix2Input(){
-  this.eyesOnlyInput.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+  this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
   //hover color effect
   var inside : boolean | undefined = false;
   this.interval = setInterval(() => {
-    inside = this.eyesOnlyInput.isInside(this.taskElement!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
+    inside = this.eyeInputService.isInside(this.taskElement!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
     if (inside == true){
       this.changeApricot(this.taskElement!);
       this.showTooltip()
@@ -114,7 +114,7 @@ public stopOtherInputs(){
   //MIX1
   document.body.removeEventListener('keydown', this.bound_Mix1Input); 
   //MIX2
-  this.eyesOnlyInput.stopMix2Input(this.sandbox, this.arrow);
+  this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
 }
 
 public bound_changeElApricot = this.changeApricot.bind(this, this.taskElement!);

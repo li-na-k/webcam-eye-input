@@ -8,7 +8,7 @@ import { AppState } from 'src/app/state/app.state';
 @Injectable({
   providedIn: 'root'
 })
-export class EyesOnlyInputService implements OnDestroy {
+export class EyeInputService implements OnDestroy {
 
   public currentEyePos$ : Observable<any> = this.store.select(selectCurrentEyePos);
   public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables

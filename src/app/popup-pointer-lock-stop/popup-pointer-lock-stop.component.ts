@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, OnInit, Input, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil} from 'rxjs';
-import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
+import { EyeInputService } from 'src/services/eye-input.service';
 import { InputType } from '../enums/input-type';
 import { AppState } from '../state/app.state';
 import { selectInputType } from '../state/expConditions/expconditions.selector';
@@ -22,7 +22,7 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
   public destroy$ : Subject<boolean> = new Subject<boolean>(); 
   public showPopup = true;
 
-  constructor(protected store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { }
+  constructor(protected store : Store<AppState>, private eyeInputService : EyeInputService) { }
 
   public click(): void {
     this.closeCallback.emit();
@@ -50,7 +50,7 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
 
   closeAndStopMix2() : void{
     this.showPopup = false;
-    this.eyesOnlyInput.stopMix2Input(this.sandbox, this.arrow)
+    this.eyeInputService.stopMix2Input(this.sandbox, this.arrow)
   }
 
 }
