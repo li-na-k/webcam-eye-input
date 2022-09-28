@@ -1,4 +1,4 @@
-<div *ngIf="!clicked">
+<div *ngIf="!clicked && !(selectedInputType == InputType.EYE)">
     <mat-card class="clickArea">
         <mat-card-title>First Headline</mat-card-title>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
@@ -15,6 +15,28 @@
     <!-- <div id="click-task" class="clickArea large">Select me!</div> -->
     <!-- <div class="clickArea small">Select me!</div> -->
 </div>
+
+<div *ngIf="!clicked && selectedInputType==InputType.EYE">
+    <mat-card>
+        <div class="clickArea green">Look here to select!</div>
+        <mat-card-title>First Headline</mat-card-title>
+        <div style="width: 80%">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div> 
+    </mat-card>
+    <mat-card>
+        <div class="clickArea green" id="click-task">Look here to select!</div>
+        <!-- TODO: Problem - wenn mat-card-title geklickt zählts als Fehler, läst sich aber sobald click Fläche einzeln in der Karte statt ganze Karte -->
+        <mat-card-title>Select me!</mat-card-title>
+        <div style="width: 80%">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>
+    </mat-card>
+    <mat-card>
+        <div class="clickArea green">Look here to select!</div>
+        <mat-card-title>Third Headline</mat-card-title>
+        <div style="width: 80%">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div> 
+    </mat-card>
+    <!-- <div id="click-task" class="clickArea large">Select me!</div> -->
+    <!-- <div class="clickArea small">Select me!</div> -->
+</div>
+
    
 <div *ngIf="clicked" class="success">
     <div *ngIf="!error"> ✓ </div>

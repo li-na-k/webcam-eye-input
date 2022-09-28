@@ -7,7 +7,7 @@
     margin: 50px;
 }
 
-.clickArea{
+mat-card{
     border: 2px solid var(--blue);
     margin: 30px 150px;
     border-radius: 15px;
@@ -17,6 +17,21 @@
 mat-card-title{
     padding-bottom: 10px;
 }
+
+.clickArea.green{
+    background-color: var(--green);
+    opacity: 0.3;
+    padding: 5px;
+    text-align: center;
+    width: 20%;
+    left: auto;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 0 12px 12px 0px;
+    position: absolute;
+}
+
 
 .small{
     width: 150px;

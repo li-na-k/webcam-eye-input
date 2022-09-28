@@ -11,7 +11,8 @@ import { selectInputType } from '../state/expConditions/expconditions.selector';
   styleUrls: ['./base-tasks.component.css']
 })
 export abstract class BaseTasksComponent implements OnInit, OnDestroy {
-
+  
+  readonly InputType = InputType;
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   public selectedInputType : InputType = InputType.EYE; 
   public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
