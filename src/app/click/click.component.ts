@@ -109,7 +109,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     if(currentClickArea != null){ //if not clicked outside of click area
       this.clicked = true;
       //Check if right area clicked
-      if(currentClickArea?.id != this.taskElementID){
+      if(currentClickArea?.id != this.taskElementID && currentClickArea.parentElement?.id != this.taskElementID){
         this.error = true;
       }
       else{
