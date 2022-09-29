@@ -13,7 +13,7 @@ import { WebgazerService } from '../services/webgazer.service';
 })
 export class ClickComponent extends BaseTasksComponent implements OnInit, OnDestroy  {
 
-  public readonly dwellTime = 3000;
+  public readonly dwellTime = 1000;
   public className : string = "clickArea"
   public clickAreas : HTMLCollectionOf<Element> | null = null; //all areas
   public intervals : any[] = [0,0,0,0]; //one for each click Area
@@ -36,23 +36,50 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
         let wentInsideAt : number|null = null; 
         let inside : boolean = false;
         this.intervals[i] = setInterval(() => {
+
           if(clickArea){
             inside = this.eyeInputService.areEyesInsideElement(clickArea);
             if (inside == true){
-              if (!wentInsideAt) {
+              if (!wentInsideAt) { //entered -> dwell time start
                 wentInsideAt = Date.now()
+                //visualize dwell time
+                clickArea.style.border = "5px solid black";
               }
-              else if (wentInsideAt + this.dwellTime < Date.now()) {
+              else if (wentInsideAt + this.dwellTime < Date.now()) { //click
+                clickArea.style.border = "";
                 this.clicked = true;
                 if(clickArea.id != this.taskElementID){
                   this.error = true;
                 }
               }
             }
+            else{
+              wentInsideAt = null;
+              clickArea.style.border = "";
+            }
           }
         }, 100);
       }
   }
+
+  // public blinking : boolean = false;
+  // public toggleBlink(){
+  //   var blinkInterval : any;
+  //   clearInterval(blinkInterval)
+  //   var dot = document.getElementById("webgazerGazeDot")
+  //   if(dot){
+  //     if(!this.blinking){
+  //       blinkInterval = setInterval(function() {
+  //         dot!.style.background = (dot!.style.background == 'var(--blue)' ? 'var(--green)' : 'var(--blue)');
+  //       }, 400);
+  //       this.blinking = true;
+  //     }
+  //     else{
+  //       dot!.style.background = "red";
+  //       this.blinking = false;
+  //     }
+  //   }
+  // }
 
 
   public startMix1Input(){
