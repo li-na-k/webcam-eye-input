@@ -4,18 +4,13 @@ import { Observable } from 'rxjs';
 import { AppState } from './state/app.state';
 import { InputType } from './enums/input-type';
 import { Tasks } from './enums/tasks';
-import {changeXPos, changeYPos} from './state/eyetracking/eyetracking.action'
+
 import { changeInputType, changeTask } from './state/expConditions/expconditions.action';
 import { selectTask } from './state/expConditions/expconditions.selector';
 import { selectInputType } from './state/expConditions/expconditions.selector';
 import { CalibrationComponent } from './calibration/calibration.component';
 import { BaseTasksComponent } from './base-tasks/base-tasks.component';
-
-
-
-
-
-declare var webgazer: any;
+import { WebgazerService } from 'src/app/services/webgazer.service';
 
 @Component({
   selector: 'app-root',
@@ -29,10 +24,8 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
       this.showPopup = true;
-      if(!this.paused){
-        this.startWebgazer();
-        this.checkWebGazerLoaded();
-      }
+      this.webgazerService.startWebgazer();
+      this.webgazerService.checkWebGazerLoaded();
   }
 
   @ViewChild(CalibrationComponent) calibrationCmp : CalibrationComponent = new CalibrationComponent();
@@ -44,9 +37,7 @@ export class AppComponent implements OnInit{
   public clickGoal = 2;
   public numberOfCPt = 6*4;
 
-  //current state webgazer
-  public webgazerLoaded : boolean = false;
-  public paused = false;
+  //current state 
   public calibrationDone : boolean = false;
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   public greenPtCount : number = 0;
@@ -62,53 +53,12 @@ export class AppComponent implements OnInit{
   public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
-
-  
-
-  constructor(private store : Store<AppState>){}
-
-  public startWebgazer(){
-    var store = this.store;
-    webgazer.setGazeListener(function(data : any, elapsedTime : any) {
-        if (data == null) {
-            return;
-        }
-        //store current x and y pos
-        store.dispatch(changeXPos({newx: data.x}));
-        store.dispatch(changeYPos({newy: data.y}));
-
-        //display current x and y
-        var xDisplay = document.getElementById("x");
-        var yDisplay = document.getElementById("y");
-        if(xDisplay){xDisplay.innerHTML = data.x;}
-        if(yDisplay){yDisplay.innerHTML = data.y;}
-    }).begin()
-  }
+  constructor(private store : Store<AppState>, public webgazerService : WebgazerService){}
 
 
 
-  public interval : any;
-  checkWebGazerLoaded = () => {
-    this.interval = setInterval(() => {
-        if(webgazer.isReady()) {
-            this.webgazerLoaded = true;
-            console.log('webgazer loaded: ',webgazer)
-            clearInterval(this.interval)
-        }
-    },1000)
-}
 
-  public pauseWebgazer(){ //TODO move this into service and call when mouse input activated!
-    if(this.paused){
-      this.paused = false;
-      webgazer.resume()
-    }
-    else{
-      this.paused = true;
-      webgazer.pause()
-      document.getElementById("webgazerGazeDot")!.style.display = "none";
-    }
-  }
+
 
   public showExplanation(){
     this.calibrationCmp.showExplanation();

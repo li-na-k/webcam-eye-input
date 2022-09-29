@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, OnInit, Input, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil} from 'rxjs';
-import { EyeInputService } from 'src/services/eye-input.service';
+import { EyeInputService } from 'src/app/services/eye-input.service';
 import { InputType } from '../enums/input-type';
 import { AppState } from '../state/app.state';
 import { selectInputType } from '../state/expConditions/expconditions.selector';

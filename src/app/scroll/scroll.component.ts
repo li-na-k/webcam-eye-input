@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { EyeInputService } from 'src/services/eye-input.service';
+import { EyeInputService } from 'src/app/services/eye-input.service';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { trigger, style, animate, transition } from '@angular/animations';

@@ -17,7 +17,7 @@
             </div>
         </div>
 
-<div *ngIf="!webgazerLoaded"> <!-- style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;" -->
+<div *ngIf="!webgazerService.webgazerLoaded"> <!-- style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;" -->
     <div class="popup-full-background"></div>
     <div class="Popup">            
         <mat-spinner [diameter]="30" ></mat-spinner>
@@ -34,13 +34,13 @@
     <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
         (click)="calibrationDone = true;">Skip callibration
     </button>
-    <span *ngIf="!paused">
-        <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="pauseWebgazer()">
+    <span *ngIf="!webgazerService.paused">
+        <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="webgazerService.pauseWebgazer()">
             <mat-icon>pause</mat-icon>
         </button>
     </span>
-    <span *ngIf="paused">
-        <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="pauseWebgazer()">
+    <span *ngIf="webgazerService.paused">
+        <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="webgazerService.pauseWebgazer()">
             <mat-icon>play_arrow</mat-icon>
         </button>
     </span>
@@ -51,7 +51,7 @@
         
 
 <!-- content -->
-<div class="content" *ngIf="webgazerLoaded">
+<div class="content" *ngIf="webgazerService.webgazerLoaded">
 
     <span class="angle">❯</span>
     <div class="instructions">{{this.instructions}}</div>
