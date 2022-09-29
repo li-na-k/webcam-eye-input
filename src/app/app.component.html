@@ -35,12 +35,12 @@
         (click)="calibrationDone = true;">Skip callibration
     </button>
     <span *ngIf="!webgazerService.paused">
-        <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="webgazerService.pauseWebgazer()">
+        <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="webgazerService.togglePauseWebgazer()">
             <mat-icon>pause</mat-icon>
         </button>
     </span>
     <span *ngIf="webgazerService.paused">
-        <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="webgazerService.pauseWebgazer()">
+        <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="webgazerService.togglePauseWebgazer()">
             <mat-icon>play_arrow</mat-icon>
         </button>
     </span>

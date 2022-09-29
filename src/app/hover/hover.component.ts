@@ -3,6 +3,7 @@ import { EyeInputService } from 'src/app/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
+import { WebgazerService } from '../services/webgazer.service';
 
 @Component({
   selector: 'app-hover',
@@ -20,8 +21,8 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   public tooltipTimer : any;
 
 
-  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService) { 
-    super(store, cdRef)
+  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService) { 
+    super(store, cdRef, webgazerService)
   }
 
   override ngAfterViewInit(): void {

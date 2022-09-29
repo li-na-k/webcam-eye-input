@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { InputType } from '../enums/input-type';
+import { WebgazerService } from '../services/webgazer.service';
 import { AppState } from '../state/app.state';
 import { selectInputType } from '../state/expConditions/expconditions.selector';
 
@@ -24,7 +25,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   public timeOutAfterMouseInput : number = 1500; //TODO: ev. überschreiben je Komponent?
 
-  constructor(protected store : Store<AppState>, private cdRef: ChangeDetectorRef) { }  
+  constructor(protected store : Store<AppState>, private cdRef: ChangeDetectorRef, private webgazerService : WebgazerService) { }  
   
   ngOnInit(): void {
     this.selectedInputType$
@@ -48,14 +49,14 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   abstract stopAllInputs() : void;
 
   public activateSelectedInputType(){
-    webgazer.resume();
+    this.webgazerService.resumeWebgazer();
     this.cdRef.detectChanges();
     this.stopAllInputs();
     if(this.selectedInputType == InputType.EYE){
       this.startEyeInput();
     }
     if(this.selectedInputType == InputType.MOUSE){
-      webgazer.pause();
+      this.webgazerService.pauseWebgazer();
       this.startMouseInput()
     }
     if(this.selectedInputType == InputType.MIX1){

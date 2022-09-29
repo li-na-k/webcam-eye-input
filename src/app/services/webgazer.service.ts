@@ -17,16 +17,33 @@ export class WebgazerService {
   public webgazerLoaded : boolean = false;
   public interval : any;
 
-  public pauseWebgazer(){ 
+  public togglePauseWebgazer(){ 
     if(this.paused){
       this.paused = false;
       webgazer.resume()
+      document.getElementById("webgazerGazeDot")!.style.display = "block";
+      document.getElementById("webgazerGazeDot")!.style.opacity = "1";
     }
     else{
       this.paused = true;
       webgazer.pause()
       document.getElementById("webgazerGazeDot")!.style.display = "none";
+      document.getElementById("webgazerGazeDot")!.style.opacity = "0";
     }
+  }
+
+  public pauseWebgazer(){ 
+    this.paused = true;
+    webgazer.pause()
+    document.getElementById("webgazerGazeDot")!.style.display = "none";
+    document.getElementById("webgazerGazeDot")!.style.opacity = "0";
+  }
+
+  public resumeWebgazer(){ 
+    this.paused = false;
+    webgazer.resume()
+    document.getElementById("webgazerGazeDot")!.style.display = "block";
+    document.getElementById("webgazerGazeDot")!.style.opacity = "1";
   }
 
   public startWebgazer(){

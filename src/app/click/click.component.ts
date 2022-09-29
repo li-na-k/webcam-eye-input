@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { InputType } from '../enums/input-type';
+import { WebgazerService } from '../services/webgazer.service';
 @Component({
   selector: 'app-click',
   providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],
@@ -12,7 +13,7 @@ import { InputType } from '../enums/input-type';
 })
 export class ClickComponent extends BaseTasksComponent implements OnInit, OnDestroy  {
 
-  public readonly dwellTime = 1000;
+  public readonly dwellTime = 3000;
   public className : string = "clickArea"
   public clickAreas : HTMLCollectionOf<Element> | null = null; //all areas
   public intervals : any[] = [0,0,0,0]; //one for each click Area
@@ -21,8 +22,8 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   public clicked : boolean = false;
   public error : boolean = false;
 
-  constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>) {
-   super(store, cdRef)
+  constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService) {
+   super(store, cdRef, webgazerService)
   }
 
   override ngAfterViewInit(): void {
