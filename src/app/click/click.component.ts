@@ -48,15 +48,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
               }
               else if (wentInsideAt + this.dwellTime < Date.now()) { //click
                 clickArea.style.border = "";
-                this.clicked = true;
-                if(clickArea.id != this.taskElementID){
-                  this.error = true;
-                  this.taskEvaluationService.addError();
-                }
-                else{
-                  this.error = false;
-                  this.taskEvaluationService.endTask();
-                }
+                this.checkIfError(clickArea);
               }
             }
             else{
@@ -77,20 +69,34 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     if(e.keyCode == 13){
       for (var i = 0; i < this.clickAreas!.length; i++){
         var clickArea = this.clickAreas![i] as HTMLElement;
-        var inside : boolean = false;
-        if(clickArea){    
-          inside = this.eyeInputService.areEyesInsideElement(clickArea);
-          if (inside == true){ 
-            this.clicked = true;
-            if(clickArea.id != this.taskElementID){
-              this.error = true;
-              this.taskEvaluationService.addError();
-            }
-          }
+        var inside : boolean = false;   
+        inside = this.eyeInputService.areEyesInsideElement(clickArea);
+        if (inside == true){ 
+          this.checkIfError(clickArea);
         }
       }
     }
   }
+
+
+  public checkIfError(clickArea : HTMLElement | null){
+    if(clickArea){ //if not clicked outside of click area
+      this.clicked = true;
+      //Check if right area clicked
+      if(clickArea?.id != this.taskElementID && clickArea.parentElement?.id != this.taskElementID){
+        this.error = true;
+        this.taskEvaluationService.addError();
+      }
+      else{
+        this.error = false;
+        this.taskEvaluationService.endTask();
+      }
+    }
+    else{
+      this.clicked = false;
+    }
+  }
+
 
   public startMouseInput(){
     for (var i = 0; i < this.clickAreas!.length; i++){
@@ -118,22 +124,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     if(this.selectedInputType == InputType.MOUSE){
       currentClickArea = ev.target; 
     }
-    //check if any area was clicked
-    if(currentClickArea != null){ //if not clicked outside of click area
-      this.clicked = true;
-      //Check if right area clicked
-      if(currentClickArea?.id != this.taskElementID && currentClickArea.parentElement?.id != this.taskElementID){
-        this.error = true;
-        this.taskEvaluationService.addError();
-      }
-      else{
-        this.error = false;
-        this.taskEvaluationService.endTask();
-      }
-    }
-    else{
-      this.clicked = false;
-    }
+    this.checkIfError(currentClickArea);
   }
 
   public startMix2Input(){
