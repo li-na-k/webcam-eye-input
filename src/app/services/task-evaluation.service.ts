@@ -77,7 +77,4 @@ export class TaskEvaluationService {
     }
   }
 
-  //TODO: access end Task from base task, where error property should be increased every time error occurs and endTask should be called on success
-
-
 }

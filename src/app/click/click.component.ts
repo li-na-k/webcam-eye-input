@@ -53,6 +53,10 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
                   this.error = true;
                   this.taskEvaluationService.addError();
                 }
+                else{
+                  this.error = false;
+                  this.taskEvaluationService.endTask();
+                }
               }
             }
             else{
@@ -115,7 +119,6 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
       currentClickArea = ev.target; 
     }
     //check if any area was clicked
-    console.log(currentClickArea);
     if(currentClickArea != null){ //if not clicked outside of click area
       this.clicked = true;
       //Check if right area clicked
@@ -125,6 +128,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
       }
       else{
         this.error = false;
+        this.taskEvaluationService.endTask();
       }
     }
     else{
