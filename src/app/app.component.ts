@@ -41,14 +41,21 @@ export class AppComponent implements OnInit{
 
   public instructions : string = "Please select a task first, then the input method!";
 
+  //order
+  public inputOrder : InputType[] = [InputType.EYE, InputType.MIX1, InputType.MIX2, InputType.MOUSE];
+  public taskOrder : Tasks[] = [Tasks.HOVER, Tasks.SCROLL, Tasks.SELECT]
+  public inputsDone : number = 0;
+  public tasksDone : number = 0;
+
   constructor(private store : Store<AppState>, public webgazerService : WebgazerService, public taskEvaluationService : TaskEvaluationService){}
 
   ngOnInit(): void {
     this.webgazerService.startWebgazer();
     this.webgazerService.checkWebGazerLoaded();
+    this.randomize();
   }
 
-  public showExplanation(){
+  public showExplanation(){ //calibration
     this.calibrationCmp.showExplanation();
   }
 
@@ -56,12 +63,41 @@ export class AppComponent implements OnInit{
     this.calibrationDone = done;
   }
 
+  public nextInputMethod(){
+    this.showExplanation(); //TODO: another explanation when calibration has already been done, that also includes input type
+    this.setCalibrationDone(false);
+    this.tasksDone = 0;
+    if(this.inputsDone <= this.inputOrder.length){
+      this.selectedInputType = this.inputOrder[this.inputsDone];
+      this.selectInputType()
+      this.inputsDone++;
+    }
+    else{
+      console.error("Last Input Method already reached.")
+    }
+  }
+
+  public nextTask(){
+    if(this.tasksDone <= this.taskOrder.length){
+      this.selectedTask = this.taskOrder[this.tasksDone];
+      this.selectTask()
+      this.tasksDone++;
+    }
+    else{
+      this.showQuestionnaireInfo();
+    }
+  }
+
+  public showQuestionnaireInfo(){
+    //TODO
+  }
+
   public selectTask(){
     if(this.selectedTask){
       this.store.dispatch(changeTask({newTask: this.selectedTask}));
     }
     this.baseTaskComponent.activateSelectedInputType();
-    this.setInstruction();
+    this.setInstruction(); //move into baseTaskComponent ?
   }
 
   public selectInputType(){
@@ -128,6 +164,27 @@ export class AppComponent implements OnInit{
       }
     }
   }
+
+  public randomize(){
+    this.shuffle(this.inputOrder);
+    this.shuffle(this.taskOrder);
+  }
+
+  //source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+  private shuffle(array : any[]) {
+  let currentIndex = array.length,  randomIndex;
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+  return array;
+}
+
 
 }  
 

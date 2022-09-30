@@ -83,6 +83,7 @@ export class TaskEvaluationService {
     this.exportToCsv(this.results, "myresults", ["task", "inputType", "size", "duration", "errors"]);
   }
 
+  //source: https://dev.to/idrisrampurawala/exporting-data-to-excel-and-csv-in-angular-3643#export-to-csv 
   public exportToCsv(rows: TaskResult[], fileName: string, columns?: string[]): string | void {
     if (!rows || !rows.length) {
       console.error("No results data found.")
