@@ -5,6 +5,7 @@ import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { WebgazerService } from '../services/webgazer.service';
+import { TaskEvaluationService } from '../services/task-evaluation.service';
 @Component({
   selector: 'app-scroll',
   providers: [{ provide: BaseTasksComponent, useExisting: ScrollComponent }],
@@ -17,8 +18,8 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   public scrollAreas = document.getElementsByClassName("scroll-area");
 
 
-  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService) {
-    super(store, cdRef, webgazerService)
+  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService) {
+    super(store, cdRef, webgazerService, taskEvaluationService)
    }
 
   public scroll(scrollArea : HTMLElement){

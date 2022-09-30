@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { WebgazerService } from '../services/webgazer.service';
+import { TaskEvaluationService } from '../services/task-evaluation.service';
 
 @Component({
   selector: 'app-hover',
@@ -21,8 +22,8 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   public tooltipTimer : any;
 
 
-  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService) { 
-    super(store, cdRef, webgazerService)
+  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService) { 
+    super(store, cdRef, webgazerService, taskEvaluationService)
   }
 
   override ngAfterViewInit(): void {

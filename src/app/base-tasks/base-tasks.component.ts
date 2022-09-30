@@ -2,9 +2,13 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { InputType } from '../enums/input-type';
+import { TaskResult } from '../classes/task-result';
 import { WebgazerService } from '../services/webgazer.service';
 import { AppState } from '../state/app.state';
 import { selectInputType } from '../state/expConditions/expconditions.selector';
+import { Tasks } from '../enums/tasks';
+import { Sizes } from '../enums/sizes';
+import { TaskEvaluationService } from '../services/task-evaluation.service';
 
 declare var webgazer: any;
 @Component({
@@ -25,7 +29,10 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   public timeOutAfterMouseInput : number = 1500; //TODO: ev. überschreiben je Komponent?
 
-  constructor(protected store : Store<AppState>, private cdRef: ChangeDetectorRef, private webgazerService : WebgazerService) { }  
+  constructor(protected store : Store<AppState>, 
+    private cdRef: ChangeDetectorRef, 
+    private webgazerService : WebgazerService,
+    public taskEvaluationService : TaskEvaluationService) { }  //will be used in derived classes
   
   ngOnInit(): void {
     this.selectedInputType$
@@ -66,4 +73,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
       this.startMix2Input();
     }
   }
+
+  
+
 }

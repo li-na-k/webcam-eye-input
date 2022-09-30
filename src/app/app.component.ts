@@ -11,6 +11,7 @@ import { selectInputType } from './state/expConditions/expconditions.selector';
 import { CalibrationComponent } from './calibration/calibration.component';
 import { BaseTasksComponent } from './base-tasks/base-tasks.component';
 import { WebgazerService } from 'src/app/services/webgazer.service';
+import { TaskEvaluationService } from './services/task-evaluation.service';
 
 @Component({
   selector: 'app-root',
@@ -21,44 +22,31 @@ import { WebgazerService } from 'src/app/services/webgazer.service';
 export class AppComponent implements OnInit{
   title = 'eye-input-visualization';
   @ViewChild(BaseTasksComponent) baseTaskComponent! : BaseTasksComponent;
-
-  ngOnInit(): void {
-      this.showPopup = true;
-      this.webgazerService.startWebgazer();
-      this.webgazerService.checkWebGazerLoaded();
-  }
-
   @ViewChild(CalibrationComponent) calibrationCmp : CalibrationComponent = new CalibrationComponent();
+
+  //enums for use in template
   public InputType = InputType;
   public TaskType = Tasks;
-  public instructions : string = "Please select a task first, then the input method!";
 
-  //settings
-  public clickGoal = 2;
-  public numberOfCPt = 6*4;
-
-  //current state 
+  //calibration status
   public calibrationDone : boolean = false;
-  public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
-  public greenPtCount : number = 0;
-  public showPopup = false;
+  public showPopup = true; 
 
-  public xprediction = 0.0;
-  public yprediction = 0.0;
-
-  //experiment - only for dispatching into store && default value?? todo
-  public selectedTask : Tasks | null = null; //Tasks.SELECT;
-  public selectedInputType : InputType | null = null; //InputType.EYE;
-  //store
+  //selections from dropdown
+  public selectedTask : Tasks | null = null; 
+  public selectedInputType : InputType | null = null; 
+  // store
   public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
-  constructor(private store : Store<AppState>, public webgazerService : WebgazerService){}
+  public instructions : string = "Please select a task first, then the input method!";
 
+  constructor(private store : Store<AppState>, public webgazerService : WebgazerService, public taskEvaluationService : TaskEvaluationService){}
 
-
-
-
+  ngOnInit(): void {
+    this.webgazerService.startWebgazer();
+    this.webgazerService.checkWebGazerLoaded();
+  }
 
   public showExplanation(){
     this.calibrationCmp.showExplanation();
@@ -72,6 +60,16 @@ export class AppComponent implements OnInit{
     if(this.selectedTask){
       this.store.dispatch(changeTask({newTask: this.selectedTask}));
     }
+    this.baseTaskComponent.activateSelectedInputType();
+    this.setInstruction();
+  }
+
+  public selectInputType(){
+    if(this.selectedInputType){
+      this.store.dispatch(changeInputType({newInputType: this.selectedInputType}));
+    }
+    this.baseTaskComponent.activateSelectedInputType();
+    this.setInstruction();
   }
 
   public setInstruction(){
@@ -130,18 +128,6 @@ export class AppComponent implements OnInit{
       }
     }
   }
-
-
-  public selectInputType(){
-    if(this.selectedInputType){
-      this.store.dispatch(changeInputType({newInputType: this.selectedInputType}));
-    }
-    this.baseTaskComponent.activateSelectedInputType();
-    this.setInstruction();
-  }
-
-
-
 
 }  
 

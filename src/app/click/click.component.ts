@@ -5,6 +5,7 @@ import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { InputType } from '../enums/input-type';
 import { WebgazerService } from '../services/webgazer.service';
+import { TaskEvaluationService } from '../services/task-evaluation.service';
 @Component({
   selector: 'app-click',
   providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],
@@ -22,8 +23,8 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   public clicked : boolean = false;
   public error : boolean = false;
 
-  constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService) {
-   super(store, cdRef, webgazerService)
+  constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService) {
+   super(store, cdRef, webgazerService, taskEvaluationService)
   }
 
   override ngAfterViewInit(): void {
@@ -50,6 +51,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
                 this.clicked = true;
                 if(clickArea.id != this.taskElementID){
                   this.error = true;
+                  this.taskEvaluationService.addError();
                 }
               }
             }
@@ -61,26 +63,6 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
         }, 100);
       }
   }
-
-  // public blinking : boolean = false;
-  // public toggleBlink(){
-  //   var blinkInterval : any;
-  //   clearInterval(blinkInterval)
-  //   var dot = document.getElementById("webgazerGazeDot")
-  //   if(dot){
-  //     if(!this.blinking){
-  //       blinkInterval = setInterval(function() {
-  //         dot!.style.background = (dot!.style.background == 'var(--blue)' ? 'var(--green)' : 'var(--blue)');
-  //       }, 400);
-  //       this.blinking = true;
-  //     }
-  //     else{
-  //       dot!.style.background = "red";
-  //       this.blinking = false;
-  //     }
-  //   }
-  // }
-
 
   public startMix1Input(){
     document.body.addEventListener('keydown', this.bound_Mix1Input); 
@@ -98,6 +80,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
             this.clicked = true;
             if(clickArea.id != this.taskElementID){
               this.error = true;
+              this.taskEvaluationService.addError();
             }
           }
         }
@@ -132,11 +115,13 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
       currentClickArea = ev.target; 
     }
     //check if any area was clicked
+    console.log(currentClickArea);
     if(currentClickArea != null){ //if not clicked outside of click area
       this.clicked = true;
       //Check if right area clicked
       if(currentClickArea?.id != this.taskElementID && currentClickArea.parentElement?.id != this.taskElementID){
         this.error = true;
+        this.taskEvaluationService.addError();
       }
       else{
         this.error = false;
