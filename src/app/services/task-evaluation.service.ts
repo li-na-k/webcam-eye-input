@@ -7,6 +7,7 @@ import { Sizes } from '../enums/sizes';
 import { Tasks } from '../enums/tasks';
 import { AppState } from '../state/app.state';
 import { selectInputType, selectTask } from '../state/expConditions/expconditions.selector';
+import * as FileSaver from 'file-saver';
 
 type NewType = Observable<Tasks>;
 
@@ -68,6 +69,7 @@ export class TaskEvaluationService {
     if(this.taskRunning){
       var result : TaskResult = this.results[this.results.length-1]
       result.endTime = Date.now();
+      result.setDuration();
       result.errors = this.errorCount;
       this.taskRunning = false;
       console.log(result);
@@ -75,6 +77,47 @@ export class TaskEvaluationService {
     else{
       console.error("tried to end task, but no task was running.")
     }
+  }
+
+  exportResults(){
+    this.exportToCsv(this.results, "myresults", ["task", "inputType", "size", "duration", "errors"]);
+  }
+
+  public exportToCsv(rows: TaskResult[], fileName: string, columns?: string[]): string | void {
+    if (!rows || !rows.length) {
+      console.error("No results data found.")
+      return;
+    }
+    const separator = ',';
+    const keys : string[] = Object.keys(rows[0]).filter(k => {
+      if (columns?.length) { //columns specified?
+        return columns.includes(k);
+      } else {
+        return true; //return all
+      }
+    });
+    const csvContent =
+      keys.join(separator) +
+      '\n' +
+      rows.map(row => {
+        return keys.map(k => {
+          let key = k as keyof TaskResult;
+          let cell = row[key] === null || row[key] === undefined ? '' : row[key];
+          // cell = cell instanceof Date
+          //   ? cell.toLocaleString()
+          //   : cell.toString().replace(/"/g, '""');
+          // if (cell.search(/("|,|\n)/g) >= 0) {
+          //   cell = `"${cell}"`;
+          // }
+          return cell;
+        }).join(separator);
+      }).join('\n');
+    this.saveAsFile(csvContent, "yourData.csv", "csv"); //TODO: add participant ID to file name
+  }
+
+  private saveAsFile(buffer: any, fileName: string, fileType: string): void {
+    const data: Blob = new Blob([buffer], { type: fileType });
+    FileSaver.saveAs(data, fileName);
   }
 
 }

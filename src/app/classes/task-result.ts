@@ -8,6 +8,9 @@ export class TaskResult {
     size : Sizes | null = null;
     startTime : number = new Date().getTime();
     endTime : number = new Date().getTime();
-    get duration() : number{ return this.endTime - this.startTime };
+    duration : number = 0;
+    // public get duration() : number { return this.endTime - this.startTime};
     errors: number = 0;
+
+    public setDuration() { this.duration = this.endTime - this.startTime };
 }

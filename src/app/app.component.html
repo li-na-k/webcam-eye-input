@@ -17,8 +17,9 @@
             </div>
         </div>
 
-        <button (click)="taskEvaluationService.startTask()">Start Task</button>
-        <button (click)="taskEvaluationService.endTask()">End Task</button>
+        <button (click)="taskEvaluationService.startTask()">Start</button>
+        <button (click)="taskEvaluationService.endTask()">End</button>
+        <button (click)="taskEvaluationService.exportResults()">Export</button>
 
 <div *ngIf="!webgazerService.webgazerLoaded"> <!-- style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;" -->
     <div class="popup-full-background"></div>
