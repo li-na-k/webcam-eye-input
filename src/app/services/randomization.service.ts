@@ -71,6 +71,7 @@ export class RandomizationService {
   }
 
   public nextTask(){
+    this.repsDone = 0;
     if(this.tasksDone <= this.taskOrder.length){
       this.selectedTask = this.taskOrder[this.tasksDone];
       this.selectTask()
@@ -83,9 +84,10 @@ export class RandomizationService {
   }
 
   public nextRep(){
-    if(this.repsDone - 1 <= this.reps.length){
+    if(this.repsDone + 1 < this.reps.length){
       this.selectedSize = this.reps[this.repsDone];
       this.repsDone++;
+      console.log("next rep", this.repsDone)
     }
     else{
       this.nextTask();
