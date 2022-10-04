@@ -75,7 +75,7 @@ export class TaskEvaluationService {
       console.log(result);
     }
     else{
-      console.error("tried to end task, but no task was running.")
+      console.log("tried to end task, but no task was running.")
     }
   }
 

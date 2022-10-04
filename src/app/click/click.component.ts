@@ -6,6 +6,7 @@ import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { InputType } from '../enums/input-type';
 import { WebgazerService } from '../services/webgazer.service';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
+import { RandomizationService } from '../services/randomization.service';
 @Component({
   selector: 'app-click',
   providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],
@@ -23,8 +24,8 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   public clicked : boolean = false;
   public error : boolean = false;
 
-  constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService) {
-   super(store, cdRef, webgazerService, taskEvaluationService)
+  constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
+   super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
   }
 
   override ngAfterViewInit(): void {
@@ -88,8 +89,9 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
         this.taskEvaluationService.addError();
       }
       else{
-        this.error = false;
+        this.error = false; //success
         this.taskEvaluationService.endTask();
+        this.randomizationService.nextRep();
       }
     }
     else{
@@ -139,9 +141,11 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     //end Mix1 click event
     document.body.removeEventListener('keydown', this.bound_Mix1Input); 
     //remove click event MOUSE input
-    for (var i = 0; i < this.clickAreas!.length; i++){
-      var clickArea = this.clickAreas![i] as HTMLElement;
-      clickArea.removeEventListener('click', this.bound_changeOnClick)
+    if(this.clickAreas){
+      for (var i = 0; i < this.clickAreas!.length; i++){
+        var clickArea = this.clickAreas![i] as HTMLElement;
+        clickArea.removeEventListener('click', this.bound_changeOnClick)
+      }
     }
     //MIX2
     this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);

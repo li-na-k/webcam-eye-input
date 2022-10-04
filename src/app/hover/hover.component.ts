@@ -5,6 +5,7 @@ import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { WebgazerService } from '../services/webgazer.service';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
+import { RandomizationService } from '../services/randomization.service';
 
 @Component({
   selector: 'app-hover',
@@ -22,38 +23,42 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   public tooltipTimer : any;
 
 
-  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService) { 
-    super(store, cdRef, webgazerService, taskEvaluationService)
+  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) { 
+    super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
   }
 
   override ngAfterViewInit(): void {
     this.taskElement = document.getElementById(this.taskElementID)
   }
 
+  public bound_showTooltip = this.showTooltip.bind(this);
   public showTooltip(){
-    this.tooltip = document.getElementById("tooltip")
+    this.tooltip = document.getElementById("tooltip") //TODO use var if initialization is done inside function anyway
     if(this.tooltip){
       this.tooltip!.style.visibility = "visible"
       this.tooltip!.style.opacity = "1"
+      this.randomizationService.nextRep();
     }
     else{
       console.error("Tooltip element not found.", this.tooltip)
     }
   }
   
+  public bound_hideTooltip = this.hideTooltip.bind(this);
   public hideTooltip(){
+    this.tooltip = document.getElementById("tooltip")
     if(this.tooltip){
       this.tooltip!.style.visibility = "hidden"
       this.tooltip!.style.opacity = "0"
     }
     else{
-      console.error("Tooltip element not found.")
+      console.log("Tooltip element not found.")
     }
   }
   
   public startMouseInput(){
-    this.taskElement?.addEventListener('mouseover', this.showTooltip)
-    this.taskElement?.addEventListener('mouseleave', this.hideTooltip) //TODO remove eventlistener later
+    this.taskElement?.addEventListener('mouseover', this.bound_showTooltip)
+    this.taskElement?.addEventListener('mouseleave', this.bound_hideTooltip) //TODO remove eventlistener later
   }
 
   public startEyeInput(){
@@ -119,7 +124,6 @@ public startMix2Input(){
 }
 
 public stopAllInputs(){
-  this.taskElement!.style.backgroundColor = "var(--blue)";
   this.hideTooltip()
   //EYE & MIX2 interval
   clearInterval(this.interval);

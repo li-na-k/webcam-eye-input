@@ -9,6 +9,7 @@ import { selectInputType } from '../state/expConditions/expconditions.selector';
 import { Tasks } from '../enums/tasks';
 import { Sizes } from '../enums/sizes';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
+import { RandomizationService } from '../services/randomization.service';
 
 declare var webgazer: any;
 @Component({
@@ -29,15 +30,24 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   public timeOutAfterMouseInput : number = 1500; //TODO: ev. überschreiben je Komponent?
 
+
+
   constructor(protected store : Store<AppState>, 
     private cdRef: ChangeDetectorRef, 
-    private webgazerService : WebgazerService,
-    public taskEvaluationService : TaskEvaluationService) { }  //will be used in derived classes
+    public webgazerService : WebgazerService,
+    public taskEvaluationService : TaskEvaluationService, //will be used in derived classes
+    public randomizationService : RandomizationService) { }  
   
   ngOnInit(): void {
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => this.selectedInputType = d);
+    this.randomizationService.messageSubject
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((message)=>{
+        console.log(message);
+        this.activateSelectedInputType() //does not have to be called inside derived classes anymore now
+      });
   }
 
   ngAfterViewInit(){
@@ -55,7 +65,10 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   abstract startMix2Input() : void;
   abstract stopAllInputs() : void;
 
+
+
   public activateSelectedInputType(){
+    console.log("activate selected input type called", this.webgazerService)
     this.webgazerService.resumeWebgazer();
     this.cdRef.detectChanges();
     this.stopAllInputs();

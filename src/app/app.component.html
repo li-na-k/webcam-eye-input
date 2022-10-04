@@ -3,7 +3,7 @@
         <div class="dropdowns" style="margin-left: 20px;" *ngIf="calibrationDone">
             <div>
                 <span class="dropdown-label">Task: </span>
-                <select [(ngModel)]="selectedTask"(change)="selectTask()"> 
+                <select [(ngModel)]="randomizationService.selectedTask"(change)="randomizationService.selectTask()"> 
                     <option *ngFor="let item of TaskType | keyvalue">{{item.value}}</option>
                 </select>
             </div>
@@ -11,10 +11,11 @@
             <!-- Drop Down InputType -->
             <div>
                 <span class="dropdown-label">Input variant: </span>
-                <select [(ngModel)]="selectedInputType" (change)="selectInputType()" > 
+                <select [(ngModel)]="randomizationService.selectedInputType" (change)="randomizationService.selectInputType()" > 
                     <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
                 </select>
             </div>
+            <button (click)="confirmSelection()">Select</button>
         </div>
 
         <button (click)="taskEvaluationService.startTask()">Start</button>
@@ -50,7 +51,13 @@
     </span>
     <button *ngIf="!calibrationDone" class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="showExplanation();">
         <mat-icon>question_mark</mat-icon>
-    </button> 
+    </button>
+    <div style="background-color: white; border-radius: 15px; padding: 5px; display: flex; justify-content: space-between; margin-top: 20px; margin-bottom: 20px;">
+        <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.reps; index as i">
+            <span *ngIf="i + 1 <= randomizationService.repsDone">●</span>
+            <span style="color: var(--green);" *ngIf="i + 1 > randomizationService.repsDone">○</span>
+        </span>
+    </div>
 </div>
         
 
@@ -58,7 +65,7 @@
 <div class="content" *ngIf="webgazerService.webgazerLoaded">
 
     <span class="angle">❯</span>
-    <div class="instructions">{{this.instructions}}</div>
+    <div class="instructions">{{randomizationService.instructions}}</div>
 
     <app-calibration *ngIf="!calibrationDone" 
         (calibrationDoneEvent)="setCalibrationDone($event)">
@@ -66,9 +73,9 @@
     
     <div *ngIf="calibrationDone">
          <div id="experimentSandbox">
-            <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
-            <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>                
-            <app-scroll *ngIf="(selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
+            <app-click *ngIf="(randomizationService.selectedTask$ | async) == TaskType.SELECT"></app-click>
+            <app-hover *ngIf="(randomizationService.selectedTask$ | async) == TaskType.HOVER"></app-hover>                
+            <app-scroll *ngIf="(randomizationService.selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
             <img id="arrow" class="arrow" src="/assets/arrow.png" />
         </div>
 
@@ -77,9 +84,11 @@
                 <div class="Popup">
                     <div class="popup-header">
                         <span>Calibration was successful!</span>
-                        <button class="Popup-close" (click)="showPopup=false;">×</button>
+                        <!-- <button class="Popup-close" (click)="showPopup=false;">×</button> -->
                     </div>
-                    Now, your eyes are being tracked :)
+                    <h2>Your task now:</h2>
+                    <div style="margin-bottom: 25px;">{{randomizationService.instructions}}</div>
+                    <button (click)="showPopup=false; confirmSelection()">Got it!</button>
                 </div>
         </div>
     </div>

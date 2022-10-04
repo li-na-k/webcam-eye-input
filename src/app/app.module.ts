@@ -24,6 +24,10 @@ import { BaseTasksComponent } from './base-tasks/base-tasks.component';
 import { PopupPointerLockStopComponent } from './popup-pointer-lock-stop/popup-pointer-lock-stop.component';
 import { HeaderComponent } from './header/header.component';
 import { CalibrationComponent } from './calibration/calibration.component';
+import { WebgazerService } from './services/webgazer.service';
+import { RandomizationService } from './services/randomization.service';
+import { TaskEvaluationService } from './services/task-evaluation.service';
+import { EyeInputService } from './services/eye-input.service';
 
 
 
