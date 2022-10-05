@@ -19,7 +19,6 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   public taskElement : HTMLElement | null = null;
 
   public tooltipDuration : number = 2000;
-  public tooltip : HTMLElement | null = null;
   public tooltipTimer : any;
 
 
@@ -33,23 +32,23 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
 
   public bound_showTooltip = this.showTooltip.bind(this);
   public showTooltip(){
-    this.tooltip = document.getElementById("tooltip") //TODO use var if initialization is done inside function anyway
-    if(this.tooltip){
-      this.tooltip!.style.visibility = "visible"
-      this.tooltip!.style.opacity = "1"
+    var tooltip = document.getElementById("tooltip") //TODO use var if initialization is done inside function anyway
+    if(tooltip){
+      tooltip!.style.visibility = "visible"
+      tooltip!.style.opacity = "1"
       this.randomizationService.nextRep();
     }
     else{
-      console.error("Tooltip element not found.", this.tooltip)
+      console.error("Tooltip element not found.")
     }
   }
   
   public bound_hideTooltip = this.hideTooltip.bind(this);
   public hideTooltip(){
-    this.tooltip = document.getElementById("tooltip")
-    if(this.tooltip){
-      this.tooltip!.style.visibility = "hidden"
-      this.tooltip!.style.opacity = "0"
+    var tooltip = document.getElementById("tooltip")
+    if(tooltip){
+      tooltip!.style.visibility = "hidden"
+      tooltip!.style.opacity = "0"
     }
     else{
       console.log("Tooltip element not found.")
@@ -58,7 +57,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   
   public startMouseInput(){
     this.taskElement?.addEventListener('mouseover', this.bound_showTooltip)
-    this.taskElement?.addEventListener('mouseleave', this.bound_hideTooltip) //TODO remove eventlistener later
+    this.taskElement?.addEventListener('mouseleave', this.bound_hideTooltip) 
   }
 
   public startEyeInput(){
@@ -128,8 +127,8 @@ public stopAllInputs(){
   //EYE & MIX2 interval
   clearInterval(this.interval);
   //MOUSE
-  this.taskElement?.removeEventListener('mouseover', this.showTooltip);
-  this.taskElement?.removeEventListener('mouseleave', this.hideTooltip)
+  this.taskElement?.removeEventListener('mouseover', this.bound_showTooltip)
+  this.taskElement?.removeEventListener('mouseleave', this.bound_hideTooltip) 
   clearTimeout(this.tooltipTimer)
   //MIX1
   document.body.removeEventListener('keydown', this.bound_Mix1Input); 

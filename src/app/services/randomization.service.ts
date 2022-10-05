@@ -37,6 +37,8 @@ export class RandomizationService {
 
   constructor(private store : Store<AppState>) { 
     this.randomize();
+    console.log(this.inputOrder);
+    console.log(this.taskOrder);
   }
 
   //source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -63,7 +65,7 @@ export class RandomizationService {
       this.selectedInputType = this.inputOrder[this.inputsDone];
       this.selectInputType()
       this.inputsDone++;
-      this.nextTask(); //first task
+      //this.nextTask(); //first task
     }
     else{
       console.error("Last Input Method already reached.")
@@ -76,6 +78,7 @@ export class RandomizationService {
       this.selectedTask = this.taskOrder[this.tasksDone];
       this.selectTask()
       this.tasksDone++;
+      this.messageSubject.next('nextTask was called.'); // emit event: popup with explanation + confirm button that activates input method should be displayed in app.component
     }
     else{
       this.showQuestionnaireInfo();
@@ -98,9 +101,6 @@ export class RandomizationService {
     if(this.selectedTask){
       this.store.dispatch(changeTask({newTask: this.selectedTask}));
     }
-    console.log(this.selectedInputType)
-    console.log(this.selectedTask)
-    this.messageSubject.next('service emit: activate Selected Input Type'); // emit event
     this.setInstruction(); 
   }
 

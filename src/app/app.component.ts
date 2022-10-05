@@ -9,6 +9,7 @@ import { BaseTasksComponent } from './base-tasks/base-tasks.component';
 import { WebgazerService } from 'src/app/services/webgazer.service';
 import { TaskEvaluationService } from './services/task-evaluation.service';
 import { RandomizationService } from './services/randomization.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,8 @@ export class AppComponent implements OnInit{
   title = 'eye-input-visualization';
   @ViewChild(BaseTasksComponent) baseTaskComponent! : BaseTasksComponent;
   @ViewChild(CalibrationComponent) calibrationCmp : CalibrationComponent = new CalibrationComponent();
+  
+  public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
 
   //enums for use in template
   public InputType = InputType;
@@ -37,6 +40,13 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     this.webgazerService.startWebgazer();
     this.webgazerService.checkWebGazerLoaded();
+    //
+    this.randomizationService.messageSubject //will be emitted when nextTask is called in randmozationService
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((message)=>{
+        console.log(message);
+        this.showPopup = true;
+    });
   }
 
   ngAfterViewInit(){
