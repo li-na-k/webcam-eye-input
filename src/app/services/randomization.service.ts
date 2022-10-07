@@ -8,6 +8,7 @@ import { Tasks } from '../enums/tasks';
 import { AppState } from '../state/app.state';
 import { changeInputType, changeTask } from '../state/expConditions/expconditions.action';
 import { selectTask, selectInputType } from '../state/expConditions/expconditions.selector';
+import { TaskEvaluationService } from './task-evaluation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class RandomizationService {
 
   messageSubject = new Subject();
 
-  constructor(private store : Store<AppState>) { 
+  constructor(private store : Store<AppState>, private taskEvalutationService : TaskEvaluationService) { 
     this.randomize();
     console.log(this.inputOrder);
     console.log(this.taskOrder);
@@ -68,7 +69,7 @@ export class RandomizationService {
       this.nextTask(); //first task
     }
     else{
-      console.error("Last Input Method already reached.")
+      this.taskEvalutationService.exportResults();
     }
   }
 
@@ -87,6 +88,8 @@ export class RandomizationService {
   }
 
   public nextRep(){
+    this.taskEvalutationService.endTask();
+    this.taskEvalutationService.startTask();
     if(this.repsDone + 1 < this.reps.length){
       this.selectedSize = this.reps[this.repsDone];
       this.repsDone++;

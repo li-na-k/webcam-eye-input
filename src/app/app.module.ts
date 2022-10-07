@@ -28,6 +28,7 @@ import { WebgazerService } from './services/webgazer.service';
 import { RandomizationService } from './services/randomization.service';
 import { TaskEvaluationService } from './services/task-evaluation.service';
 import { EyeInputService } from './services/eye-input.service';
+import { FinalPageComponent } from './final-page/final-page.component';
 
 
 
@@ -40,7 +41,8 @@ import { EyeInputService } from './services/eye-input.service';
     ScrollComponent,
     PopupPointerLockStopComponent,
     HeaderComponent,
-    CalibrationComponent
+    CalibrationComponent,
+    FinalPageComponent
   ],
   imports: [
     BrowserModule,
