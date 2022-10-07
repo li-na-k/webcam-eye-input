@@ -34,7 +34,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   public selectedTask : Tasks = Tasks.HOVER; 
 
   constructor(protected store : Store<AppState>, 
-    private cdRef: ChangeDetectorRef, 
+    public cdRef: ChangeDetectorRef, 
     public webgazerService : WebgazerService,
     public taskEvaluationService : TaskEvaluationService, //will be used in derived classes
     public randomizationService : RandomizationService) { }  
@@ -43,13 +43,9 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => this.selectedInputType = d);
-    // this.selectedTask$
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe(
-    //     d => {
-    //       this.selectedTask = d;
-    //       this.activateSelectedInputType() //TODO: button click to activate (popup that explains!) ODER: store erst ändern wenn ready
-    //     });
+    this.selectedTask$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(d => this.selectedTask = d); //TODO eigentlich braucht mans nicht weil immer von component gerufen??
   }
 
   ngAfterViewInit(){

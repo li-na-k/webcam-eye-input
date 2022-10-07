@@ -3,7 +3,7 @@
         <div class="dropdowns" style="margin-left: 20px;" *ngIf="calibrationDone">
             <div>
                 <span class="dropdown-label">Task: </span>
-                <select [(ngModel)]="randomizationService.selectedTask"(change)="randomizationService.selectTask()"> 
+                <select [(ngModel)]="randomizationService.selectedTask" (change)="randomizationService.selectTask()"> 
                     <option *ngFor="let item of TaskType | keyvalue">{{item.value}}</option>
                 </select>
             </div>

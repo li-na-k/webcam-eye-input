@@ -60,12 +60,12 @@ export class RandomizationService {
   public nextInputMethod(){
     //this.showExplanation(); //TODO: another explanation when calibration has already been done, that also includes input type
     //this.setCalibrationDone(false); //TODO !
-    this.tasksDone = 0;
+    this.tasksDone = 2;
     if(this.inputsDone <= this.inputOrder.length){
       this.selectedInputType = this.inputOrder[this.inputsDone];
       this.selectInputType()
       this.inputsDone++;
-      //this.nextTask(); //first task
+      this.nextTask(); //first task
     }
     else{
       console.error("Last Input Method already reached.")
@@ -74,7 +74,7 @@ export class RandomizationService {
 
   public nextTask(){
     this.repsDone = 0;
-    if(this.tasksDone <= this.taskOrder.length){
+    if(this.tasksDone < this.taskOrder.length){
       this.selectedTask = this.taskOrder[this.tasksDone];
       this.selectTask()
       this.tasksDone++;
@@ -90,7 +90,6 @@ export class RandomizationService {
     if(this.repsDone + 1 < this.reps.length){
       this.selectedSize = this.reps[this.repsDone];
       this.repsDone++;
-      console.log("next rep", this.repsDone)
     }
     else{
       this.nextTask();

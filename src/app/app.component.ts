@@ -45,13 +45,15 @@ export class AppComponent implements OnInit{
       .pipe(takeUntil(this.destroy$))
       .subscribe((message)=>{
         console.log(message);
+        if(this.baseTaskComponent){
+          this.baseTaskComponent.stopAllInputs(); //so pop-up can be clicked normally
+        }
         this.showPopup = true;
     });
   }
 
   ngAfterViewInit(){
     this.randomizationService.nextInputMethod();
-    this.randomizationService.nextTask();
   }
 
   public showExplanation(){ //calibration //TODO ??

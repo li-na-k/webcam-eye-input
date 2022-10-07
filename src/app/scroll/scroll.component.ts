@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { EyeInputService } from 'src/app/services/eye-input.service';
 import { AppState } from '../state/app.state';
@@ -36,10 +36,11 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
     if(scrollArea.classList.contains("right")){
       window.scrollBy(10, 0);
     }
+    this.changeTargetReached();
   }
 
   startMouseInput(): void {
-      
+    window.addEventListener("scroll", this.bound_changeTargetReached)
   }
   
   public startEyeInput(){
@@ -78,7 +79,6 @@ public Mix1Input(e : any){
 
 public mouseInput : boolean = false; //TODO: needed?
 
-
 public startMix2Input(){
   this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
   var inside : boolean | undefined = false;
@@ -94,21 +94,41 @@ public startMix2Input(){
 }
 
 public target1Reached : boolean = false;
+public target2Reached : boolean = false;
 @ViewChild('target1', { static: true }) target1!: ElementRef;
+@ViewChild('target2', { static: true }) target2!: ElementRef;
 
 public isHeadingInTargetArea(heading : HTMLElement): boolean{
   const targetArea = document.getElementById("target-area")
-  var boundingBox = heading.getBoundingClientRect();
-  var inside = this.eyeInputService.isInside(targetArea!, undefined, boundingBox.top)
-  if(heading == this.target1.nativeElement && inside){
-    this.target1Reached = true;
-  }
-  return inside
+  var headingBoundingBox = heading.getBoundingClientRect();
+  var inside = this.eyeInputService.isInside(targetArea!, undefined, headingBoundingBox.top)
+  return inside;
 }
 
 
+public bound_changeTargetReached = this.changeTargetReached.bind(this);
+public changeTargetReached(){
+  let target1Inside = this.isHeadingInTargetArea(this.target1.nativeElement);
+  let target2Inside = this.isHeadingInTargetArea(this.target2.nativeElement);
+  if(target1Inside){
+    this.target1Reached = true;
+  }
+  if(target2Inside && this.target1Reached){
+    this.target2Reached = true;
+    this.stopAllInputs();
+    //TODO: add waiting for next rep popup?
+    setTimeout(() => {
+      this.target2Reached = false;
+      this.target1Reached = false;
+      this.randomizationService.nextRep();
+      this.activateSelectedInputType();
+    }, 2000);
+  }
+}
+
 public stopAllInputs(){
-  window.scrollTo(0,0);
+  //mouse
+  window.removeEventListener("scroll", this.bound_changeTargetReached) //TODO removeAllListeners
   //end Eye Input
   clearInterval(this.interval);
   //end Mix1 click event
