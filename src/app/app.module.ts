@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { PendingChangesGuard } from './component-can-deactivate';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +17,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
+import {MatDividerModule} from '@angular/material/divider';
 
 import { ClickComponent } from './click/click.component';
 import { HoverComponent } from './hover/hover.component';
@@ -52,6 +54,7 @@ import { FinalPageComponent } from './final-page/final-page.component';
     MatButtonModule,
     MatSelectModule,
     MatCardModule,
+    MatDividerModule,
     StoreModule.forRoot({
       eyetrackingData : eyetrackingReducer,
       expConditionsData : expConditionsReducer
@@ -59,7 +62,7 @@ import { FinalPageComponent } from './final-page/final-page.component';
     BrowserAnimationsModule,
     FormsModule
   ],
-  providers: [],
+  providers: [PendingChangesGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

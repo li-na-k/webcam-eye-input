@@ -1,7 +1,6 @@
-import { Component, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { InputType } from '../enums/input-type';
 import { Sizes } from '../enums/sizes';
 import { Tasks } from '../enums/tasks';
@@ -26,15 +25,20 @@ export class RandomizationService {
   //order of tasks
   public inputOrder : InputType[] = [InputType.EYE, InputType.MIX1, InputType.MIX2, InputType.MOUSE];
   public taskOrder : Tasks[] = [Tasks.HOVER, Tasks.SCROLL, Tasks.SELECT]
-  public inputsDone : number = 0;
+  public inputsDone : number = 0; 
   public tasksDone : number = 0;
 
+  public everythingDone: boolean = false;
+  public showQuestionnaireInfo : boolean = false;
+  
+
   // each task: 3 different sizes, two reps each
-  public reps = [Sizes.S, Sizes.S, Sizes.M, Sizes.M, Sizes.L, Sizes.L];
+  public reps = [Sizes.S, Sizes.S /*, Sizes.M, Sizes.M, Sizes.L, Sizes.L*/];
   public repsDone : number = 0;
   public selectedSize : Sizes =  Sizes.M;
 
   messageSubject = new Subject();
+  
 
   constructor(private store : Store<AppState>, private taskEvalutationService : TaskEvaluationService) { 
     this.randomize();
@@ -62,13 +66,15 @@ export class RandomizationService {
     //this.showExplanation(); //TODO: another explanation when calibration has already been done, that also includes input type
     //this.setCalibrationDone(false); //TODO !
     this.tasksDone = 2;
-    if(this.inputsDone <= this.inputOrder.length){
+    if(this.inputsDone < this.inputOrder.length){
       this.selectedInputType = this.inputOrder[this.inputsDone];
       this.selectInputType()
       this.inputsDone++;
+      console.log("inputsDone", this.inputsDone)
       this.nextTask(); //first task
     }
     else{
+      this.everythingDone = true;
       this.taskEvalutationService.exportResults();
     }
   }
@@ -82,7 +88,7 @@ export class RandomizationService {
       this.messageSubject.next('nextTask was called.'); // emit event: popup with explanation + confirm button that activates input method should be displayed in app.component
     }
     else{
-      this.showQuestionnaireInfo();
+      this.showQuestionnaireInfo = true;
       this.nextInputMethod();
     }
   }
@@ -168,11 +174,6 @@ export class RandomizationService {
             break;
       }
     }
-  }
-
-
-  public showQuestionnaireInfo(){
-    //TODO
   }
 
   private randomize(){
