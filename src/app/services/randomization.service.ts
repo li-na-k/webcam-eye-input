@@ -28,9 +28,9 @@ export class RandomizationService {
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
 
+  //final page after finishing inputs 
   public everythingDone: boolean = false;
   public showQuestionnaireInfo : boolean = false;
-  
 
   // each task: 3 different sizes, two reps each
   public reps = [Sizes.S, Sizes.S /*, Sizes.M, Sizes.M, Sizes.L, Sizes.L*/];
@@ -64,13 +64,11 @@ export class RandomizationService {
 
   public nextInputMethod(){
     //this.showExplanation(); //TODO: another explanation when calibration has already been done, that also includes input type
-    //this.setCalibrationDone(false); //TODO !
     this.tasksDone = 2;
     if(this.inputsDone < this.inputOrder.length){
       this.selectedInputType = this.inputOrder[this.inputsDone];
       this.selectInputType()
       this.inputsDone++;
-      console.log("inputsDone", this.inputsDone)
       this.nextTask(); //first task
     }
     else{

@@ -37,7 +37,8 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
 
   //calibration status
   public calibrationDone : boolean = false;
-  public showPopup = true; 
+  public showTaskPopup = true; 
+  public showCalibrationPopup = true;
 
   constructor(private store : Store<AppState>, 
     public webgazerService : WebgazerService, 
@@ -47,7 +48,6 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
   ngOnInit(): void {
     this.webgazerService.startWebgazer();
     this.webgazerService.checkWebGazerLoaded();
-    //
     this.randomizationService.messageSubject //will be emitted when nextTask is called in randmozationService
       .pipe(takeUntil(this.destroy$))
       .subscribe((message)=>{
@@ -55,7 +55,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
         if(this.baseTaskComponent){
           this.baseTaskComponent.stopAllInputs(); //so pop-up can be clicked normally
         }
-        this.showPopup = true;
+        this.showTaskPopup = true;
     });
   }
 
@@ -63,12 +63,9 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
     this.randomizationService.nextInputMethod();
   }
 
-  public showExplanation(){ //calibration //TODO ??
-    this.calibrationCmp.showExplanation();
-  }
-
-  public setCalibrationDone(done : boolean){ //TODO ?? (siehe fkt drüber)
+  public setCalibrationDone(done : boolean){ //TODO ?? 
     this.calibrationDone = done;
+    this.showCalibrationPopup = false;
   }
 
   confirmSelection(){

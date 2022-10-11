@@ -5,7 +5,7 @@
     <div style="margin-top: 50px; padding: 15px; border: 1px solid black; border-radius: 15px;" *ngIf="questionnaireCountdownDone">
         <h2>Are you done with answering the questions about this input method?</h2>
         <p>Then, please click the button below.</p>
-        <button (click)="randomizationService.showQuestionnaireInfo = false">Yes, I just answered the questions about the Input Method "{{randomizationService.inputOrder[randomizationService.inputsDone-2]}}".</button>
+        <button (click)="confirmNextInput()">Yes, I just answered the questions about the Input Method "{{randomizationService.inputOrder[randomizationService.inputsDone-2]}}".</button>
     </div> 
 </div>
 
