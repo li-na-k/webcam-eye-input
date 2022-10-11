@@ -23,8 +23,9 @@ export class RandomizationService {
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
   //order of tasks
-  public inputOrder : InputType[] = [InputType.EYE, InputType.MIX1, InputType.MIX2, InputType.MOUSE];
-  public taskOrder : Tasks[] = [Tasks.HOVER, Tasks.SCROLL, Tasks.SELECT]
+  public inputOrder : InputType[] = [InputType.EYE, InputType.MIX1, InputType.MIX2, InputType.MOUSE]; //string instead??
+  public taskOrder : Tasks[] = [Tasks.HOVER, Tasks.SCROLL, Tasks.SELECT];
+  public positionOrder : string[] = ["pos1", "pos1", "pos2", "pos2", "pos3", "pos4"];
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
 
@@ -33,9 +34,11 @@ export class RandomizationService {
   public showQuestionnaireInfo : boolean = false;
 
   // each task: 3 different sizes, two reps each
-  public reps = [Sizes.S, Sizes.S /*, Sizes.M, Sizes.M, Sizes.L, Sizes.L*/];
+  public reps = [Sizes.S, Sizes.S , Sizes.M, Sizes.M, Sizes.L, Sizes.L];
   public repsDone : number = 0;
   public selectedSize : Sizes =  Sizes.M;
+  public selectedPos : string = "";
+
 
   messageSubject = new Subject();
   
@@ -44,6 +47,8 @@ export class RandomizationService {
     this.randomize();
     console.log(this.inputOrder);
     console.log(this.taskOrder);
+    console.log(this.reps);
+    console.log(this.positionOrder);
   }
 
   //source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -83,7 +88,7 @@ export class RandomizationService {
       this.selectedTask = this.taskOrder[this.tasksDone];
       this.selectTask()
       this.tasksDone++;
-      this.messageSubject.next('nextTask was called.'); // emit event: popup with explanation + confirm button that activates input method should be displayed in app.component
+      this.messageSubject.next('nextTask'); // emit event: popup with explanation + confirm button that activates input method should be displayed in app.component
     }
     else{
       this.showQuestionnaireInfo = true;
@@ -96,6 +101,7 @@ export class RandomizationService {
     this.taskEvalutationService.startTask();
     if(this.repsDone + 1 < this.reps.length){
       this.selectedSize = this.reps[this.repsDone];
+      this.selectedPos = this.positionOrder[this.repsDone];
       this.repsDone++;
     }
     else{
@@ -178,6 +184,7 @@ export class RandomizationService {
     this.shuffle(this.inputOrder);
     this.shuffle(this.taskOrder);
     this.shuffle(this.reps);
+    this.shuffle(this.positionOrder);
   }
 
 }

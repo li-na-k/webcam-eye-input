@@ -50,8 +50,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
     this.webgazerService.checkWebGazerLoaded();
     this.randomizationService.messageSubject //will be emitted when nextTask is called in randmozationService
       .pipe(takeUntil(this.destroy$))
-      .subscribe((message)=>{
-        console.log(message);
+      .subscribe(()=>{
         if(this.baseTaskComponent){
           this.baseTaskComponent.stopAllInputs(); //so pop-up can be clicked normally
         }
