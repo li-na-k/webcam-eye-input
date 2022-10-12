@@ -18,8 +18,14 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   public taskElementID : string = "hover-task";
   public taskElement : HTMLElement | null = null;
 
+
+  public hoverAreas : HTMLCollectionOf<HTMLElement> | null = null;
+
   public tooltipDuration : number = 2000;
-  public tooltipTimer : any;
+  public tooltipTimers : any[] = [0,0,0,0];
+
+  public intervals : any[] = [0,0,0,0]; //one for each click Area
+  public success: boolean = false;
 
 
   constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) { 
@@ -27,25 +33,44 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
   override ngAfterViewInit(): void {
-    this.taskElement = document.getElementById(this.taskElementID)
+    this.taskElement = document.getElementById(this.taskElementID);
+    this.hoverAreas = document.getElementsByClassName("hoverArea") as HTMLCollectionOf<HTMLElement>;
   }
 
-  public bound_showTooltip = this.showTooltip.bind(this);
-  public showTooltip(){
-    var tooltip = document.getElementById("tooltip") //TODO use var if initialization is done inside function anyway
+  // public bound_showTooltip = this.showTooltip.bind(this);
+  public showTooltip(element : HTMLElement){
+    //var tooltip = document.getElementById("tooltip")
+    var tooltip = element.firstElementChild as HTMLElement;
     if(tooltip){
+      this.checkIfError(tooltip);
       tooltip!.style.visibility = "visible"
       tooltip!.style.opacity = "1"
-      this.randomizationService.nextRep();
     }
     else{
       console.error("Tooltip element not found.")
     }
   }
+
+  public checkIfError(tooltip : HTMLElement){
+    if(tooltip.id != "success"){ //error
+      this.taskEvaluationService.addError();
+    }
+    else{ //success
+      this.stopAllInputs();
+      this.success = true;
+      setTimeout(() => {
+        this.hideTooltip(tooltip.parentElement!);
+        this.startEyeInput();
+        this.randomizationService.nextRep()
+        this.success = false;
+      }, 3000);
+    }
+  }
   
-  public bound_hideTooltip = this.hideTooltip.bind(this);
-  public hideTooltip(){
-    var tooltip = document.getElementById("tooltip")
+  // public bound_hideTooltip = this.hideTooltip.bind(this);
+  public hideTooltip(element : HTMLElement){
+    var tooltip = element.firstElementChild as HTMLElement;
+    //var tooltip = document.getElementById("tooltip")
     if(tooltip){
       tooltip!.style.visibility = "hidden"
       tooltip!.style.opacity = "0"
@@ -55,32 +80,40 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     }
   }
   
+  public handler_show = (event : any) => this.showTooltip(event.target as HTMLElement);
+  public handler_hide = (event : any) => this.hideTooltip(event.target as HTMLElement);
   public startMouseInput(){
-    this.taskElement?.addEventListener('mouseover', this.bound_showTooltip)
-    this.taskElement?.addEventListener('mouseleave', this.bound_hideTooltip) 
+    for (var i = 0; i < this.hoverAreas!.length; i++){
+      var currentHoverArea = this.hoverAreas![i];
+      currentHoverArea.addEventListener('mouseover', this.handler_show);
+      currentHoverArea.addEventListener('mouseleave', this.handler_hide);
+    }
   }
 
   public startEyeInput(){
-    var inside : boolean | undefined = false;
-    var visible : boolean = false;
-    this.interval = setInterval(() => {
-      inside = this.eyeInputService.areEyesInsideElement(this.taskElement!);
-      if (inside){
-        visible = true;
-        clearTimeout(this.tooltipTimer)
-        this.changeApricot(this.taskElement!);
-        this.showTooltip();
-      }
-      else { 
-        this.changeBlue(this.taskElement!);
-        if(visible){
-          this.tooltipTimer = setTimeout(() => {
-            this.hideTooltip();
-          }, this.tooltipDuration)
+    for (var i = 0; i < this.hoverAreas!.length; i++){
+      let currentHoverArea = this.hoverAreas![i]; 
+      let inside : boolean = false;
+      let visible : boolean = false;
+      this.intervals[i] = setInterval(() => {
+        inside = this.eyeInputService.areEyesInsideElement(currentHoverArea);
+        if (inside){
+          visible = true;
+          clearTimeout(this.tooltipTimers[i]) 
+          this.changeApricot(currentHoverArea);
+          this.showTooltip(currentHoverArea); //error evaluation
         }
-        visible = false;
-      }
-    }, 100);
+        else { 
+          this.changeBlue(currentHoverArea);
+          if(visible){
+            this.tooltipTimers[i] = setTimeout(() => {
+              this.hideTooltip(currentHoverArea); 
+              visible = false;
+            }, this.tooltipDuration)
+          }
+        }
+      }, 100);
+    }
   }
 
 public bound_Mix1Input = this.Mix1Input.bind(this);
@@ -91,11 +124,11 @@ public Mix1Input(e : any){
       inside = this.eyeInputService.areEyesInsideElement(this.taskElement);
       if (inside == true){
         this.changeApricot(this.taskElement!)
-        this.showTooltip();
+        this.showTooltip(this.taskElement!); //TODO
       }
       else if(inside == false){
         this.changeBlue(this.taskElement!)
-        this.hideTooltip();
+        this.hideTooltip(this.taskElement!); //TODO: Check if task element needed... probably not because success id already on tooltip
       }
     }
   }
@@ -109,27 +142,34 @@ public startMix2Input(){
   this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
   //hover color effect
   var inside : boolean | undefined = false;
-  this.interval = setInterval(() => {
+  this.intervals[0] = setInterval(() => { //TODO
     inside = this.eyeInputService.isInside(this.taskElement!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
     if (inside == true){
       this.changeApricot(this.taskElement!);
-      this.showTooltip()
+      this.showTooltip(this.taskElement!) //TODO
     }
     else if(inside == false){
       this.changeBlue(this.taskElement!);
-      this.hideTooltip();
+      this.hideTooltip(this.taskElement!);//TODO
     }
   }, 100);
 }
 
 public stopAllInputs(){
-  this.hideTooltip()
+  //MOUSE + hide tooltips
+  for (var i = 0; i < this.hoverAreas!.length; i++){
+    var currentHoverArea = this.hoverAreas![i];
+    this.hideTooltip(currentHoverArea);
+    currentHoverArea.removeEventListener('mouseover', this.handler_show);
+    currentHoverArea.removeEventListener('mouseleave', this.handler_hide);
+  }
   //EYE & MIX2 interval
-  clearInterval(this.interval);
-  //MOUSE
-  this.taskElement?.removeEventListener('mouseover', this.bound_showTooltip)
-  this.taskElement?.removeEventListener('mouseleave', this.bound_hideTooltip) 
-  clearTimeout(this.tooltipTimer)
+  //clearInterval(this.interval);
+  for(let i of this.intervals){clearInterval(i)};
+
+  // this.taskElement?.removeEventListener('mouseover', this.showTooltip())
+  // this.taskElement?.removeEventListener('mouseleave', this.bound_hideTooltip) 
+  for(let i of this.intervals){clearTimeout(this.tooltipTimers[i])};
   //MIX1
   document.body.removeEventListener('keydown', this.bound_Mix1Input); 
   //MIX2

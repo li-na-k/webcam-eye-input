@@ -18,6 +18,9 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   public taskElementID: string = "" //TODO: macht hier kein Sinn eigentlich
   public scrollAreas = document.getElementsByClassName("scroll-area");
 
+  public interval_eye : any = null;
+  public interval_mix2 : any = null;
+
 
   constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
     super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
@@ -45,7 +48,7 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   
   public startEyeInput(){
     var inside : boolean = false;
-    this.interval = setInterval(() => {
+    this.interval_eye = setInterval(() => {
       for(var i = 0; i < this.scrollAreas.length; i++){
         var el : HTMLElement = this.scrollAreas[i] as HTMLElement;
         inside = this.eyeInputService.areEyesInsideElement(el!);
@@ -82,7 +85,7 @@ public mouseInput : boolean = false; //TODO: needed?
 public startMix2Input(){
   this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
   var inside : boolean | undefined = false;
-  this.interval = setInterval(() => {
+  this.interval_mix2 = setInterval(() => {
     for(var i = 0; i < this.scrollAreas.length; i++){
       var el : HTMLElement = this.scrollAreas[i] as HTMLElement;
       inside = this.eyeInputService.isInside(el, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
@@ -127,10 +130,12 @@ public changeTargetReached(){
 }
 
 public stopAllInputs(){
+  console.log("stop scroll input")
   //mouse
   window.removeEventListener("scroll", this.bound_changeTargetReached) //TODO removeAllListeners
   //end Eye Input
-  clearInterval(this.interval);
+  clearInterval(this.interval_mix2);
+  clearInterval(this.interval_eye);
   //end Mix1 click event
   document.body.removeEventListener('keydown', this.bound_Mix1Input);
   //MIX2

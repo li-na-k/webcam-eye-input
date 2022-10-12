@@ -1,28 +1,22 @@
 <div class="container">
-    <div id="hover-task" [ngClass]="[randomizationService.selectedSize, randomizationService.selectedPos]" class="clickArea">Hover over me!
-        <span class="tooltip" id="tooltip">This is a tooltip that explains the element.</span>
+    <div *ngIf="success" class="popup-background">
+    </div> 
+    <div id="hover-task" style="z-index: 3;" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]" class="hoverArea">Hover over me!
+        <span class="tooltip" id="success">✓ This is a tooltip that explains the element.</span>
     </div>
-
-
-    <!-- <div id="hover-task" class="clickArea small pos2">Hover over me!
-        <span class="tooltip" id="tooltip">This is a tooltip that explains the element.</span>
+    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1]]" class="hoverArea">
+        <span class="tooltip"><span style="color: var(--red)">✖ </span>You hovered over the wrong tooltip</span>
     </div>
-    <div id="hover-task" class="clickArea large pos3">Hover over me!
-        <span class="tooltip" id="tooltip">This is a tooltip that explains the element.</span>
+    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2]]" class="hoverArea">
+        <span class="tooltip"><span style="color: var(--red)">✖ </span>You hovered over the wrong tooltip</span>
     </div>
-    <div id="hover-task" class="clickArea medium pos4">Hover over me!
-        <span class="tooltip" id="tooltip">This is a tooltip that explains the element.</span>
-    </div> -->
-    
-    <!-- <div id="HoverPt0" class="clickArea small">Hover over me!</div>
-    <div id="HoverPt1" class="clickArea medium">Hover over me!</div>
-    <div id="HoverPt2" class="clickArea large">Hover over me!</div> -->
+    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3]]" class="hoverArea">
+        <span class="tooltip"><span style="color: var(--red)">✖ </span>You hovered over the wrong tooltip</span>
+    </div>
 </div>
 
 <app-popup-pointer-lock-stop (closeCallback)="startMix2Input()"></app-popup-pointer-lock-stop>
 
 
-
-<!-- mehrere Durchgänge, zufälliger (oder einfach aus 6 positionen zufällig?) Ort, 3 verschiedene Größen -->
 
 

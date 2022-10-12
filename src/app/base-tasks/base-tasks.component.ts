@@ -23,7 +23,6 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   public selectedInputType : InputType = InputType.EYE; 
   public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
-  public interval : any; //for checking if arrow cursor / gaze is inside an element
   public moveArrowinterval : any;
   public arrow : HTMLElement | null = document.getElementById("arrow");
   public sandbox : HTMLElement | null = document.getElementById("experimentSandbox");
@@ -52,7 +51,6 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.interval);
     this.destroy$.next(true);
     this.destroy$.complete();
   }

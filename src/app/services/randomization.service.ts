@@ -25,7 +25,7 @@ export class RandomizationService {
   //order of tasks
   public inputOrder : InputType[] = [InputType.EYE, InputType.MIX1, InputType.MIX2, InputType.MOUSE]; //string instead??
   public taskOrder : Tasks[] = [Tasks.HOVER, Tasks.SCROLL, Tasks.SELECT];
-  public positionOrder : string[] = ["pos1", "pos1", "pos2", "pos2", "pos3", "pos4"];
+  public positionOrder : string[] = ["pos1", "pos2", "pos3", "pos4"];
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
 
@@ -37,7 +37,7 @@ export class RandomizationService {
   public reps = [Sizes.S, Sizes.S , Sizes.M, Sizes.M, Sizes.L, Sizes.L];
   public repsDone : number = 0;
   public selectedSize : Sizes =  Sizes.M;
-  public selectedPos : string = "";
+  //public selectedPos : string = "";
 
 
   messageSubject = new Subject();
@@ -101,7 +101,13 @@ export class RandomizationService {
     this.taskEvalutationService.startTask();
     if(this.repsDone + 1 < this.reps.length){
       this.selectedSize = this.reps[this.repsDone];
-      this.selectedPos = this.positionOrder[this.repsDone];
+      // if(this.repsDone >= this.positionOrder.length){
+      //   this.selectedPos = this.positionOrder[this.repsDone-this.positionOrder.length];
+      // }
+      // else{
+      //   this.selectedPos = this.positionOrder[this.repsDone];
+      // }
+      this.shuffle(this.positionOrder); //TODO: kann auch zwei mal hintereinander selbe Position sein so :/
       this.repsDone++;
     }
     else{
