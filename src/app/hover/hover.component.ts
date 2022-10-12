@@ -60,7 +60,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
       this.success = true;
       setTimeout(() => {
         this.hideTooltip(tooltip.parentElement!);
-        this.startEyeInput();
+        this.activateSelectedInputType();
         this.randomizationService.nextRep()
         this.success = false;
       }, 3000);
@@ -140,36 +140,34 @@ public startMix1Input(): void {
 
 public startMix2Input(){
   this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
-  //hover color effect
-  var inside : boolean | undefined = false;
-  this.intervals[0] = setInterval(() => { //TODO
-    inside = this.eyeInputService.isInside(this.taskElement!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
-    if (inside == true){
-      this.changeApricot(this.taskElement!);
-      this.showTooltip(this.taskElement!) //TODO
-    }
-    else if(inside == false){
-      this.changeBlue(this.taskElement!);
-      this.hideTooltip(this.taskElement!);//TODO
-    }
-  }, 100);
+  for (var i = 0; i < this.hoverAreas!.length; i++){
+    let currentHoverArea = this.hoverAreas![i]; 
+    let inside : boolean | undefined = false;
+    this.intervals[i] = setInterval(() => { 
+      inside = this.eyeInputService.isInside(currentHoverArea, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
+      if (inside == true){
+        this.changeApricot(currentHoverArea);
+        this.showTooltip(currentHoverArea);
+      }
+      else if(inside == false){
+        this.changeBlue(currentHoverArea);
+        this.hideTooltip(currentHoverArea);
+      }
+    }, 100);
+  }
 }
 
 public stopAllInputs(){
-  //MOUSE + hide tooltips
+  for(let i of this.tooltipTimers){clearTimeout(i)};
+  //MOUSE + hide tooltips from before
   for (var i = 0; i < this.hoverAreas!.length; i++){
     var currentHoverArea = this.hoverAreas![i];
-    this.hideTooltip(currentHoverArea);
+    this.hideTooltip(currentHoverArea); //TODO: not needed if all timers ended?
     currentHoverArea.removeEventListener('mouseover', this.handler_show);
     currentHoverArea.removeEventListener('mouseleave', this.handler_hide);
   }
   //EYE & MIX2 interval
-  //clearInterval(this.interval);
-  for(let i of this.intervals){clearInterval(i)};
-
-  // this.taskElement?.removeEventListener('mouseover', this.showTooltip())
-  // this.taskElement?.removeEventListener('mouseleave', this.bound_hideTooltip) 
-  for(let i of this.intervals){clearTimeout(this.tooltipTimers[i])};
+  for(let i of this.intervals){clearInterval(i)}; //TODO: can be used twice?
   //MIX1
   document.body.removeEventListener('keydown', this.bound_Mix1Input); 
   //MIX2
