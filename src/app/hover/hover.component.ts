@@ -15,10 +15,6 @@ import { RandomizationService } from '../services/randomization.service';
 })
 export class HoverComponent extends BaseTasksComponent implements OnInit, OnDestroy {
 
-  public taskElementID : string = "hover-task";
-  public taskElement : HTMLElement | null = null;
-
-
   public hoverAreas : HTMLCollectionOf<HTMLElement> | null = null;
 
   public tooltipDuration : number = 2000;
@@ -33,7 +29,6 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
   override ngAfterViewInit(): void {
-    this.taskElement = document.getElementById(this.taskElementID);
     this.hoverAreas = document.getElementsByClassName("hoverArea") as HTMLCollectionOf<HTMLElement>;
   }
 
@@ -116,19 +111,22 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     }
   }
 
-public bound_Mix1Input = this.Mix1Input.bind(this);
+public bound_Mix1Input = this.Mix1Input.bind(this); 
 public Mix1Input(e : any){
   if(e.keyCode == 13){
-    var inside : boolean = false;
-    if(this.taskElement){   
-      inside = this.eyeInputService.areEyesInsideElement(this.taskElement);
-      if (inside == true){
-        this.changeApricot(this.taskElement!)
-        this.showTooltip(this.taskElement!); //TODO
-      }
-      else if(inside == false){
-        this.changeBlue(this.taskElement!)
-        this.hideTooltip(this.taskElement!); //TODO: Check if task element needed... probably not because success id already on tooltip
+    for (var i = 0; i < this.hoverAreas!.length; i++){
+      let currentHoverArea = this.hoverAreas![i]; 
+      let inside : boolean = false;
+      if(currentHoverArea){   
+        inside = this.eyeInputService.areEyesInsideElement(currentHoverArea);
+        if (inside == true){
+          this.changeApricot(currentHoverArea)
+          this.showTooltip(currentHoverArea); 
+        }
+        else if(inside == false){
+          this.changeBlue(currentHoverArea)
+          this.hideTooltip(currentHoverArea); //TODO: Check if task element needed... probably not because success id already on tooltip
+        }
       }
     }
   }
@@ -174,7 +172,6 @@ public stopAllInputs(){
   this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
 }
 
-public bound_changeElApricot = this.changeApricot.bind(this, this.taskElement!);
 public changeApricot(el : HTMLElement){
   el.style.backgroundColor = "var(--apricot)";
 }
