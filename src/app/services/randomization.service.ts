@@ -98,6 +98,7 @@ export class RandomizationService {
 
   public nextRep(){
     this.taskEvalutationService.endTask();
+    this.playAudio();
     this.taskEvalutationService.startTask();
     if(this.repsDone + 1 < this.reps.length){
       this.selectedSize = this.reps[this.repsDone];
@@ -113,6 +114,13 @@ export class RandomizationService {
     else{
       this.nextTask();
     }
+  }
+
+  private playAudio(){
+    let audio = new Audio();
+    audio.src = "assets/success.mp3"; /* source: http://freesoundeffect.net/sound/correct-answer-bling-1-sound-effect */
+    audio.load();
+    audio.play();
   }
 
   public selectTask(){
