@@ -7,6 +7,7 @@ import { InputType } from '../enums/input-type';
 import { WebgazerService } from '../services/webgazer.service';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
+import { Sizes } from '../enums/sizes';
 @Component({
   selector: 'app-click',
   providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],
@@ -19,6 +20,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   public className : string = "clickArea"
   public clickAreas : HTMLCollectionOf<Element> | null = null; //all areas
   public intervals : any[] = [0,0,0,0]; //one for each click Area
+  public Sizes = Sizes;
 
   public taskElementID : string = "click-task"; //area that shows success when clicked
   public clicked : boolean = false;

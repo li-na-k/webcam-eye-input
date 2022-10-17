@@ -14,6 +14,10 @@ mat-card{
     padding: 30px;
 }
 
+mat-card:hover{
+    cursor: pointer;
+}
+
 mat-card-title{
     padding-bottom: 10px;
 }
@@ -46,6 +50,22 @@ mat-card-title{
 .large{
     width: 600px;
     height: 160px;
+}
+
+.pos1{
+    order: 1;
+}
+
+.pos2{
+    order: 2;
+}
+
+.pos3{
+    order: 3;
+}
+
+.pos4{
+   order: 4;
 }
 
 .arrow {
