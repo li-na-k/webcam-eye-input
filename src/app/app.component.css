@@ -63,9 +63,27 @@
     padding-right: 10px;
 }
 
-/* .dropdowns{
-    position: absolute; 
-    top: 10px; 
-    left: auto;
-    right: 250px; 
-} */
+/* user id input form */
+input{
+    border-radius: 15px;
+    margin: 20px;
+    border: 2px solid grey;
+}
+
+.alert{
+    color: var(--red);
+}
+
+.ng-valid[required], .ng-valid.required  {
+    background-color: var(--green-background);
+  }
+  
+.ng-dirty.ng-invalid {
+    background-color: var(--red-background);
+}
+
+button:disabled{
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}

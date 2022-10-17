@@ -35,6 +35,26 @@
     </div>
 </div>
 
+<div *ngIf="webgazerService.webgazerLoaded && !userIDSubmitted">
+    <div class="popup-full-background"></div>
+    <div class="Popup">                     
+        <div style="padding-top: 30px; font-weight: bold;">
+            <label for="userID">Please paste your copied participant ID here:</label>
+        </div> 
+
+        <input class="form-control"
+            id="userID"  type="text"
+            required minlength="6" maxlength="6"
+            [(ngModel)]="enteredUserID" name="userID"
+            #userID="ngModel">
+        <div [hidden]="userID.valid || userID.pristine"
+            class="alert">Please enter a valid participant ID.</div>
+        <div style="margin-top: 10px;">
+            <button type="submit" [disabled]="!userID.valid" (click)="userIDSubmit()">Submit</button>
+        </div>
+    </div>
+</div>
+
 <div class="button-header-container">
     <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
         (click)="calibrationDone = true;">Skip callibration
@@ -62,7 +82,7 @@
         
 
 <!-- content -->
-<div class="content" *ngIf="webgazerService.webgazerLoaded">
+<div class="content" *ngIf="webgazerService.webgazerLoaded && userIDSubmitted">
 
     <span class="angle">❯</span>
     <div class="instructions">{{randomizationService.instructions}}</div>

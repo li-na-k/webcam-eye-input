@@ -4,6 +4,9 @@
     --yellow: #f0cf65;
     --apricot: #d7816a;
     --red: #bd4f6c;
+    --red-background: #bd4f6c84;
+    --green-background: #a0bd4184;
+    
     font-family: Roboto,Helvetica Neue Light,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;
     line-height: 150%;
 }

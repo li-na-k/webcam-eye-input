@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from './state/app.state';
 import { InputType } from './enums/input-type';
@@ -42,6 +42,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
 
   constructor(private store : Store<AppState>, 
     public webgazerService : WebgazerService, 
+    public cdRef: ChangeDetectorRef, 
     public taskEvaluationService : TaskEvaluationService,
     public randomizationService : RandomizationService){}
 
@@ -60,15 +61,36 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
 
   ngAfterViewInit(){
     this.randomizationService.nextInputMethod();
+    this.setCalibrationDone(false, true);
+    this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true;
   }
 
-  public setCalibrationDone(done : boolean){ //TODO ?? 
-    this.calibrationDone = done;
-    this.showCalibrationPopup = false;
+  public setCalibrationDone(done : boolean, showExplanation? : boolean){ 
+    if(this.randomizationService.selectedInputType != InputType.MOUSE){ //no calibration needed if mouse input
+      this.calibrationDone = done;
+    }
+    else{
+      this.calibrationDone = true;
+    }
+    if(!this.calibrationDone && showExplanation){
+      this.showCalibrationPopup = showExplanation;
+    }
+    else{
+      this.showCalibrationPopup = false; //if no calibration, explanation makes no sense
+    }
   }
 
   confirmSelection(){
     this.baseTaskComponent.activateSelectedInputType()
+  }
+
+  
+  public enteredUserID: string = "";
+  public userIDSubmitted : boolean = false;
+
+  userIDSubmit(){
+    this.taskEvaluationService.userID = this.enteredUserID;
+    this.userIDSubmitted = true;
   }
 }  
 
