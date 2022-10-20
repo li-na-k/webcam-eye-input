@@ -67,7 +67,7 @@ export class RandomizationService {
   }
 
 
-  public nextInputMethod(){
+  public nextInputMethod(){ 
     //this.showExplanation(); //TODO: another explanation when calibration has already been done, that also includes input type
     this.tasksDone = 2;
     if(this.inputsDone < this.inputOrder.length){
@@ -82,7 +82,7 @@ export class RandomizationService {
     }
   }
 
-  public nextTask(){
+  private nextTask(){
     this.repsDone = 0;
     if(this.tasksDone < this.taskOrder.length){
       this.selectedTask = this.taskOrder[this.tasksDone];
@@ -97,8 +97,7 @@ export class RandomizationService {
   }
 
   public nextRep(){
-    this.taskEvalutationService.endTask();
-    this.playAudio();
+    //endTask(); must be called separatly!
     this.taskEvalutationService.startTask();
     if(this.repsDone + 1 < this.reps.length){
       this.selectedSize = this.reps[this.repsDone];
@@ -116,12 +115,7 @@ export class RandomizationService {
     }
   }
 
-  private playAudio(){
-    let audio = new Audio();
-    audio.src = "assets/success.mp3"; /* source: http://freesoundeffect.net/sound/correct-answer-bling-1-sound-effect */
-    audio.load();
-    audio.play();
-  }
+
 
   public selectTask(){
     if(this.selectedTask){

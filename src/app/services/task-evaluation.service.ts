@@ -73,11 +73,19 @@ export class TaskEvaluationService {
       result.setDuration();
       result.errors = this.errorCount;
       this.taskRunning = false;
+      this.playAudio();
       console.log(result);
     }
     else{
       console.log("tried to end task, but no task was running.")
     }
+  }
+
+  private playAudio(){
+    let audio = new Audio();
+    audio.src = "assets/success.mp3"; /* source: http://freesoundeffect.net/sound/correct-answer-bling-1-sound-effect */
+    audio.load();
+    audio.play();
   }
 
   exportResults(){
