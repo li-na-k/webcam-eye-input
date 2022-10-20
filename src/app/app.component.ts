@@ -39,6 +39,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
   public calibrationDone : boolean = false;
   public showTaskPopup = true; 
   public showCalibrationPopup = true;
+  public CalibrationPopupShown = false;
 
   constructor(private store : Store<AppState>, 
     public webgazerService : WebgazerService, 
@@ -61,22 +62,26 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
 
   ngAfterViewInit(){
     this.randomizationService.nextInputMethod();
-    this.setCalibrationDone(false, true);
+    this.setCalibrationDone(false);
     this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true;
   }
 
-  public setCalibrationDone(done : boolean, showExplanation? : boolean){ 
-    if(this.randomizationService.selectedInputType != InputType.MOUSE){ //no calibration needed if mouse input
-      this.calibrationDone = done;
-    }
-    else{
+  public setCalibrationDone(done : boolean){ //TODO check if this function is correct!
+    if(done){ //calibration should NOT be shown next time
       this.calibrationDone = true;
     }
-    if(!this.calibrationDone && showExplanation){
-      this.showCalibrationPopup = showExplanation;
+    else{ //SHOW calibration next time
+      if(this.randomizationService.selectedInputType == InputType.MOUSE){ 
+        this.calibrationDone = true; //no calibration needed if mouse input
+      }
+      else{
+        this.calibrationDone = false;
+        this.CalibrationPopupShown = true;
+      }
     }
-    else{
-      this.showCalibrationPopup = false; //if no calibration, explanation makes no sense
+    //if calibration for the first time: show explanation
+    if(!this.calibrationDone && !this.CalibrationPopupShown){
+      this.showCalibrationPopup = true; 
     }
   }
 

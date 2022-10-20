@@ -121,12 +121,16 @@ public Mix1Input(e : any){
         inside = this.eyeInputService.areEyesInsideElement(currentHoverArea);
         if (inside == true){
           this.changeApricot(currentHoverArea)
-          this.showTooltip(currentHoverArea); 
+          this.showTooltip(currentHoverArea);
+          this.tooltipTimers[i] = setTimeout(() => {
+            this.hideTooltip(currentHoverArea); 
+            this.changeBlue(currentHoverArea);
+          }, this.tooltipDuration)
         }
-        else if(inside == false){
-          this.changeBlue(currentHoverArea)
-          this.hideTooltip(currentHoverArea); //TODO: Check if task element needed... probably not because success id already on tooltip
-        }
+        // else if(inside == false){
+        //   this.changeBlue(currentHoverArea)
+        //   this.hideTooltip(currentHoverArea); //TODO: Check if task element needed... probably not because success id already on tooltip
+        // }
       }
     }
   }

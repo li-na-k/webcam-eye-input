@@ -83,7 +83,7 @@ public Mix1Input(e : any){
 public mouseInput : boolean = false; //TODO: needed?
 
 public startMix2Input(){
-  this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+  this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
   var inside : boolean | undefined = false;
   this.interval_mix2 = setInterval(() => {
     for(var i = 0; i < this.scrollAreas.length; i++){
@@ -139,7 +139,7 @@ public stopAllInputs(){
   //end Mix1 click event
   document.body.removeEventListener('keydown', this.bound_Mix1Input);
   //MIX2
-  this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
+  this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
 }
 
 

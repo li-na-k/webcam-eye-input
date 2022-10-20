@@ -114,6 +114,11 @@ export class EyeInputService implements OnDestroy {
     if(!arrow){
       throw Error("Provided arrow is null.")
     }
+    //remove red dot
+    const dot = document.getElementById("webgazerGazeDot");
+    if(dot){
+      dot.style.visibility = "hidden";
+    }
     //assign method parameters to instance properties to be able to use them in mouseTakeover()
     this.sandbox = sandbox; 
     this.arrow = arrow;
@@ -145,6 +150,10 @@ export class EyeInputService implements OnDestroy {
   
   public stopMix2Input(sandbox : HTMLElement | null, arrow : HTMLElement | null){
     document.exitPointerLock();
+    const dot = document.getElementById("webgazerGazeDot");
+    if(dot){
+      dot.style.visibility = "";
+    }
     window.document.removeEventListener('mousemove', this.bound_mouseTakeover);
     arrow!.style.visibility = 'hidden';
     sandbox!.style.cursor = '';
