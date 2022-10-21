@@ -51,11 +51,12 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
       this.taskEvaluationService.addError();
     }
     else{ //success
-      this.stopAllInputs();
+      //this.stopAllInputs();
       this.success = true;
+      this.taskEvaluationService.endTask();
       setTimeout(() => {
         this.hideTooltip(tooltip.parentElement!);
-        this.activateSelectedInputType();
+        //this.activateSelectedInputType();
         this.randomizationService.nextRep()
         this.success = false;
       }, 3000);
@@ -140,7 +141,9 @@ public startMix1Input(): void {
   document.body.addEventListener('keydown', this.bound_Mix1Input);
 }
 
+public mix2loaded = false;
 public startMix2Input(){
+  debugger;
   this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
   for (var i = 0; i < this.hoverAreas!.length; i++){
     let currentHoverArea = this.hoverAreas![i]; 
@@ -157,6 +160,7 @@ public startMix2Input(){
       }
     }, 100);
   }
+  this.mix2loaded = true;
 }
 
 public stopAllInputs(){
@@ -174,6 +178,7 @@ public stopAllInputs(){
   document.body.removeEventListener('keydown', this.bound_Mix1Input); 
   //MIX2
   this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
+  this.mix2loaded = false;
 }
 
 public changeApricot(el : HTMLElement){
