@@ -41,7 +41,7 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
 
   public pointerLockedStopped() : boolean {
     if(this.selectedInputType == InputType.MIX2){
-      return !(document.pointerLockElement === this.sandbox);
+      return !(document.pointerLockElement === (this.sandbox || window.document.body));
     }
     else{
       return false;
