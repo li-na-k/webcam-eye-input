@@ -111,9 +111,9 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
 
   public bound_changeOnClick = this.changeOnClick.bind(this);
   public changeOnClick(ev : any){
-    var currentClickArea : HTMLElement | null = null; //reset from last click
+    let currentClickArea : HTMLElement | null = null; //reset from last click
     if(this.selectedInputType == InputType.MIX2){
-      for (var i = 0; i < this.clickAreas!.length; i++){
+      for (let i = 0; i < this.clickAreas!.length; i++){
         let clickArea = this.clickAreas![i] as HTMLElement;
         let inside = this.eyeInputService.isInside(clickArea, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
         if(inside){
@@ -131,9 +131,16 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     this.checkIfError(currentClickArea);
   }
 
+  public mix2loaded = false;
   public startMix2Input(){
     this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
-    document.addEventListener('click', this.bound_changeOnClick); 
+    // document.addEventListener('click', () => {
+    //   debugger;
+    //   this.bound_changeOnClick;
+    //   console.log("event listener triggered");
+    //   }); 
+    document.addEventListener('click', this.bound_changeOnClick)
+    this.mix2loaded = true;
   }
 
   public stopAllInputs(){
@@ -152,6 +159,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     //MIX2
     this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
     document.removeEventListener('click', this.bound_changeOnClick); 
+    this.mix2loaded = false;
     //view port resets
     this.clicked = false;
     this.error = false;

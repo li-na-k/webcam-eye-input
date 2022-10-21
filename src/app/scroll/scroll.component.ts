@@ -82,6 +82,7 @@ public Mix1Input(e : any){
 
 public mouseInput : boolean = false; //TODO: needed?
 
+public mix2loaded = false;
 public startMix2Input(){
   this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
   var inside : boolean | undefined = false;
@@ -94,6 +95,7 @@ public startMix2Input(){
       }
     }
   }, 100);
+  this.mix2loaded = true;
 }
 
 public target1Reached : boolean = false;
@@ -119,6 +121,7 @@ public changeTargetReached(){
   if(target2Inside && this.target1Reached){
     this.target2Reached = true;
     this.stopAllInputs();
+    this.taskEvaluationService.endTask();
     //TODO: add waiting for next rep popup?
     setTimeout(() => {
       this.target2Reached = false;
@@ -140,6 +143,7 @@ public stopAllInputs(){
   document.body.removeEventListener('keydown', this.bound_Mix1Input);
   //MIX2
   this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
+  this.mix2loaded = false;
 }
 
 
