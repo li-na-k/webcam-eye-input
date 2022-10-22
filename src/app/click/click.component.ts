@@ -105,7 +105,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   public startMouseInput(){
     for (var i = 0; i < this.clickAreas!.length; i++){
       var clickArea = this.clickAreas![i] as HTMLElement;
-      clickArea.addEventListener('click', this.bound_changeOnClick)
+      clickArea.addEventListener('mousedown', () => {this.bound_changeOnClick});
     }
   }
 
@@ -134,12 +134,10 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   public mix2loaded = false;
   public startMix2Input(){
     this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
-    // document.addEventListener('click', () => {
-    //   debugger;
-    //   this.bound_changeOnClick;
-    //   console.log("event listener triggered");
-    //   }); 
-    document.addEventListener('click', this.bound_changeOnClick)
+    document.addEventListener('mousedown', this.bound_changeOnClick);
+    /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
+    have been better, but it cannot be removed, which is necessary here (for other input methods)
+    -> using Renderer2 might have been an option but this works, so keeeping it like this for the moment */
     this.mix2loaded = true;
   }
 
@@ -153,12 +151,12 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     if(this.clickAreas){
       for (var i = 0; i < this.clickAreas!.length; i++){
         var clickArea = this.clickAreas![i] as HTMLElement;
-        clickArea.removeEventListener('click', this.bound_changeOnClick)
+        clickArea.removeEventListener('mousedown', this.bound_changeOnClick)
       }
     }
     //MIX2
     this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
-    document.removeEventListener('click', this.bound_changeOnClick); 
+    document.removeEventListener('mousedown', this.bound_changeOnClick); 
     this.mix2loaded = false;
     //view port resets
     this.clicked = false;
