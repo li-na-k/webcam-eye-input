@@ -83,22 +83,22 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
 
 
   public checkIfError(clickArea : HTMLElement | null){
-    if(clickArea){ //if not clicked outside of click area
-      this.clicked = true;
-      //Check if right area clicked
-      if(clickArea?.id != this.taskElementID && clickArea.parentElement?.id != this.taskElementID){
-        this.error = true;
-        this.taskEvaluationService.addError();
+      if(clickArea){ //if not clicked outside of click area
+        this.clicked = true;
+        //Check if right area clicked
+        if(clickArea?.id != this.taskElementID && clickArea.parentElement?.id != this.taskElementID){
+          this.error = true;
+          this.taskEvaluationService.addError();
+        }
+        else{
+          this.error = false; //success
+          this.taskEvaluationService.endTask();
+          this.randomizationService.nextRep();
+        }
       }
       else{
-        this.error = false; //success
-        this.taskEvaluationService.endTask();
-        this.randomizationService.nextRep();
+        this.clicked = false;
       }
-    }
-    else{
-      this.clicked = false;
-    }
   }
 
 
