@@ -99,3 +99,16 @@
     border-style: solid;
     border-color: transparent transparent #555 transparent;
 }
+
+.centeredOverlay {
+    background-color: white;
+    height: 100%;
+    position: relative;
+    width: 100%;
+    z-index: 999;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align: center;
+    flex-direction: column;
+}

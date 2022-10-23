@@ -1,6 +1,4 @@
 <div class="container">
-    <div *ngIf="success" class="popup-background">
-    </div> 
     <div id="hover-task" style="z-index: 3;" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]" class="hoverArea">Hover over me!
         <span class="tooltip" id="success">✓ This is a tooltip that explains the element.</span>
     </div>
@@ -13,7 +11,12 @@
     <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3]]" class="hoverArea">
         <span class="tooltip"><span style="color: var(--red)">✖ </span>You hovered over the wrong tooltip</span>
     </div>
+    <div *ngIf="success" class="centeredOverlay">
+        <div style="margin-bottom: 20px;">Move your eye gaze and your mouse here:</div>
+        <div style="font-size: 80px; color: var(--blue); width: 100%;">⦿</div>
+    </div>
 </div>
+
 
 <app-popup-pointer-lock-stop *ngIf="mix2loaded" (closeCallback)="startMix2Input()"></app-popup-pointer-lock-stop>
 

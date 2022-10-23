@@ -51,14 +51,14 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
       this.taskEvaluationService.addError();
     }
     else{ //success
-      //this.stopAllInputs();
-      this.success = true;
       this.taskEvaluationService.endTask();
       setTimeout(() => {
         this.hideTooltip(tooltip.parentElement!);
-        //this.activateSelectedInputType();
-        this.randomizationService.nextRep()
-        this.success = false;
+        this.success = true; // between-reps: Blank page because eyes should be in middle of screen again
+        setTimeout(() => {
+          this.success = false;
+          this.randomizationService.nextRep();
+        }, 5000)
       }, 3000);
     }
   }
@@ -143,7 +143,6 @@ public startMix1Input(): void {
 
 public mix2loaded = false;
 public startMix2Input(){
-  debugger;
   this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
   for (var i = 0; i < this.hoverAreas!.length; i++){
     let currentHoverArea = this.hoverAreas![i]; 
@@ -164,6 +163,7 @@ public startMix2Input(){
 }
 
 public stopAllInputs(){
+  console.log("stop all INputs called")
   for(let i of this.tooltipTimers){clearTimeout(i)};
   //MOUSE + hide tooltips from before
   for (var i = 0; i < this.hoverAreas!.length; i++){
