@@ -66,12 +66,15 @@ export class TaskEvaluationService {
     }
   }
 
-  endTask(){
+  endTask(aborted? : boolean){
     if(this.taskRunning){
       let result : TaskResult = this.results[this.results.length-1]
       result.endTime = Date.now();
       result.setDuration();
       result.errors = this.errorCount;
+      if(aborted){
+        result.aborted = aborted;
+      }
       this.taskRunning = false;
       this.playAudio();
       console.log(result);

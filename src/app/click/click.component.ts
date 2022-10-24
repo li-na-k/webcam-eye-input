@@ -90,15 +90,19 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
           this.error = true;
           this.taskEvaluationService.addError();
         }
-        else{
-          this.error = false; //success
-          this.taskEvaluationService.endTask();
-          this.randomizationService.nextRep();
+        else{ 
+          this.addSuccess();
         }
       }
       else{
         this.clicked = false;
       }
+  }
+
+  public addSuccess(aborted?: boolean){
+    this.error = false; 
+    this.taskEvaluationService.endTask(aborted);
+    this.randomizationService.nextRep();
   }
 
 

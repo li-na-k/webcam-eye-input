@@ -60,6 +60,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   abstract startMix1Input() : void;
   abstract startMix2Input() : void;
   abstract stopAllInputs() : void;
+  abstract addSuccess(aborted?: boolean) : void;
 
 
 

@@ -11,6 +11,7 @@ export class TaskResult {
     duration : number = 0;
     // public get duration() : number { return this.endTime - this.startTime};
     errors: number = 0;
+    aborted : boolean = false;
 
     public setDuration() { this.duration = this.endTime - this.startTime };
 }

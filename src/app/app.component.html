@@ -72,11 +72,12 @@
     <button *ngIf="!calibrationDone" class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="showCalibrationPopup = true;">
         <mat-icon>question_mark</mat-icon>
     </button>
-    <div style="background-color: white; border-radius: 15px; padding: 5px; display: flex; justify-content: space-between; margin-top: 20px; margin-bottom: 20px;">
+    <div *ngIf="calibrationDone" style="background-color: white; border-radius: 15px; padding: 5px; display: flex; justify-content: space-between; margin-top: 20px; margin-bottom: 20px;">
         <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.reps; index as i">
             <span *ngIf="i + 1 <= randomizationService.repsDone">●</span>
             <span style="color: var(--green);" *ngIf="i + 1 > randomizationService.repsDone">○</span>
         </span>
+        <button (click)="baseTaskComponent.addSuccess(true)">Skip one repetition</button>
     </div>
 </div>
         

@@ -130,17 +130,25 @@ public changeTargetReached(){
     this.target1Reached = true;
   }
   if(target2Inside && this.target1Reached){
-    this.taskEvaluationService.endTask();
-    this.target2Reached = true;
-    this.stopAllInputs();
-    //TODO: add waiting for next rep popup?
-    setTimeout(() => {
-      this.target2Reached = false;
-      this.target1Reached = false;
-      this.activateSelectedInputType();
-      this.randomizationService.nextRep();
-    }, 2000);
+    this.addSuccess();
   }
+}
+
+public addSuccess(aborted? : boolean){
+  let timeout : number = 2000;
+  this.taskEvaluationService.endTask(aborted);
+  this.target2Reached = true;
+  this.stopAllInputs();
+  //TODO: add waiting for next rep popup?
+  if(aborted){
+    timeout = 0;
+  }
+  setTimeout(() => {
+    this.target2Reached = false;
+    this.target1Reached = false;
+    this.activateSelectedInputType();
+    this.randomizationService.nextRep();
+  }, timeout);
 }
 
 public stopAllInputs(){

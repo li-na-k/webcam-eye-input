@@ -46,14 +46,26 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
   public checkIfError(tooltip : HTMLElement){
+    setTimeout(() => {
+      this.hideTooltip(tooltip.parentElement!); 
+    }, 3000)
     if(tooltip.id != "success"){ //error
       this.taskEvaluationService.addError();
     }
     else{ //success
-      this.taskEvaluationService.endTask();
-      this.stopAllInputs(); 
+      this.addSuccess();
+    }
+  }
+
+  public addSuccess(aborted? : boolean){
+    this.taskEvaluationService.endTask(aborted);
+    this.stopAllInputs(); 
+    if(aborted){
+      this.activateSelectedInputType();
+      this.randomizationService.nextRep();
+    }
+    else{
       setTimeout(() => {
-        this.hideTooltip(tooltip.parentElement!);
         this.success = true; // between-reps: Blank page because eyes should be in middle of screen again
         //TODO: move arrow in middle too!
         setTimeout(() => {
