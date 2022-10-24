@@ -130,9 +130,9 @@ public changeTargetReached(){
     this.target1Reached = true;
   }
   if(target2Inside && this.target1Reached){
+    this.taskEvaluationService.endTask();
     this.target2Reached = true;
     this.stopAllInputs();
-    this.taskEvaluationService.endTask();
     //TODO: add waiting for next rep popup?
     setTimeout(() => {
       this.target2Reached = false;
