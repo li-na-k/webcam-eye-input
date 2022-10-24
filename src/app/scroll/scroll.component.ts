@@ -43,7 +43,7 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   }
 
   startMouseInput(): void {
-    window.addEventListener("scroll", this.bound_changeTargetReached)
+    window.addEventListener("scroll", this.bound_changeTargetReached);
   }
   
   public startEyeInput(){
@@ -137,8 +137,8 @@ public changeTargetReached(){
     setTimeout(() => {
       this.target2Reached = false;
       this.target1Reached = false;
-      this.randomizationService.nextRep();
       this.activateSelectedInputType();
+      this.randomizationService.nextRep();
     }, 2000);
   }
 }

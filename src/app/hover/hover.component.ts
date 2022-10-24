@@ -51,11 +51,14 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     }
     else{ //success
       this.taskEvaluationService.endTask();
+      this.stopAllInputs(); 
       setTimeout(() => {
         this.hideTooltip(tooltip.parentElement!);
         this.success = true; // between-reps: Blank page because eyes should be in middle of screen again
+        //TODO: move arrow in middle too!
         setTimeout(() => {
           this.success = false;
+          this.activateSelectedInputType();
           this.randomizationService.nextRep();
         }, 5000)
       }, 3000);
