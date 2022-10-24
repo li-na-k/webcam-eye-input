@@ -68,7 +68,7 @@ export class RandomizationService {
 
 
   public nextInputMethod(){ 
-    // this.tasksDone = 2;
+    this.tasksDone = 0;
     if(this.inputsDone < this.inputOrder.length){
       this.selectedInputType = this.inputOrder[this.inputsDone];
       this.selectInputType()
