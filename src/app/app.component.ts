@@ -50,7 +50,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
   ngOnInit(): void {
     this.webgazerService.startWebgazer();
     this.webgazerService.checkWebGazerLoaded();
-    this.randomizationService.messageSubject //will be emitted when nextTask is called in randmozationService
+    this.randomizationService.messageSubject //will be emitted when nextTask is called in randmizationService
       .pipe(takeUntil(this.destroy$))
       .subscribe(()=>{
         if(this.baseTaskComponent){
@@ -61,6 +61,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
   }
 
   ngAfterViewInit(){
+    console.log("view init app component")
     this.randomizationService.nextInputMethod();
     this.setCalibrationDone(false);
     this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true;
