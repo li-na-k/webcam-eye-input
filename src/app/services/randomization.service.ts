@@ -131,8 +131,8 @@ export class RandomizationService {
   }
 
   public setInstruction(){
-    var input = this.selectedInputType;
-    var task = this.selectedTask;
+    let input = this.selectedInputType;
+    let task = this.selectedTask;
     if(input == InputType.EYE){
       switch(task){
         case Tasks.HOVER:
