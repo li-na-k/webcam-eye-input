@@ -61,6 +61,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
   }
 
   ngAfterViewInit(){
+    console.log("view init app component")
     this.randomizationService.nextInputMethod();
     this.setCalibrationDone(false);
     this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true;
