@@ -144,14 +144,18 @@ public changeTargetReached(){
 }
 
 public stopAllInputs(){
-  console.log("stop scroll input")
+  console.log("stopAllInputs scroll component")
+  // this.target2Reached = false;
+  // this.target1Reached = false;
   //mouse
-  window.removeEventListener("scroll", this.bound_changeTargetReached) //TODO removeAllListeners
+  window.removeEventListener("scroll", this.bound_changeTargetReached); 
   //end Eye Input
   clearInterval(this.interval_mix2);
   clearInterval(this.interval_eye);
   //end Mix1 click event
   document.body.removeEventListener('keydown', this.bound_Mix1Input);
+  document.body.removeEventListener('keyup', this.removeMix1ScrollInterval);
+  this.removeMix1ScrollInterval();
   //MIX2
   this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
   this.mix2loaded = false;
