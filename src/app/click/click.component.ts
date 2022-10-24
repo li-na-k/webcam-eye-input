@@ -105,7 +105,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   public startMouseInput(){
     for (let i = 0; i < this.clickAreas!.length; i++){
       let clickArea = this.clickAreas![i] as HTMLElement;
-      clickArea.addEventListener('mousedown', () => {this.bound_changeOnClick});
+      clickArea.addEventListener('mousedown', this.bound_changeOnClick);
     }
   }
 
