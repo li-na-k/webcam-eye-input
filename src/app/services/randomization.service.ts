@@ -68,8 +68,7 @@ export class RandomizationService {
 
 
   public nextInputMethod(){ 
-    //this.showExplanation(); //TODO: another explanation when calibration has already been done, that also includes input type
-    this.tasksDone = 2;
+    // this.tasksDone = 2;
     if(this.inputsDone < this.inputOrder.length){
       this.selectedInputType = this.inputOrder[this.inputsDone];
       this.selectInputType()
