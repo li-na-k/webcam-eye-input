@@ -34,8 +34,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
 
   // public bound_showTooltip = this.showTooltip.bind(this);
   public showTooltip(element : HTMLElement){
-    //var tooltip = document.getElementById("tooltip")
-    var tooltip = element.firstElementChild as HTMLElement;
+    let tooltip = element.firstElementChild as HTMLElement;
     if(tooltip){
       this.checkIfError(tooltip);
       tooltip!.style.visibility = "visible"
@@ -65,8 +64,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   
   // public bound_hideTooltip = this.hideTooltip.bind(this);
   public hideTooltip(element : HTMLElement){
-    var tooltip = element.firstElementChild as HTMLElement;
-    //var tooltip = document.getElementById("tooltip")
+    let tooltip = element.firstElementChild as HTMLElement;
     if(tooltip){
       tooltip!.style.visibility = "hidden"
       tooltip!.style.opacity = "0"
@@ -79,15 +77,15 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   public handler_show = (event : any) => this.showTooltip(event.target as HTMLElement);
   public handler_hide = (event : any) => this.hideTooltip(event.target as HTMLElement);
   public startMouseInput(){
-    for (var i = 0; i < this.hoverAreas!.length; i++){
-      var currentHoverArea = this.hoverAreas![i];
+    for (let i = 0; i < this.hoverAreas!.length; i++){
+      let currentHoverArea = this.hoverAreas![i];
       currentHoverArea.addEventListener('mouseover', this.handler_show);
       currentHoverArea.addEventListener('mouseleave', this.handler_hide);
     }
   }
 
   public startEyeInput(){
-    for (var i = 0; i < this.hoverAreas!.length; i++){
+    for (let i = 0; i < this.hoverAreas!.length; i++){
       let currentHoverArea = this.hoverAreas![i]; 
       let inside : boolean = false;
       let visible : boolean = false;
@@ -115,7 +113,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
 public bound_Mix1Input = this.Mix1Input.bind(this); 
 public Mix1Input(e : any){
   if(e.keyCode == 13){
-    for (var i = 0; i < this.hoverAreas!.length; i++){
+    for (let i = 0; i < this.hoverAreas!.length; i++){
       let currentHoverArea = this.hoverAreas![i]; 
       let inside : boolean = false;
       if(currentHoverArea){   
@@ -144,7 +142,7 @@ public startMix1Input(): void {
 public mix2loaded = false;
 public startMix2Input(){
   this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
-  for (var i = 0; i < this.hoverAreas!.length; i++){
+  for (let i = 0; i < this.hoverAreas!.length; i++){
     let currentHoverArea = this.hoverAreas![i]; 
     let inside : boolean | undefined = false;
     this.intervals[i] = setInterval(() => { 
@@ -166,8 +164,8 @@ public stopAllInputs(){
   console.log("stop all INputs called")
   for(let i of this.tooltipTimers){clearTimeout(i)};
   //MOUSE + hide tooltips from before
-  for (var i = 0; i < this.hoverAreas!.length; i++){
-    var currentHoverArea = this.hoverAreas![i];
+  for (let i = 0; i < this.hoverAreas!.length; i++){
+    let currentHoverArea = this.hoverAreas![i];
     this.hideTooltip(currentHoverArea); //TODO: not needed if all timers ended?
     currentHoverArea.removeEventListener('mouseover', this.handler_show);
     currentHoverArea.removeEventListener('mouseleave', this.handler_hide);

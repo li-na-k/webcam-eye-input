@@ -23,8 +23,8 @@ export class EyeInputService implements OnDestroy {
   constructor(private store : Store<AppState>) { }
 
   public areEyesInsideElement(el : HTMLElement) : boolean{
-    var x = 0.0;
-    var y = 0.0;
+    let x = 0.0;
+    let y = 0.0;
     this.currentEyePos$
     .pipe(takeUntil(this.destroy$))
     .subscribe(d => {
@@ -35,11 +35,11 @@ export class EyeInputService implements OnDestroy {
   }
 
   public isInside(el : HTMLElement, x? : number, y?: number){
-    var clientWidth = document.documentElement.clientWidth;
-    var clientHeight = document.documentElement.clientHeight;
-    var boundingBox = el.getBoundingClientRect();
-    var lr_inside = false;
-    var tb_inside = false;
+    let clientWidth = document.documentElement.clientWidth;
+    let clientHeight = document.documentElement.clientHeight;
+    let boundingBox = el.getBoundingClientRect();
+    let lr_inside = false;
+    let tb_inside = false;
     if(x){
       if(
       (boundingBox.left <= x || boundingBox.left <= 0) && 
@@ -66,8 +66,8 @@ export class EyeInputService implements OnDestroy {
   }
 
   public moveArrowWithEyes(arrow : HTMLElement | null){
-    var x = 0.0;
-    var y = 0.0;
+    let x = 0.0;
+    let y = 0.0;
     this.currentEyePos$
     .pipe(takeUntil(this.destroy$))
     .subscribe(d => {
@@ -84,8 +84,8 @@ export class EyeInputService implements OnDestroy {
   } 
 
   public moveArrowWithMouse(e : any, arrow : HTMLElement, sandbox : HTMLElement){
-    var x = parseInt(arrow!.style.left, 10) + e.movementX;
-    var y = parseInt(arrow!.style.top, 10) + e.movementY;
+    let x = parseInt(arrow!.style.left, 10) + e.movementX;
+    let y = parseInt(arrow!.style.top, 10) + e.movementY;
     const sbRight = sandbox!.getBoundingClientRect().right;
     const sbBottom = sandbox!.getBoundingClientRect().bottom;
     const sbLeft = sandbox!.getBoundingClientRect().left;

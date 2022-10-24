@@ -48,7 +48,7 @@ export class TaskEvaluationService {
     else{
       this.taskRunning = true;
       this.errorCount = 0;
-      var result : TaskResult = new TaskResult();
+      let result : TaskResult = new TaskResult();
       this.results.push(result);
       result.startTime = Date.now();
       result.inputType = this.selectedInputType;
@@ -68,7 +68,7 @@ export class TaskEvaluationService {
 
   endTask(){
     if(this.taskRunning){
-      var result : TaskResult = this.results[this.results.length-1]
+      let result : TaskResult = this.results[this.results.length-1]
       result.endTime = Date.now();
       result.setDuration();
       result.errors = this.errorCount;

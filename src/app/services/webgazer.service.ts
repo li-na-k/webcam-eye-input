@@ -47,7 +47,7 @@ export class WebgazerService {
   }
 
   public startWebgazer(){
-    var store = this.store;
+    let store = this.store;
     webgazer.setGazeListener(function(data : any) {
         if (data == null) {
             return;
@@ -57,8 +57,8 @@ export class WebgazerService {
         store.dispatch(changeYPos({newy: data.y}));
 
         //display current x and y
-        var xDisplay = document.getElementById("x");
-        var yDisplay = document.getElementById("y");
+        let xDisplay = document.getElementById("x");
+        let yDisplay = document.getElementById("y");
         if(xDisplay){xDisplay.innerHTML = data.x;}
         if(yDisplay){yDisplay.innerHTML = data.y;}
     }).begin()

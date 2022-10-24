@@ -35,7 +35,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
   public startEyeInput(){
-      for (var i = 0; i < this.clickAreas!.length; i++){
+      for (let i = 0; i < this.clickAreas!.length; i++){
         let clickArea = this.clickAreas![i] as HTMLElement;
         let wentInsideAt : number|null = null; 
         let inside : boolean = false;
@@ -70,9 +70,9 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   public bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
   public Mix1Input(e : any){
     if(e.keyCode == 13){
-      for (var i = 0; i < this.clickAreas!.length; i++){
-        var clickArea = this.clickAreas![i] as HTMLElement;
-        var inside : boolean = false;   
+      for (let i = 0; i < this.clickAreas!.length; i++){
+        let clickArea = this.clickAreas![i] as HTMLElement;
+        let inside : boolean = false;   
         inside = this.eyeInputService.areEyesInsideElement(clickArea);
         if (inside == true){ 
           this.checkIfError(clickArea);
@@ -103,8 +103,8 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
 
 
   public startMouseInput(){
-    for (var i = 0; i < this.clickAreas!.length; i++){
-      var clickArea = this.clickAreas![i] as HTMLElement;
+    for (let i = 0; i < this.clickAreas!.length; i++){
+      let clickArea = this.clickAreas![i] as HTMLElement;
       clickArea.addEventListener('mousedown', () => {this.bound_changeOnClick});
     }
   }
@@ -149,8 +149,8 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     document.body.removeEventListener('keydown', this.bound_Mix1Input); 
     //remove click event MOUSE input
     if(this.clickAreas){
-      for (var i = 0; i < this.clickAreas!.length; i++){
-        var clickArea = this.clickAreas![i] as HTMLElement;
+      for (let i = 0; i < this.clickAreas!.length; i++){
+        let clickArea = this.clickAreas![i] as HTMLElement;
         clickArea.removeEventListener('mousedown', this.bound_changeOnClick)
       }
     }
