@@ -1,4 +1,4 @@
-<div style="display: flex; flex-direction: column;" *ngIf="!clicked && !(selectedInputType == InputType.EYE)">
+<div style="display: flex; flex-direction: column; align-content: space-between;" *ngIf="!clicked && !(selectedInputType == InputType.EYE)">
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]" class="clickArea">
         <mat-card-title>First Headline</mat-card-title>
         <span *ngIf="randomizationService.selectedSize != Sizes.S">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy. </span>

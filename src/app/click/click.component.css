@@ -9,7 +9,7 @@
 
 mat-card{
     border: 2px solid var(--blue);
-    margin: 30px 150px;
+    margin: 5px 150px;
     border-radius: 15px;
     padding: 30px;
 }
