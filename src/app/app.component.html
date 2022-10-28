@@ -66,7 +66,8 @@
             <span *ngIf="i + 1 <= randomizationService.repsDone">●</span>
             <span style="color: var(--green);" *ngIf="i + 1 > randomizationService.repsDone">○</span>
         </span>
-        <button style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">I can't do it - skip this one</button>
+        <div style="font-size: 12px;" *ngIf="this.randomizationService.selectedInputType == InputType.MIX2">To skip press "escape".</div>
+        <button *ngIf="this.randomizationService.selectedInputType != InputType.MIX2" style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">I can't do it - skip this one</button>
     </div>
     <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
         (click)="calibrationDone = true; this.blur($event)">Skip callibration

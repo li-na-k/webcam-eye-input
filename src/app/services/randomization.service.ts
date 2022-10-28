@@ -97,7 +97,6 @@ export class RandomizationService {
 
   public nextRep(){
     //endTask(); must be called separatly!
-    this.taskEvalutationService.startTask();
     if(this.repsDone + 1 < this.reps.length){
       this.selectedSize = this.reps[this.repsDone];
       // if(this.repsDone >= this.positionOrder.length){
@@ -106,8 +105,9 @@ export class RandomizationService {
       // else{
       //   this.selectedPos = this.positionOrder[this.repsDone];
       // }
-      this.shuffle(this.positionOrder); //TODO: kann auch zwei mal hintereinander selbe Position sein so :/
+      this.shuffle(this.positionOrder); 
       this.repsDone++;
+      this.taskEvalutationService.startTask();
     }
     else{
       this.nextTask();

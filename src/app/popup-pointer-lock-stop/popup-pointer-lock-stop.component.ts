@@ -14,6 +14,7 @@ import { selectInputType } from '../state/expConditions/expconditions.selector';
 export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
 
   @Output() closeCallback = new EventEmitter();
+  @Output() skipTaskCallback = new EventEmitter();
 
   public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   public selectedInputType : InputType = InputType.EYE; 
@@ -26,6 +27,10 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
 
   public click(): void {
     this.closeCallback.emit();
+  }
+
+  public skipTask(): void{
+    this.skipTaskCallback.emit();
   }
 
   ngOnInit(): void {
@@ -41,7 +46,8 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
 
   public pointerLockedStopped() : boolean {
     if(this.selectedInputType == InputType.MIX2){
-      return !(document.pointerLockElement === (this.sandbox || window.document.body));
+      let res = document.pointerLockElement == null;
+      return res;
     }
     else{
       return false;

@@ -88,7 +88,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
 
   confirmSelection(){
     this.baseTaskComponent.activateSelectedInputType();
-    this.taskEvaluationService.endTask();
+    //this.taskEvaluationService.endTask();
     this.taskEvaluationService.startTask();
   }
 
