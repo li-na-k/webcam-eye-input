@@ -28,7 +28,7 @@
         <div [hidden]="userID.valid || userID.pristine"
             class="alert">Please enter a valid participant ID.</div>
         <div style="margin-top: 10px;">
-            <button type="submit" [disabled]="!userID.valid" (click)="userIDSubmit()">Submit</button>
+            <button type="submit" [disabled]="!userID.valid" (click)="userIDSubmit(); this.blur($event)">Submit</button>
         </div>
     </div>
 </div>
@@ -49,7 +49,7 @@
             <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
         </select>
     </div>
-    <button (click)="confirmSelection()">Select</button>
+    <button (click)="confirmSelection(); this.blur($event)">Select</button>
 </div>
 
 <!-- <button (click)="taskEvaluationService.startTask()">Start</button>
@@ -66,22 +66,22 @@
             <span *ngIf="i + 1 <= randomizationService.repsDone">●</span>
             <span style="color: var(--green);" *ngIf="i + 1 > randomizationService.repsDone">○</span>
         </span>
-        <button style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true)">I can't do it - skip this one</button>
+        <button style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">I can't do it - skip this one</button>
     </div>
     <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
-        (click)="calibrationDone = true;">Skip callibration
+        (click)="calibrationDone = true; this.blur($event)">Skip callibration
     </button>
     <span *ngIf="!webgazerService.paused">
-        <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="webgazerService.togglePauseWebgazer()">
+        <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="webgazerService.togglePauseWebgazer(); this.blur($event)">
             <mat-icon>pause</mat-icon>
         </button>
     </span>
     <span *ngIf="webgazerService.paused">
-        <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="webgazerService.togglePauseWebgazer()">
+        <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="webgazerService.togglePauseWebgazer(); this.blur($event)">
             <mat-icon>play_arrow</mat-icon>
         </button>
     </span>
-    <button *ngIf="!calibrationDone" class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="showCalibrationPopup = true;">
+    <button *ngIf="!calibrationDone" class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="showCalibrationPopup = true; this.blur($event);">
         <mat-icon>question_mark</mat-icon>
     </button>
 </div>
@@ -117,7 +117,7 @@
                     </div>
                     <h2>Your task now:</h2>
                     <div style="margin-bottom: 25px;">{{randomizationService.instructions}}</div>
-                    <button (click)="showTaskPopup=false; confirmSelection()">Got it!</button>
+                    <button (click)="showTaskPopup=false; confirmSelection(); this.blur($event)">Got it!</button>
                 </div>
         </div>
     </div>

@@ -92,6 +92,10 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
     this.taskEvaluationService.startTask();
   }
 
+  blur($event : any){
+    $event.target.blur();
+  }
+
   
   public enteredUserID: string = "";
   public userIDSubmitted : boolean = false;
