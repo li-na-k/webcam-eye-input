@@ -20,6 +20,7 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
 
   public interval_eye : any = null;
   public interval_mix2 : any = null;
+  protected mix1ScrollInterval : any[] = [null,null,null,null]; 
 
 
   constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
@@ -27,23 +28,27 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
    }
 
   public scroll(scrollArea : HTMLElement){
-    if(scrollArea.classList.contains("bottom")){
-      window.scrollBy(0, 30);
-    }
-    if(scrollArea.classList.contains("top")){
-      window.scrollBy(0, -30);
-    }
-    if(scrollArea.classList.contains("left")){
-      window.scrollBy(-30, 0);
-    }
-    if(scrollArea.classList.contains("right")){
-      window.scrollBy(30, 0);
-    }
-    this.changeTargetReached();
+    const content = document.getElementById("content");
+    if(content){
+      if(scrollArea.classList.contains("bottom")){
+        content.scrollBy(0, 30);
+      }
+      if(scrollArea.classList.contains("top")){
+        content.scrollBy(0, -30);
+      }
+      if(scrollArea.classList.contains("left")){
+        content.scrollBy(-30, 0);
+      }
+      if(scrollArea.classList.contains("right")){
+        content.scrollBy(30, 0);
+      }
+      this.changeTargetReached();
+    } 
   }
 
   startMouseInput(): void {
-    window.addEventListener("scroll", this.bound_changeTargetReached);
+    const content = document.getElementById("content");
+    content!.addEventListener("scroll", this.bound_changeTargetReached);
   }
   
   public startEyeInput(){
@@ -62,11 +67,12 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
 
 public startMix1Input(): void {
   document.body.addEventListener('keydown', this.bound_Mix1Input);
-  document.body.addEventListener('keyup', this.removeMix1ScrollInterval);
+  document.body.addEventListener('keyup', this.bound_removeMix1ScrollInterval);
 }
 
-protected mix1ScrollInterval : any[] = [null,null,null,null]; 
+protected bound_removeMix1ScrollInterval = this.removeMix1ScrollInterval.bind(this);
 protected removeMix1ScrollInterval(){
+  console.log("up")
   for(let i = 0; i < this.mix1ScrollInterval.length; i++){
     clearInterval(this.mix1ScrollInterval[i]); 
    }
@@ -83,6 +89,7 @@ public Mix1Input(e : any){
         if (inside == true){ 
           clearInterval(this.mix1ScrollInterval[i]);
           this.mix1ScrollInterval[i] = setInterval(() => {
+            console.log("scroll", el);
             this.scroll(el);
           }, 100)
         }
@@ -131,11 +138,13 @@ public changeTargetReached(){
   }
   if(target2Inside && this.target1Reached){
     this.addSuccess();
+    console.log("addSuccess")
   }
 }
 
 public addSuccess(aborted? : boolean){
   let timeout : number = 2000;
+  console.log("endTask")
   this.taskEvaluationService.endTask(aborted);
   this.target2Reached = true;
   this.stopAllInputs();
@@ -152,11 +161,12 @@ public addSuccess(aborted? : boolean){
 }
 
 public stopAllInputs(){
+  const content = document.getElementById("content");
   console.log("stopAllInputs scroll component")
   // this.target2Reached = false;
   // this.target1Reached = false;
   //mouse
-  window.removeEventListener("scroll", this.bound_changeTargetReached); 
+  content!.removeEventListener("scroll", this.bound_changeTargetReached); 
   //end Eye Input
   clearInterval(this.interval_mix2);
   clearInterval(this.interval_eye);
