@@ -34,23 +34,23 @@
 </div>
 
  <!-- Drop Down Task -->
- <!-- <div class="dropdowns" style="margin-left: 20px;" *ngIf="calibrationDone">
+ <div class="dropdowns" style="margin-left: 20px;" *ngIf="calibrationDone">
     <div>
         <span class="dropdown-label">Task: </span>
         <select [(ngModel)]="randomizationService.selectedTask" (change)="randomizationService.selectTask()"> 
             <option *ngFor="let item of TaskType | keyvalue">{{item.value}}</option>
         </select>
-    </div> -->
+    </div>
     
     <!-- Drop Down InputType -->
-    <!-- <div>
+    <div>
         <span class="dropdown-label">Input variant: </span>
         <select [(ngModel)]="randomizationService.selectedInputType" (change)="randomizationService.selectInputType()" > 
             <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
         </select>
     </div>
     <button (click)="confirmSelection()">Select</button>
-</div> -->
+</div>
 
 <!-- <button (click)="taskEvaluationService.startTask()">Start</button>
 <button (click)="taskEvaluationService.endTask()">End</button>
