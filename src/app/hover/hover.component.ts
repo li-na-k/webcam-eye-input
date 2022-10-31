@@ -67,7 +67,8 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     else{
       setTimeout(() => {
         this.success = true; // between-reps: Blank page because eyes should be in middle of screen again
-        //TODO: move arrow in middle too!
+        this.arrow!.style.left = "400px";
+        this.arrow!.style.top = "400px";
         setTimeout(() => {
           this.success = false;
           this.activateSelectedInputType();
