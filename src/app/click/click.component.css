@@ -9,9 +9,9 @@
 
 mat-card{
     border: 2px solid var(--blue);
-    margin: 5px 150px;
+    margin: 5px;
     border-radius: 15px;
-    padding: 30px;
+    padding: 20px;
 }
 
 mat-card:hover{
@@ -38,8 +38,8 @@ mat-card-title{
 
 
 .small{
-    width: 150px;
-    height: 40px;
+    width: 190px;
+    height: 44px;
 }
 
 .medium{
@@ -48,8 +48,8 @@ mat-card-title{
 }
 
 .large{
-    width: 600px;
-    height: 160px;
+    width: 760px;
+    height: 110px;
 }
 
 .pos1{
