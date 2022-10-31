@@ -3,7 +3,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 20%;
+    /* height: 20%; */
 }
 
 .top{
@@ -11,10 +11,10 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 20%;
+    /* height: 20%; */
 }
 
-.left{
+/* .left{
     position: fixed;
     top: 0;
     left: 0;
@@ -28,10 +28,10 @@
     right: 0;
     height: 100%;
     width: 20%;
-}
+} */
 
 .scroll-area{
-    border: solid 1px rgb(213, 211, 211);
+    border: dotted 1px rgb(213, 211, 211);
     pointer-events: none;
 }
 
@@ -47,4 +47,16 @@
 .check{
     color: var(--green);
     padding-right: 10px;
+}
+
+.small{
+    height: 10%;
+}
+
+.medium{
+    height: 20%;
+}
+
+.large{
+    height: 30%;
 }
