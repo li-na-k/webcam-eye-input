@@ -25,7 +25,7 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
 
   constructor(protected store : Store<AppState>, private eyeInputService : EyeInputService) { }
 
-  public click(): void {
+  public enablePointerLock(): void {
     this.startMix2.emit();
   }
 
