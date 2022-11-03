@@ -37,10 +37,8 @@
 
 .target-area{
     position: fixed;
-    bottom: 20%;
-    top: 20%;
     width: 100%;
-    height: 60%; 
+    height: 50%; 
     z-index: -1;
 }
 
