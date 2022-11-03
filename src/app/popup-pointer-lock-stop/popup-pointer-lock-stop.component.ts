@@ -23,13 +23,14 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
   public destroy$ : Subject<boolean> = new Subject<boolean>(); 
   public showPopup = true;
 
-  constructor(protected store : Store<AppState>, private eyeInputService : EyeInputService) { }
+  constructor(protected store : Store<AppState>, protected eyeInputService : EyeInputService) { }
 
   public enablePointerLock(): void {
     this.startMix2.emit();
   }
 
   public skipTask(): void{
+    this.startMix2.emit(); //problem: bei letztem rep kann man sonst nicht klicken...
     this.addSuccess.emit();
   }
 
@@ -45,13 +46,11 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
   }
 
   public pointerLockedStopped() : boolean {
+    let stopped = false;
     if(this.selectedInputType == InputType.MIX2){
-      let res = document.pointerLockElement == null;
-      return res;
+      stopped = document.pointerLockElement == null;
     }
-    else{
-      return false;
-    }
+    return stopped;
   }
 
   closeAndStopMix2() : void{

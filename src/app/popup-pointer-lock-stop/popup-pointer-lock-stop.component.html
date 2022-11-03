@@ -1,4 +1,6 @@
-<div *ngIf="pointerLockedStopped() && showPopup" style="display:flex;justify-content:center;">
+<div *ngIf="pointerLockedStopped() && showPopup" 
+    (mouseover)="eyeInputService.stopMix2Input(this.sandbox, this.arrow)" 
+    style="display:flex;justify-content:center;">
     <div class="popup-background">
     </div> 
     <div class="Popup">

@@ -59,12 +59,12 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
 
   public addSuccess(aborted? : boolean){
     this.taskEvaluationService.endTask(aborted);
-    this.stopAllInputs(); 
     if(aborted){
-      this.activateSelectedInputType();
+      console.log("aborted");
       this.randomizationService.nextRep();
     }
     else{
+      this.stopAllInputs(); 
       setTimeout(() => {
         this.success = true; // between-reps: Blank page because eyes should be in middle of screen again
         this.arrow!.style.left = "400px";
@@ -157,6 +157,8 @@ public startMix1Input(): void {
 
 public mix2loaded = false;
 public startMix2Input(){
+  console.log("start hover mix2")
+  console.log(this.sandbox);
   this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
   for (let i = 0; i < this.hoverAreas!.length; i++){
     let currentHoverArea = this.hoverAreas![i]; 
