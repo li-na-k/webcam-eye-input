@@ -99,7 +99,7 @@ export class RandomizationService {
     //endTask(); must be called separatly!
     if(this.repsDone + 1 < this.reps.length){
       this.selectedSize = this.reps[this.repsDone];
-      // if(this.repsDone >= this.positionOrder.length){
+      // if(this.repsDone >= this.positionOrder.length){ //TODO ??
       //   this.selectedPos = this.positionOrder[this.repsDone-this.positionOrder.length];
       // }
       // else{

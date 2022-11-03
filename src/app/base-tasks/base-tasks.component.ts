@@ -44,7 +44,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
       .subscribe(d => this.selectedInputType = d);
     this.selectedTask$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(d => this.selectedTask = d); //TODO eigentlich braucht mans nicht weil immer von component gerufen??
+      .subscribe(d => this.selectedTask = d); 
   }
 
   ngAfterViewInit(){

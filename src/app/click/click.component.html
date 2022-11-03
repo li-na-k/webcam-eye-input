@@ -5,7 +5,6 @@
         <span *ngIf="randomizationService.selectedSize == Sizes.L">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril.</span>  
     </mat-card>
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1]]" class="clickArea" id="click-task" > 
-        <!-- TODO: Problem - wenn mat-card-title geklickt zählts als Fehler, läst sich aber sobald click Fläche einzeln in der Karte statt ganze Karte -->
         <mat-card-title>Select me!</mat-card-title>
         <span *ngIf="randomizationService.selectedSize != Sizes.S">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy. </span>
         <span *ngIf="randomizationService.selectedSize == Sizes.L">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril.</span> 
@@ -30,7 +29,6 @@
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1]]">
         <div *ngIf="randomizationService.selectedSize != Sizes.S" class="clickArea green" id="click-task">Look here to select!</div>
         <div *ngIf="randomizationService.selectedSize == Sizes.S" style="width: 100%; border-radius: 12px; padding: 0px;" class="clickArea green" id="click-task"></div>
-        <!-- TODO: Problem - wenn mat-card-title geklickt zählts als Fehler, läst sich aber sobald click Fläche einzeln in der Karte statt ganze Karte -->
         <mat-card-title>Select me!</mat-card-title>
         <div style="width: 70%">
             <span *ngIf="randomizationService.selectedSize != Sizes.S">Lorem ipsum dolor sit amet, consetetur sadipscing elitr. </span> 
