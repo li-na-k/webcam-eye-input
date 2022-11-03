@@ -8,6 +8,7 @@ import { Tasks } from '../enums/tasks';
 import { AppState } from '../state/app.state';
 import { selectInputType, selectTask } from '../state/expConditions/expconditions.selector';
 import * as FileSaver from 'file-saver';
+import { RandomizationService } from './randomization.service';
 
 type NewType = Observable<Tasks>;
 
@@ -40,6 +41,7 @@ export class TaskEvaluationService {
   public results : TaskResult[] = []; //nicht als rxjs store weil mans einfach gleich hier in eine Datei reinschreibt, es muss ja sonst von nirgendwo drauf zugegriffen werden
   private taskRunning : boolean = false;
   private errorCount : number = 0;
+  public selectedSize : Sizes = Sizes.S; //set by randomization Service
 
   startTask(){
     if(this.taskRunning){
@@ -53,7 +55,7 @@ export class TaskEvaluationService {
       result.startTime = Date.now();
       result.inputType = this.selectedInputType;
       result.task = this.selectedTask;
-      result.size = Sizes.M //TODO 
+      result.size = this.selectedSize;
     }
   }
 
