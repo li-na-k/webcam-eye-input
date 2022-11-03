@@ -103,6 +103,9 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     this.error = false; 
     this.taskEvaluationService.endTask(aborted);
     this.randomizationService.nextRep();
+    if(aborted){
+      this.activateSelectedInputType();
+    }
   }
 
 

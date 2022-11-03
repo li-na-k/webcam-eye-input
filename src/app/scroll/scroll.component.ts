@@ -138,19 +138,17 @@ public changeTargetReached(){
   }
   if(target2Inside && this.target1Reached){
     this.addSuccess();
-    console.log("addSuccess")
   }
 }
 
 public addSuccess(aborted? : boolean){
-  let timeout : number = 2000;
-  console.log("endTask")
+  let timeout : number = 0;
   this.taskEvaluationService.endTask(aborted);
   this.target2Reached = true;
-  this.stopAllInputs();
   //TODO: add waiting for next rep popup?
-  if(aborted){
-    timeout = 0;
+  if(!aborted){
+    timeout = 2000;
+    this.stopAllInputs();
   }
   setTimeout(() => {
     this.target2Reached = false;

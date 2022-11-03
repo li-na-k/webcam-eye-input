@@ -30,7 +30,7 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
   }
 
   public skipTask(): void{
-    this.startMix2.emit(); //problem: bei letztem rep kann man sonst nicht klicken...
+    this.startMix2.emit(); 
     this.addSuccess.emit();
   }
 
