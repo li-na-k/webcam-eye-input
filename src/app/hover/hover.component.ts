@@ -155,7 +155,6 @@ public startMix1Input(): void {
   document.body.addEventListener('keydown', this.bound_Mix1Input);
 }
 
-public mix2loaded = false;
 public startMix2Input(){
   console.log("start hover mix2")
   console.log(this.sandbox);

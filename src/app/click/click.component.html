@@ -55,4 +55,4 @@
     <button style="display: block; margin-top: 50px;" (click)="stopAllInputs(); activateSelectedInputType()">Back</button>
 </div>
 
-<app-popup-pointer-lock-stop *ngIf="mix2loaded" (addSuccess)="addSuccess(true)" (startMix2)="startMix2Input()"></app-popup-pointer-lock-stop>
+<app-popup-pointer-lock-stop *ngIf="pointerLockedStopped()" (addSuccess)="addSuccess(true)" (startMix2)="startMix2Input()"></app-popup-pointer-lock-stop>

@@ -84,6 +84,13 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
     }
   }
 
-  
-
+  public mix2loaded = false;
+  public pointerLockedStopped() : boolean {
+    if(this.selectedInputType == InputType.MIX2 && this.mix2loaded){
+      return document.pointerLockElement == null;
+    }
+    else{
+      return false;
+    }   
+  }
 }

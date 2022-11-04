@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil} from 'rxjs';
 import { EyeInputService } from 'src/app/services/eye-input.service';
@@ -11,7 +11,7 @@ import { selectInputType } from '../state/expConditions/expconditions.selector';
   templateUrl: './popup-pointer-lock-stop.component.html',
   styleUrls: ['./popup-pointer-lock-stop.component.css']
 })
-export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
+export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Output() startMix2 = new EventEmitter();
   @Output() addSuccess = new EventEmitter();
@@ -40,22 +40,20 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy {
       .subscribe(d => this.selectedInputType = d);
   }
 
+  ngAfterViewInit(): void {
+    this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
+    this.eyeInputService.stopMix2Input(window.document.body, this.arrow); 
+  }
+
   ngOnDestroy(){
     this.destroy$.next(true);
     this.destroy$.complete();
   }
 
-  public pointerLockedStopped() : boolean {
-    let stopped = false;
-    if(this.selectedInputType == InputType.MIX2){
-      stopped = document.pointerLockElement == null;
-    }
-    return stopped;
-  }
-
   closeAndStopMix2() : void{
     this.showPopup = false;
     this.eyeInputService.stopMix2Input(this.sandbox, this.arrow)
+    this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
   }
 
 }

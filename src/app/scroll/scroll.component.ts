@@ -72,7 +72,6 @@ public startMix1Input(): void {
 
 protected bound_removeMix1ScrollInterval = this.removeMix1ScrollInterval.bind(this);
 protected removeMix1ScrollInterval(){
-  console.log("up")
   for(let i = 0; i < this.mix1ScrollInterval.length; i++){
     clearInterval(this.mix1ScrollInterval[i]); 
    }
@@ -89,7 +88,6 @@ public Mix1Input(e : any){
         if (inside == true){ 
           clearInterval(this.mix1ScrollInterval[i]);
           this.mix1ScrollInterval[i] = setInterval(() => {
-            console.log("scroll", el);
             this.scroll(el);
           }, 100)
         }
@@ -100,7 +98,7 @@ public Mix1Input(e : any){
 
 public mouseInput : boolean = false; //TODO: needed?
 
-public mix2loaded = false;
+
 public startMix2Input(){
   this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
   let inside : boolean | undefined = false;
@@ -113,7 +111,10 @@ public startMix2Input(){
       }
     }
   }, 100);
-  this.mix2loaded = true;
+  setTimeout(() => {
+    this.mix2loaded = true;
+  }, 100)
+  console.log(this.mix2loaded)
 }
 
 public target1Reached : boolean = false;
@@ -141,21 +142,39 @@ public changeTargetReached(){
   }
 }
 
+// public addSuccess(aborted? : boolean){
+//   let timeout : number = 0;
+//   this.taskEvaluationService.endTask(aborted);
+//   this.target2Reached = true;
+//   //TODO: add waiting for next rep popup?
+//   if(!aborted){
+//     timeout = 2000;
+//   }
+//   setTimeout(() => {
+//     this.target2Reached = false;
+//     this.target1Reached = false;
+//     this.activateSelectedInputType();
+//     this.randomizationService.nextRep();
+//   }, timeout);
+// }
+
 public addSuccess(aborted? : boolean){
-  let timeout : number = 0;
   this.taskEvaluationService.endTask(aborted);
-  this.target2Reached = true;
-  //TODO: add waiting for next rep popup?
-  if(!aborted){
-    timeout = 2000;
-    this.stopAllInputs();
-  }
-  setTimeout(() => {
+  if(aborted){
     this.target2Reached = false;
     this.target1Reached = false;
-    this.activateSelectedInputType();
     this.randomizationService.nextRep();
-  }, timeout);
+  }
+  else{ 
+    this.target2Reached = true;
+    this.stopAllInputs();
+    setTimeout(() => {
+      this.target2Reached = false;
+      this.target1Reached = false;
+      this.activateSelectedInputType();
+      this.randomizationService.nextRep();
+    }, 2000)
+  }
 }
 
 public stopAllInputs(){
@@ -173,8 +192,8 @@ public stopAllInputs(){
   document.body.removeEventListener('keyup', this.removeMix1ScrollInterval);
   this.removeMix1ScrollInterval();
   //MIX2
-  this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
   this.mix2loaded = false;
+  this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
 }
 
 

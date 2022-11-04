@@ -103,9 +103,6 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     this.error = false; 
     this.taskEvaluationService.endTask(aborted);
     this.randomizationService.nextRep();
-    if(aborted){
-      this.activateSelectedInputType();
-    }
   }
 
 
@@ -138,14 +135,16 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     this.checkIfError(currentClickArea);
   }
 
-  public mix2loaded = false;
+
   public startMix2Input(){
     this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
     document.addEventListener('mousedown', this.bound_changeOnClick);
     /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
     have been better, but it cannot be removed, which is necessary here (for other input methods)
     -> using Renderer2 might have been an option but this works, so keeeping it like this for the moment */
-    this.mix2loaded = true;
+    setTimeout(() =>
+      {this.mix2loaded = true;}
+    ,100) //no other option because pointer lock request does not return observable to check success 
   }
 
   public stopAllInputs(){
