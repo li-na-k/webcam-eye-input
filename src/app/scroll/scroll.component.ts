@@ -142,22 +142,6 @@ public changeTargetReached(){
   }
 }
 
-// public addSuccess(aborted? : boolean){
-//   let timeout : number = 0;
-//   this.taskEvaluationService.endTask(aborted);
-//   this.target2Reached = true;
-//   //TODO: add waiting for next rep popup?
-//   if(!aborted){
-//     timeout = 2000;
-//   }
-//   setTimeout(() => {
-//     this.target2Reached = false;
-//     this.target1Reached = false;
-//     this.activateSelectedInputType();
-//     this.randomizationService.nextRep();
-//   }, timeout);
-// }
-
 public addSuccess(aborted? : boolean){
   this.taskEvaluationService.endTask(aborted);
   if(aborted){
@@ -180,8 +164,7 @@ public addSuccess(aborted? : boolean){
 public stopAllInputs(){
   const content = document.getElementById("content");
   console.log("stopAllInputs scroll component")
-  // this.target2Reached = false;
-  // this.target1Reached = false;
+  content?.scrollTo(0,0);
   //mouse
   content!.removeEventListener("scroll", this.bound_changeTargetReached); 
   //end Eye Input
