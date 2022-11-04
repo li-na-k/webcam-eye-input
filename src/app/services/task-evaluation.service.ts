@@ -45,7 +45,7 @@ export class TaskEvaluationService {
 
   startTask(){
     if(this.taskRunning){
-      console.error("there is already a task running")
+      console.info("there is already a task running")
     }
     else{
       this.taskRunning = true;
