@@ -18,8 +18,8 @@
 
 <div style="display: flex; flex-direction: column;" *ngIf="!clicked && selectedInputType==InputType.EYE">
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]">
-        <div *ngIf="randomizationService.selectedSize != Sizes.S" class="clickArea green" id="click-task">Look here to select!</div>
-        <div *ngIf="randomizationService.selectedSize == Sizes.S" style="width: 100%; border-radius: 12px; padding: 0px;" class="clickArea green" id="click-task"></div>
+        <div *ngIf="randomizationService.selectedSize != Sizes.S" class="clickArea green" >Look here to select!</div>
+        <div *ngIf="randomizationService.selectedSize == Sizes.S" style="width: 100%; border-radius: 12px; padding: 0px;" class="clickArea green"></div>
         <mat-card-title>First Headline</mat-card-title>
         <div style="width: 70%">
             <span *ngIf="randomizationService.selectedSize != Sizes.S">Lorem ipsum dolor sit amet, consetetur sadipscing elitr. </span> 
@@ -36,16 +36,14 @@
         </div>
     </mat-card>
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2]]" >
-        <div *ngIf="randomizationService.selectedSize != Sizes.S" class="clickArea green" id="click-task">Look here to select!</div>
-        <div *ngIf="randomizationService.selectedSize == Sizes.S" style="width: 100%; border-radius: 12px; padding: 0px;" class="clickArea green" id="click-task"></div>
+        <div *ngIf="randomizationService.selectedSize != Sizes.S" class="clickArea green" >Look here to select!</div>
+        <div *ngIf="randomizationService.selectedSize == Sizes.S" style="width: 100%; border-radius: 12px; padding: 0px;" class="clickArea green"></div>
         <mat-card-title>Third Headline</mat-card-title>
         <div style="width: 70%">
             <span *ngIf="randomizationService.selectedSize != Sizes.S">Lorem ipsum dolor sit amet, consetetur sadipscing elitr. </span> 
             <span *ngIf="randomizationService.selectedSize == Sizes.L">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.</span> 
         </div> 
     </mat-card>
-    <!-- <div id="click-task" class="clickArea large">Select me!</div> -->
-    <!-- <div class="clickArea small">Select me!</div> -->
 </div>
 
    
