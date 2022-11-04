@@ -60,7 +60,6 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
   public addSuccess(aborted? : boolean){
     this.taskEvaluationService.endTask(aborted);
     if(aborted){
-      console.log("aborted");
       this.randomizationService.nextRep();
     }
     else{
@@ -174,7 +173,9 @@ public startMix2Input(){
       }
     }, 100);
   }
-  this.mix2loaded = true;
+  setTimeout(() => {
+    this.mix2loaded = true;
+  }, 500)
 }
 
 public stopAllInputs(){

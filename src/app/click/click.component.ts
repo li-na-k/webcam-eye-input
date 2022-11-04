@@ -144,7 +144,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     -> using Renderer2 might have been an option but this works, so keeeping it like this for the moment */
     setTimeout(() =>
       {this.mix2loaded = true;}
-    ,100) //no other option because pointer lock request does not return observable to check success 
+    ,500) //no other option because pointer lock request does not return observable to check success 
   }
 
   public stopAllInputs(){

@@ -113,7 +113,7 @@ public startMix2Input(){
   }, 100);
   setTimeout(() => {
     this.mix2loaded = true;
-  }, 100)
+  }, 500)
   console.log(this.mix2loaded)
 }
 
