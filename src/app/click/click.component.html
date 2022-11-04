@@ -1,6 +1,6 @@
 <div style="display: flex; flex-direction: column; align-content: space-between;" *ngIf="!clicked && !(selectedInputType == InputType.EYE)">
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]" class="clickArea">
-        <mat-card-title>First Headline</mat-card-title>
+        <mat-card-title>Hello!</mat-card-title>
         <span *ngIf="randomizationService.selectedSize != Sizes.S">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy. </span>
         <span *ngIf="randomizationService.selectedSize == Sizes.L">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril.</span>  
     </mat-card>
@@ -10,7 +10,7 @@
         <span *ngIf="randomizationService.selectedSize == Sizes.L">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril.</span> 
     </mat-card>
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2]]" class="clickArea">
-        <mat-card-title>Third Headline</mat-card-title>
+        <mat-card-title>I am a Headline</mat-card-title>
         <span *ngIf="randomizationService.selectedSize != Sizes.S">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy. </span> 
         <span *ngIf="randomizationService.selectedSize == Sizes.L">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril.</span> 
     </mat-card>
@@ -20,7 +20,7 @@
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]">
         <div *ngIf="randomizationService.selectedSize != Sizes.S" class="clickArea green" >Look here to select!</div>
         <div *ngIf="randomizationService.selectedSize == Sizes.S" style="width: 100%; border-radius: 12px; padding: 0px;" class="clickArea green"></div>
-        <mat-card-title>First Headline</mat-card-title>
+        <mat-card-title>Hello!</mat-card-title>
         <div style="width: 70%">
             <span *ngIf="randomizationService.selectedSize != Sizes.S">Lorem ipsum dolor sit amet, consetetur sadipscing elitr. </span> 
             <span *ngIf="randomizationService.selectedSize == Sizes.L">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.</span> 
@@ -38,7 +38,7 @@
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2]]" >
         <div *ngIf="randomizationService.selectedSize != Sizes.S" class="clickArea green" >Look here to select!</div>
         <div *ngIf="randomizationService.selectedSize == Sizes.S" style="width: 100%; border-radius: 12px; padding: 0px;" class="clickArea green"></div>
-        <mat-card-title>Third Headline</mat-card-title>
+        <mat-card-title>I am a Headline</mat-card-title>
         <div style="width: 70%">
             <span *ngIf="randomizationService.selectedSize != Sizes.S">Lorem ipsum dolor sit amet, consetetur sadipscing elitr. </span> 
             <span *ngIf="randomizationService.selectedSize == Sizes.L">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.</span> 
