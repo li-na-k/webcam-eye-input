@@ -9,6 +9,8 @@
 
 .mat-icon-button{
     line-height: 0px;
+    height: auto;
+    width: auto;
 }
 
 .mat-spinner{

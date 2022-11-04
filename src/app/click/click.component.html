@@ -1,4 +1,4 @@
-<div style="display: flex; flex-direction: column; align-content: space-between;" *ngIf="!clicked && !(selectedInputType == InputType.EYE)">
+<div class="flex-container" *ngIf="!clicked && !(selectedInputType == InputType.EYE)">
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]" class="clickArea">
         <mat-card-title>Hello!</mat-card-title>
         <span *ngIf="randomizationService.selectedSize != Sizes.S">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy. </span>
@@ -16,7 +16,7 @@
     </mat-card>
 </div>
 
-<div style="display: flex; flex-direction: column;" *ngIf="!clicked && selectedInputType==InputType.EYE">
+<div class="flex-container" *ngIf="!clicked && selectedInputType==InputType.EYE">
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]">
         <div *ngIf="randomizationService.selectedSize != Sizes.S" class="clickArea green" >Look here to select!</div>
         <div *ngIf="randomizationService.selectedSize == Sizes.S" style="width: 100%; border-radius: 12px; padding: 0px;" class="clickArea green"></div>

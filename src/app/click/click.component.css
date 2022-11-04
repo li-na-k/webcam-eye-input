@@ -7,6 +7,14 @@
     margin: 50px;
 }
 
+.flex-container{
+    display: flex; 
+    flex-direction: column; 
+    height: 100%; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
 mat-card{
     border: 2px solid var(--blue);
     margin: 5px;
