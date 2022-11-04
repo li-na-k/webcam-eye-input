@@ -37,9 +37,13 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
 
   //calibration status
   public calibrationDone : boolean = false;
-  public showTaskPopup = true; 
-  public showCalibrationPopup = true;
-  public CalibrationPopupShown = false;
+  //calibration explanation popup
+  protected showCalibExplanation(){
+    this.calibrationCmp.showPopup = true;
+  }
+  public calibrationExplanationShown : boolean = false;
+  //task explanation
+  public showTaskPopup : boolean = true; 
 
   constructor(private store : Store<AppState>, 
     public webgazerService : WebgazerService, 
@@ -68,27 +72,26 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
   }
 
   public setCalibrationDone(done : boolean){ //TODO check if this function is correct!
-    if(done){ //calibration should NOT be shown next time
+    if(done){ //calibration should NOT be shown next task
       this.calibrationDone = true;
     }
-    else{ //SHOW calibration next time
+    else{ //SHOW calibration next task
       if(this.randomizationService.selectedInputType == InputType.MOUSE){ 
         this.calibrationDone = true; //no calibration needed if mouse input
       }
       else{
         this.calibrationDone = false;
-        this.CalibrationPopupShown = true;
+        this.calibrationExplanationShown = true;
       }
     }
-    //if calibration for the first time: show explanation
-    if(!this.calibrationDone && !this.CalibrationPopupShown){
-      this.showCalibrationPopup = true; 
+    //decide if calibration for the first time (yes -> show explanation)
+    if(!this.calibrationDone && !this.calibrationExplanationShown){
+      this.showCalibExplanation();
     }
   }
 
   confirmSelection(){
     this.baseTaskComponent.activateSelectedInputType();
-    //this.taskEvaluationService.endTask();
     this.taskEvaluationService.startTask();
   }
 

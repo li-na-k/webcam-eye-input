@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<div *ngIf="!webgazerService.webgazerLoaded"> <!-- style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;" -->
+<div *ngIf="!webgazerService.webgazerLoaded"> 
     <div class="popup-full-background"></div>
     <div class="Popup">            
         <mat-spinner [diameter]="30" ></mat-spinner>
@@ -72,7 +72,7 @@
     <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
         (click)="calibrationDone = true; this.blur($event)">Skip callibration
     </button>
-    <span *ngIf="!webgazerService.paused">
+    <!-- <span *ngIf="!webgazerService.paused">
         <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="webgazerService.togglePauseWebgazer(); this.blur($event)">
             <mat-icon>pause</mat-icon>
         </button>
@@ -81,10 +81,16 @@
         <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="webgazerService.togglePauseWebgazer(); this.blur($event)">
             <mat-icon>play_arrow</mat-icon>
         </button>
-    </span>
-    <button *ngIf="!calibrationDone" class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="showCalibrationPopup = true; this.blur($event);">
+    </span> -->
+    <button *ngIf="!calibrationDone" class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="showCalibExplanation(); this.blur($event);">
         <mat-icon>question_mark</mat-icon>
     </button>
+    <span style="border: 1px solid black; padding: 5px 10px; border-radius: 15px;" *ngIf="calibrationDone" >
+        <span><span style="font-weight: bold;">{{randomizationService.selectedTask$ | async}}</span> via <span style="font-weight: bold;">{{randomizationService.selectedInputType$ | async}}</span></span>
+        <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="showTaskPopup = true; this.blur($event);">
+            <mat-icon>question_mark</mat-icon>
+        </button>
+    </span>
 </div>
         
 
@@ -95,14 +101,13 @@
     <div class="instructions">{{randomizationService.instructions}}</div> -->
 
     <app-calibration *ngIf="!calibrationDone && !randomizationService.everythingDone" 
-        (calibrationDoneEvent)="setCalibrationDone($event)"
-        [showPopup]="showCalibrationPopup">
+        (calibrationDoneEvent)="setCalibrationDone($event)">
     </app-calibration>
 
     <app-final-page (calibrationDoneEvent)="setCalibrationDone($event)" *ngIf="randomizationService.everythingDone || randomizationService.showQuestionnaireInfo"></app-final-page>
     
-    <div *ngIf="calibrationDone && !(randomizationService.everythingDone || randomizationService.showQuestionnaireInfo)">
-         <div id="experimentSandbox">
+    <div style="height: 100%;" *ngIf="calibrationDone && !(randomizationService.everythingDone || randomizationService.showQuestionnaireInfo)">
+         <div style="height: 100%;" id="experimentSandbox">
             <app-click *ngIf="(randomizationService.selectedTask$ | async) == TaskType.SELECT"></app-click>
             <app-hover *ngIf="(randomizationService.selectedTask$ | async) == TaskType.HOVER"></app-hover>                
             <app-scroll *ngIf="(randomizationService.selectedTask$ | async) == TaskType.SCROLL"></app-scroll>

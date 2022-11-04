@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
 
 @Component({
@@ -6,29 +6,20 @@ import { Output, EventEmitter } from '@angular/core';
   templateUrl: './calibration.component.html',
   styleUrls: ['./calibration.component.css']
 })
-export class CalibrationComponent /*implements OnInit*/ {
+export class CalibrationComponent {
 
   constructor() { }
 
-  // ngOnInit(): void {
-  //   console.log("init called calib")
-  // }
-
-  // ngOnDestroy(){
-  //   console.log("calib destroyed")
-  // }
-
   @Output() calibrationDoneEvent = new EventEmitter<boolean>();
-  @Input() showPopup : boolean = true;
 
   public numberOfCPt = 6*4;
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   public greenPtCount : number = 0;
-  //public showPopup = true;
   //settings
   public clickGoal = 2;
   //explanation
-  public explanationNr : number = 0;
+  protected explanationNr : number = 0;
+  public showPopup : boolean = true;
 
   public changeButtonColor(buttonNr: number){
     this.buttonClicks[buttonNr]++
@@ -51,7 +42,7 @@ export class CalibrationComponent /*implements OnInit*/ {
   public numberInstructions : number = 4;
   public nextExplanation(){
     if(this.explanationNr >= (this.numberInstructions-1)){
-      this.showPopup=false;
+      this.closePopup();
     }
     this.explanationNr = this.explanationNr+1; 
   }
@@ -60,9 +51,8 @@ export class CalibrationComponent /*implements OnInit*/ {
     this.explanationNr = this.explanationNr-1; 
   }
 
-  public showExplanation(){
-    console.log("show")
-    this.showPopup=true;
+  public closePopup(){
+    this.showPopup = false;
     this.explanationNr = 0;
   }
 
