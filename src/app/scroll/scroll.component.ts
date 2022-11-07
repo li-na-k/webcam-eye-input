@@ -79,18 +79,21 @@ public startMix1Input(): void {
 
 protected bound_removeMix1ScrollInterval = this.removeMix1ScrollInterval.bind(this);
 protected removeMix1ScrollInterval(){
+  this.newENTERPress = true;
   for(let i = 0; i < this.mix1ScrollInterval.length; i++){
     clearInterval(this.mix1ScrollInterval[i]); 
    }
 }
 
+private newENTERPress : boolean = true;
 public bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
 public Mix1Input(e : any){
-  if(e.keyCode == 13){
+  if(e.keyCode == 13 && this.newENTERPress){
+    this.newENTERPress = false; 
     for(let i = 0; i < this.scrollAreas.length; i++){
       let el : HTMLElement = this.scrollAreas[i] as HTMLElement;
       let inside : boolean = false;
-      if(el){     
+      if(el){   
         inside = this.eyeInputService.areEyesInsideElement(el);
         if (inside == true){ 
           clearInterval(this.mix1ScrollInterval[i]);
@@ -181,6 +184,7 @@ public stopAllInputs(){
   document.body.removeEventListener('keydown', this.bound_Mix1Input);
   document.body.removeEventListener('keyup', this.removeMix1ScrollInterval);
   this.removeMix1ScrollInterval();
+  this.newENTERPress = true;
   //MIX2
   this.mix2loaded = false;
   this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
