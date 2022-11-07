@@ -18,9 +18,10 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   public scrollAreas = document.getElementsByClassName("scroll-area");
 
   // calculations for target area(should be same height + position as content)
+  protected pxToScrollIntoTargetArea = 70; 
   protected content = document.getElementById("content")
-  protected contentTopPx = this.content!.getBoundingClientRect().top;
-  protected contentHeightPx = parseFloat(window.getComputedStyle(this.content!).getPropertyValue('height')) + 2 * parseFloat(window.getComputedStyle(this.content!).getPropertyValue('padding-top'))
+  protected contentTopPx = this.content!.getBoundingClientRect().top + this.pxToScrollIntoTargetArea;
+  protected contentHeightPx = parseFloat(window.getComputedStyle(this.content!).getPropertyValue('height')) + 2 * parseFloat(window.getComputedStyle(this.content!).getPropertyValue('padding-top')) - 2 * this.pxToScrollIntoTargetArea;
   protected contentTop = this.contentTopPx.toString() + 'px'; 
   protected contentHeight = this.contentHeightPx.toString() + 'px'; 
 
@@ -131,7 +132,7 @@ public target2Reached : boolean = false;
 public isHeadingInTargetArea(heading : HTMLElement): boolean{
   const targetArea = document.getElementById("target-area")
   let headingBoundingBox = heading.getBoundingClientRect();
-  let inside = this.eyeInputService.isInside(targetArea!, undefined, headingBoundingBox.top)
+  let inside = this.eyeInputService.isInside(targetArea!, undefined, headingBoundingBox.bottom)
   return inside;
 }
 
