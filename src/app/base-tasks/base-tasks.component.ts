@@ -27,7 +27,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   public arrow : HTMLElement | null = document.getElementById("arrow");
   public sandbox : HTMLElement | null = document.getElementById("experimentSandbox");
 
-  public timeOutAfterMouseInput : number = 1500; //TODO: ev. überschreiben je Komponent?
+  public timeOutAfterMouseInput : number = 500; //TODO: ev. überschreiben je Komponent?
 
   public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
   public selectedTask : Tasks = Tasks.HOVER; 

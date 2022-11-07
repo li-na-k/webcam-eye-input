@@ -125,15 +125,17 @@ export class EyeInputService implements OnDestroy {
     this.timeout = timeout;
     this.sandbox!.requestPointerLock(); 
     this.arrow!.style.visibility = 'visible';
+    this.arrow!.style.left = "50%";
+    this.arrow!.style.top = "50%";
     //eye input
     this.moveArrowInterval = setInterval(() => {
       if(!this.mouseInput){
         this.arrow!.classList.add("smoothTransition");
         this.moveArrowWithEyes(this.arrow);
-    }
-    else{
-      this.arrow!.classList.remove("smoothTransition");
-    }
+      }
+      else{
+        this.arrow!.classList.remove("smoothTransition");
+      }
     }, 100);
     window.document.addEventListener('mousemove', this.bound_mouseTakeover); 
   }
@@ -159,6 +161,7 @@ export class EyeInputService implements OnDestroy {
     sandbox!.style.cursor = '';
     clearTimeout(this.timeOutAfterMouseInput);
     clearInterval(this.moveArrowInterval);
+    this.mouseInput = false;
   }
 
   ngOnDestroy(): void{
