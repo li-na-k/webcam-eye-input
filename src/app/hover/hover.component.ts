@@ -158,6 +158,9 @@ public startMix2Input(){
   console.log("start hover mix2")
   console.log(this.sandbox);
   this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+  setTimeout(() => {
+    this.mix2loaded = true;
+  }, 500)
   for (let i = 0; i < this.hoverAreas!.length; i++){
     let currentHoverArea = this.hoverAreas![i]; 
     let inside : boolean | undefined = false;
@@ -173,9 +176,6 @@ public startMix2Input(){
       }
     }, 100);
   }
-  setTimeout(() => {
-    this.mix2loaded = true;
-  }, 500)
 }
 
 public stopAllInputs(){
@@ -193,8 +193,9 @@ public stopAllInputs(){
   //MIX1
   document.body.removeEventListener('keydown', this.bound_Mix1Input); 
   //MIX2
-  this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
   this.mix2loaded = false;
+  this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
+  
 }
 
 public changeApricot(el : HTMLElement){

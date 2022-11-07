@@ -161,9 +161,9 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
       }
     }
     //MIX2
+    this.mix2loaded = false;
     this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
     document.removeEventListener('mousedown', this.bound_changeOnClick); 
-    this.mix2loaded = false;
     //view port resets
     this.clicked = false;
     this.error = false;
