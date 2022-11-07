@@ -62,7 +62,7 @@
         style="background-color: white; border-radius: 15px; padding: 5px 15px; 
         display: flex; justify-content: space-between; align-items:center;
         margin-top: 20px; margin-bottom: 20px; width: 300px;">
-        <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.reps; index as i">
+        <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.sizeOrder; index as i">
             <span *ngIf="i + 1 <= randomizationService.repsDone">●</span>
             <span style="color: var(--green);" *ngIf="i + 1 > randomizationService.repsDone">○</span>
         </span>
