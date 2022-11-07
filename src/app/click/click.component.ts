@@ -30,7 +30,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
    super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
   }
 
-  override ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
     this.clickAreas = document.getElementsByClassName(this.className)
   }
 

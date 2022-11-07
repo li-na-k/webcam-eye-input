@@ -28,7 +28,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
   }
 
-  override ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
     this.hoverAreas = document.getElementsByClassName("hoverArea") as HTMLCollectionOf<HTMLElement>;
   }
 

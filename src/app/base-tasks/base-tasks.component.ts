@@ -47,9 +47,6 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
       .subscribe(d => this.selectedTask = d); 
   }
 
-  ngAfterViewInit(){
-  }
-
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
