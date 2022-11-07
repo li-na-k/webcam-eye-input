@@ -1,5 +1,5 @@
 <div *ngIf="selectedInputType!=InputType.MOUSE" [ngClass]="[randomizationService.selectedSize]" class="bottom scroll-area"></div>
-<div class="target-area" id="target-area"></div>
+<div class="target-area" id="target-area" [ngStyle]="{'top': contentTop, 'height': contentHeight}"></div>
 <div *ngIf="selectedInputType!=InputType.MOUSE" [ngClass]="[randomizationService.selectedSize]" class="top scroll-area"></div>
 <!-- <div class="left scroll-area"></div>
 <div class="right scroll-area"></div> -->

@@ -36,9 +36,9 @@
 }
 
 .target-area{
-    position: fixed;
-    width: 100%;
-    height: 60%; 
+    position: absolute;
+    /* height + top assigned dynamically */
+    width: 100%; 
     z-index: -1;
 }
 

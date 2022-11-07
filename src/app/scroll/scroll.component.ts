@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import { EyeInputService } from 'src/app/services/eye-input.service';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
-import { trigger, style, animate, transition } from '@angular/animations';
 import { WebgazerService } from '../services/webgazer.service';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
@@ -17,6 +16,13 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
 
   public taskElementID: string = "" //TODO: macht hier kein Sinn eigentlich
   public scrollAreas = document.getElementsByClassName("scroll-area");
+
+  // calculations for target area(should be same height + position as content)
+  protected content = document.getElementById("content")
+  protected contentTopPx = this.content!.getBoundingClientRect().top;
+  protected contentHeightPx = parseFloat(window.getComputedStyle(this.content!).getPropertyValue('height')) + 2 * parseFloat(window.getComputedStyle(this.content!).getPropertyValue('padding-top'))
+  protected contentTop = this.contentTopPx.toString() + 'px'; 
+  protected contentHeight = this.contentHeightPx.toString() + 'px'; 
 
   public interval_eye : any = null;
   public interval_mix2 : any = null;
