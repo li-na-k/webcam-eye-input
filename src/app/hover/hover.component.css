@@ -7,7 +7,7 @@
 
 .hoverArea{
     background-color: var(--blue);
-    margin: 20px;
+    margin: 20px 30px 100px 30px;
     display:flex; 
     justify-content: center;
     align-items:center;
@@ -47,8 +47,8 @@
 }
 
 .large{
-    width: 380px; 
-    height: 220px;
+    width: 522.5px; 
+    height: 160px;
 }
 
 
@@ -111,4 +111,5 @@
     align-items:center;
     text-align: center;
     flex-direction: column;
+    border-radius: 15px;
 }

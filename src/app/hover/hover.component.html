@@ -3,13 +3,13 @@
         <span class="tooltip" id="success">✓ This is a tooltip that explains the element.</span>
     </div>
     <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1]]" class="hoverArea">
-        <span class="tooltip"><span style="color: var(--red)">✖ </span>You hovered over the wrong tooltip</span>
+        <span class="tooltip">This is another tooltip.</span>
     </div>
     <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2]]" class="hoverArea">
-        <span class="tooltip"><span style="color: var(--red)">✖ </span>You hovered over the wrong tooltip</span>
+        <span class="tooltip">This is another tooltip.</span>
     </div>
     <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3]]" class="hoverArea">
-        <span class="tooltip"><span style="color: var(--red)">✖ </span>You hovered over the wrong tooltip</span>
+        <span class="tooltip">This is another tooltip.</span>
     </div>
     <div *ngIf="success" class="centeredOverlay">
         <div style="margin-bottom: 20px;">Move your eye gaze and your mouse here:</div>

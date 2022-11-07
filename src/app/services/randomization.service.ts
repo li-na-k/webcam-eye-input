@@ -29,15 +29,15 @@ export class RandomizationService {
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
 
-  //final page after finishing inputs 
-  public everythingDone: boolean = false;
-  public showQuestionnaireInfo : boolean = false;
-
   // each task: 3 different sizes, two reps each
-  public reps = [Sizes.S, Sizes.S , Sizes.M, Sizes.M, Sizes.L, Sizes.L];
+  public sizeOrder = [Sizes.S, Sizes.S , Sizes.M, Sizes.M, Sizes.L, Sizes.L];
   public repsDone : number = 0;
   public selectedSize : Sizes =  Sizes.M;
   //public selectedPos : string = "";
+
+  //final page after finishing inputs 
+  public everythingDone: boolean = false;
+  public showQuestionnaireInfo : boolean = false;
 
 
   messageSubject = new Subject();
@@ -47,7 +47,7 @@ export class RandomizationService {
     this.randomize();
     console.log(this.inputOrder);
     console.log(this.taskOrder);
-    console.log(this.reps);
+    console.log(this.sizeOrder);
     console.log(this.positionOrder);
   }
 
@@ -97,8 +97,8 @@ export class RandomizationService {
 
   public nextRep(){
     //endTask(); must be called separatly!
-    if(this.repsDone + 1 < this.reps.length){
-      this.selectedSize = this.reps[this.repsDone];
+    if(this.repsDone + 1 < this.sizeOrder.length){
+      this.selectedSize = this.sizeOrder[this.repsDone+1];
       this.taskEvalutationService.selectedSize = this.selectedSize;
       // if(this.repsDone >= this.positionOrder.length){ //TODO ??
       //   this.selectedPos = this.positionOrder[this.repsDone-this.positionOrder.length];
@@ -191,8 +191,9 @@ export class RandomizationService {
   private randomize(){
     this.shuffle(this.inputOrder);
     this.shuffle(this.taskOrder);
-    this.shuffle(this.reps);
+    this.shuffle(this.sizeOrder); 
     this.shuffle(this.positionOrder);
+    this.selectedSize = this.sizeOrder[0]; //first size
   }
 
 }
