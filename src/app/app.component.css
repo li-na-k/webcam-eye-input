@@ -46,8 +46,9 @@
     padding: 15px; 
     height: 50px;
     display: flex; 
-    align-items: center;
+    align-items: flex-start;
     gap: 15px; 
+
 }
 
 .instructions{

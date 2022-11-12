@@ -1,3 +1,4 @@
+import { BoundElementProperty } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
@@ -14,7 +15,8 @@ import { TaskEvaluationService } from './task-evaluation.service';
 })
 export class RandomizationService {
 
-  public instructions : string = "Please select a task first, then the input method!";
+  public taskInstructions : string = "Please select a task first, then the input method!";
+  public inputMethodInstructions : string = "";
   //selections from dropdown
   public selectedTask : Tasks | null = null; 
   public selectedInputType : InputType | null = null; 
@@ -135,54 +137,58 @@ export class RandomizationService {
     let input = this.selectedInputType;
     let task = this.selectedTask;
     if(input == InputType.EYE){
+      this.inputMethodInstructions = "Move the red dot with your eye-gaze."
       switch(task){
         case Tasks.HOVER:
-          this.instructions = "Look at the button to make it switch color."
+          this.taskInstructions = "Move the red dot over the button that says 'Hover over me!'."
           break;
         case Tasks.SCROLL:
-          this.instructions = "Look at the edges of the screen to scroll in the respective direction."
+          this.taskInstructions = "Move the red dot to the screen borders to scroll in the respective direction. Scroll to the headline that says „Scroll here!“, then scroll to the top of the page again."
           break;
         case Tasks.SELECT:
-            this.instructions = "Look at the button for some seconds to select it."
+            this.taskInstructions = "Move the red dot over the button that says 'Select me!' for some seconds to select it."
             break;
       }
     }
     if(input == InputType.MIX1){
+      this.inputMethodInstructions = "Move the red dot with your eye-gaze. To confirm the position press ENTER."
       switch(task){
         case Tasks.HOVER:
-          this.instructions = "Look at the button and confirm with ENTER."
+          this.taskInstructions = "Move the red dot over the button that says 'Hover over me!' and confirm with ENTER."
           break;
         case Tasks.SCROLL:
-          this.instructions = "Look at the edges of the screen and confirm with ENTER to scroll in the respective direction."
+          this.taskInstructions = "Move the red dot to the screen borders and press ENTER to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
           break;
         case Tasks.SELECT:
-            this.instructions = "Look at the button and confirm with ENTER."
+            this.taskInstructions = "Move the red dot over the button that says 'Select me!' and confirm with ENTER."
             break;
       }
     }
     if(input == InputType.MIX2){
+      this.inputMethodInstructions = "Move the red dot with your eye-gaze. With the mouse you can override eye input and thus do the finetuning of the cursor movement."
       switch(task){
         case Tasks.HOVER:
-          this.instructions = "Use your eyes to move the cursor near the button. With the mouse, you can override eye movements and thus do the finetuning of the movement."
+          this.taskInstructions = "Move the cursor over the button that says 'Hover over me!'."
           break;
         case Tasks.SCROLL:
-          this.instructions = "Use your eyes to move the cursor near the button. With the mouse, you can override eye movements and thus do the finetuning of the movement. Move the cursor to the screen borders to scroll in the respective direction."
+          this.taskInstructions = "Move the cursor to the screen borders to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
           break;
         case Tasks.SELECT:
-            this.instructions = "Use your eyes to move the cursor near the button. With the mouse, you can override eye movements and thus do the finetuning of the movement. Click to select the button."
+            this.taskInstructions = "Move the cursor over the button that says 'Select me!'. Click (with your mouse) to select the button."
             break;
       }
     }
     if(input == InputType.MOUSE){
+      this.inputMethodInstructions = "Use the mouse, like you normally would."
       switch(task){
         case Tasks.HOVER:
-          this.instructions = "Use the mouse to hover over the button."
+          this.taskInstructions = "Hover over the button that says 'Hover over me!'."
           break;
         case Tasks.SCROLL:
-          this.instructions = "Use the mouse to scroll the page."
+          this.taskInstructions = "Scroll to the headline that says „Scroll here“. Then, scroll to the top of the page again."
           break;
         case Tasks.SELECT:
-            this.instructions = "Use the mouse to click the button."
+            this.taskInstructions = "Click the button that says 'Select me!'."
             break;
       }
     }

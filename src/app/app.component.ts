@@ -44,6 +44,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
   public calibrationExplanationShown : boolean = false;
   //task explanation
   public showTaskPopup : boolean = true; 
+  public showInputMethodPopup : boolean = true;
 
   constructor(private store : Store<AppState>, 
     public webgazerService : WebgazerService, 

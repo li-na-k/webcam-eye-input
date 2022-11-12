@@ -74,15 +74,14 @@ button:hover{
 
 .Popup{
     position: absolute;
-    top: 20%;
-    left: 30%;
+    top: 10%;
     color: white;
     border-radius: 15px; 
     padding: 50px; 
     background-color: var(--blue); 
     z-index: 3;
     text-align: center;
-    width: 40%;
+    width: 50%;
 }
 
 .Popup-close{
@@ -97,6 +96,7 @@ button:hover{
 .popup-header {
     padding: 20px 0px 40px 0px;
     font-size: 30px;
+    line-height: 30px;
   }
 
 .popup-background {
@@ -122,3 +122,9 @@ button:hover{
     background-color: #fff;
     z-index: 2;
 } 
+
+.FlexboxCentered{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}

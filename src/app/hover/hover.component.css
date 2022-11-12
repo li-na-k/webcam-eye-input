@@ -76,7 +76,7 @@
     border-radius: 15px;
     /* Position the tooltip text */
     position: absolute;
-    z-index: 1;
+    z-index: 5;
     top: 110%;
     /* Fade in tooltip */
     opacity: 0; 
