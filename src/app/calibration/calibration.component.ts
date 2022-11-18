@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
 
 @Component({
@@ -6,11 +6,13 @@ import { Output, EventEmitter } from '@angular/core';
   templateUrl: './calibration.component.html',
   styleUrls: ['./calibration.component.css']
 })
-export class CalibrationComponent {
+export class CalibrationComponent implements OnInit{
 
   constructor() { }
 
   @Output() calibrationDoneEvent = new EventEmitter<boolean>();
+  @Input() calibrationExplanationShown : boolean = true;
+  public showPopup : boolean = true;
 
   public numberOfCPt = 6*4;
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
@@ -19,7 +21,10 @@ export class CalibrationComponent {
   public clickGoal = 2;
   //explanation
   protected explanationNr : number = 0;
-  public showPopup : boolean = true;
+
+  ngOnInit(){
+    this.showPopup = !this.calibrationExplanationShown; //if calibration explanation was already shown, do not show second time
+  }
 
   public changeButtonColor(buttonNr: number){
     this.buttonClicks[buttonNr]++
@@ -39,6 +44,11 @@ export class CalibrationComponent {
     }
   }
 
+  public closePopup(){
+    this.showPopup = false;
+    this.explanationNr = 1;
+  }
+
   public numberInstructions : number = 4;
   public nextExplanation(){
     if(this.explanationNr >= (this.numberInstructions-1)){
@@ -49,11 +59,6 @@ export class CalibrationComponent {
 
   public previousExplanation(){
     this.explanationNr = this.explanationNr-1; 
-  }
-
-  public closePopup(){
-    this.showPopup = false;
-    this.explanationNr = 0;
   }
 
 }

@@ -69,7 +69,7 @@
         <button *ngIf="this.randomizationService.selectedInputType != InputType.MIX2" style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">I can't do it - skip this one</button>
     </div>
     <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
-        (click)="calibrationDone = true; this.blur($event)">Skip callibration
+        (click)="setCalibrationDone(true); this.blur($event)">Skip callibration
     </button>
     <!-- <span *ngIf="!webgazerService.paused">
         <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="webgazerService.togglePauseWebgazer(); this.blur($event)">
@@ -104,7 +104,8 @@
     <div class="instructions">{{randomizationService.instructions}}</div> -->
 
     <app-calibration *ngIf="!calibrationDone && !randomizationService.everythingDone" 
-        (calibrationDoneEvent)="setCalibrationDone($event)">
+        (calibrationDoneEvent)="setCalibrationDone($event)"
+        [calibrationExplanationShown]="calibrationExplanationShown">
     </app-calibration>
 
     <app-final-page (calibrationDoneEvent)="setCalibrationDone($event)" *ngIf="randomizationService.everythingDone || randomizationService.showQuestionnaireInfo"></app-final-page>

@@ -66,15 +66,15 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
   }
 
   ngAfterViewInit(){
-    console.log("view init app component")
     this.randomizationService.nextInputMethod();
     this.setCalibrationDone(false);
-    this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true;
+    this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true
   }
 
-  public setCalibrationDone(done : boolean){ //TODO check if this function is correct!
+  public setCalibrationDone(done : boolean){ 
     if(done){ //calibration should NOT be shown next task
       this.calibrationDone = true;
+      this.calibrationExplanationShown = true; //as soon as (first) calibration is done: set explanation shown to true, so it will not be shown second time
     }
     else{ //SHOW calibration next task
       if(this.randomizationService.selectedInputType == InputType.MOUSE){ 
@@ -82,12 +82,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
       }
       else{
         this.calibrationDone = false;
-        this.calibrationExplanationShown = true;
       }
-    }
-    //decide if calibration for the first time (yes -> show explanation)
-    if(!this.calibrationDone && !this.calibrationExplanationShown){
-      this.showCalibExplanation();
     }
   }
 
@@ -99,7 +94,6 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
   blur($event : any){
     $event.target.blur();
   }
-
   
   public enteredUserID: string = "";
   public userIDSubmitted : boolean = false;
