@@ -51,21 +51,6 @@
     height: 160px;
 }
 
-
-
-.arrow {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 20px;
-    visibility: hidden; 
-    pointer-events: none;
-    z-index: 1000;
-    -webkit-filter: drop-shadow(2px 4px 6px black);
-    filter: drop-shadow(2px 4px 6px black);
-}
-
-
 .tooltip{
     visibility: hidden;
     width: 200px;

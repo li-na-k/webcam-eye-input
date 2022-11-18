@@ -67,8 +67,8 @@ button:hover{
 }
 
 .smoothTransition{
-    -webkit-filter: none;
-    filter: none;
+    -webkit-filter: drop-shadow(2px 4px 6px red); /* red to visualize the mix with eye input (where dot is also red) */
+    filter: drop-shadow(2px 4px 6px red);
     transition: all 0.5s linear;
 }
 
