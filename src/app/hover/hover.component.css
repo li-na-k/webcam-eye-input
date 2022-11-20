@@ -51,7 +51,7 @@
     height: 160px;
 }
 
-.tooltip{
+.tooltip{ /* is actually not really a tooltip since it stays next to the element */
     visibility: hidden;
     width: 200px;
     background-color: #555;
@@ -80,7 +80,7 @@
 }
 
 .centeredOverlay {
-    background-color: white;
+    background-color: transparent;
     height: 100%;
     position: relative;
     width: 100%;
