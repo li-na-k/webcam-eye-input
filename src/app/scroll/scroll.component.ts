@@ -189,8 +189,10 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
 
   protected slideInSuccessBox(){
     var successBox = document.getElementById("successBox");
-    successBox!.style.opacity = "1";
-    successBox!.style.animation = "0.5s linear slide-in";
+    setTimeout(() => {
+      successBox!.style.opacity = "1";
+      successBox!.style.animation = "0.5s linear slide-in";
+    }, 800)
     setTimeout(() => {
       successBox!.style.opacity = "0";
       successBox!.style.opacity = "1000ms";
