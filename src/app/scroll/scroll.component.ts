@@ -59,6 +59,7 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   }
   
   public startEyeInput(){
+    this.preventMouseScroll();
     let inside : boolean = false;
     this.interval_eye = setInterval(() => {
       for(let i = 0; i < this.scrollAreas.length; i++){
@@ -72,125 +73,138 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   }
 
 
-public startMix1Input(): void {
-  document.body.addEventListener('keydown', this.bound_Mix1Input);
-  document.body.addEventListener('keyup', this.bound_removeMix1ScrollInterval);
-}
+  public startMix1Input(): void {
+    this.preventMouseScroll();
+    document.body.addEventListener('keydown', this.bound_Mix1Input);
+    document.body.addEventListener('keyup', this.bound_removeMix1ScrollInterval);
+  }
 
-protected bound_removeMix1ScrollInterval = this.removeMix1ScrollInterval.bind(this);
-protected removeMix1ScrollInterval(){
-  this.newENTERPress = true;
-  for(let i = 0; i < this.mix1ScrollInterval.length; i++){
-    clearInterval(this.mix1ScrollInterval[i]); 
-   }
-}
+  protected bound_removeMix1ScrollInterval = this.removeMix1ScrollInterval.bind(this);
+  protected removeMix1ScrollInterval(){
+    this.newENTERPress = true;
+    for(let i = 0; i < this.mix1ScrollInterval.length; i++){
+      clearInterval(this.mix1ScrollInterval[i]); 
+    }
+  }
 
-private newENTERPress : boolean = true;
-public bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
-public Mix1Input(e : any){
-  if(e.keyCode == 13 && this.newENTERPress){
-    this.newENTERPress = false; 
-    for(let i = 0; i < this.scrollAreas.length; i++){
-      let el : HTMLElement = this.scrollAreas[i] as HTMLElement;
-      let inside : boolean = false;
-      if(el){   
-        inside = this.eyeInputService.areEyesInsideElement(el);
-        if (inside == true){ 
-          clearInterval(this.mix1ScrollInterval[i]);
-          this.mix1ScrollInterval[i] = setInterval(() => {
-            this.scroll(el);
-          }, 100)
+  private newENTERPress : boolean = true;
+  public bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
+  public Mix1Input(e : any){
+    if(e.keyCode == 13 && this.newENTERPress){
+      this.newENTERPress = false; 
+      for(let i = 0; i < this.scrollAreas.length; i++){
+        let el : HTMLElement = this.scrollAreas[i] as HTMLElement;
+        let inside : boolean = false;
+        if(el){   
+          inside = this.eyeInputService.areEyesInsideElement(el);
+          if (inside == true){ 
+            clearInterval(this.mix1ScrollInterval[i]);
+            this.mix1ScrollInterval[i] = setInterval(() => {
+              this.scroll(el);
+            }, 100)
+          }
         }
       }
     }
   }
-}
 
-public mouseInput : boolean = false; //TODO: needed?
+  public mouseInput : boolean = false; //TODO: needed?
 
-
-public startMix2Input(){
-  this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
-  let inside : boolean | undefined = false;
-  this.interval_mix2 = setInterval(() => {
-    for(let i = 0; i < this.scrollAreas.length; i++){
-      let el : HTMLElement = this.scrollAreas[i] as HTMLElement;
-      inside = this.eyeInputService.isInside(el, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
-      if (inside == true){
-        this.scroll(el);
+  public startMix2Input(){
+    this.preventMouseScroll();
+    this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
+    let inside : boolean | undefined = false;
+    this.interval_mix2 = setInterval(() => {
+      for(let i = 0; i < this.scrollAreas.length; i++){
+        let el : HTMLElement = this.scrollAreas[i] as HTMLElement;
+        inside = this.eyeInputService.isInside(el, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
+        if (inside == true){
+          this.scroll(el);
+        }
       }
-    }
-  }, 100);
-  setTimeout(() => {
-    this.mix2loaded = true;
-  }, 500)
-  console.log(this.mix2loaded)
-}
-
-public target1Reached : boolean = false;
-public target2Reached : boolean = false;
-@ViewChild('target1', { static: true }) target1!: ElementRef;
-@ViewChild('target2', { static: true }) target2!: ElementRef;
-
-public isHeadingInTargetArea(heading : HTMLElement): boolean{
-  const targetArea = document.getElementById("target-area")
-  let headingBoundingBox = heading.getBoundingClientRect();
-  let inside = this.eyeInputService.isInside(targetArea!, undefined, headingBoundingBox.bottom)
-  return inside;
-}
-
-
-public bound_changeTargetReached = this.changeTargetReached.bind(this);
-public changeTargetReached(){
-  let target1Inside = this.isHeadingInTargetArea(this.target1.nativeElement);
-  let target2Inside = this.isHeadingInTargetArea(this.target2.nativeElement);
-  if(target1Inside){
-    this.target1Reached = true;
-  }
-  if(target2Inside && this.target1Reached){
-    this.addSuccess();
-  }
-}
-
-public addSuccess(aborted? : boolean){
-  this.taskEvaluationService.endTask(aborted);
-  if(aborted){
-    this.target2Reached = false;
-    this.target1Reached = false;
-    this.randomizationService.nextRep();
-  }
-  else{ 
-    this.target2Reached = true;
-    this.stopAllInputs();
+    }, 100);
     setTimeout(() => {
+      this.mix2loaded = true;
+    }, 500)
+    console.log(this.mix2loaded)
+  }
+
+  public target1Reached : boolean = false;
+  public target2Reached : boolean = false;
+  @ViewChild('target1', { static: true }) target1!: ElementRef;
+  @ViewChild('target2', { static: true }) target2!: ElementRef;
+
+  public isHeadingInTargetArea(heading : HTMLElement): boolean{
+    const targetArea = document.getElementById("target-area")
+    let headingBoundingBox = heading.getBoundingClientRect();
+    let inside = this.eyeInputService.isInside(targetArea!, undefined, headingBoundingBox.bottom)
+    return inside;
+  }
+
+
+  public bound_changeTargetReached = this.changeTargetReached.bind(this);
+  public changeTargetReached(){
+    let target1Inside = this.isHeadingInTargetArea(this.target1.nativeElement);
+    let target2Inside = this.isHeadingInTargetArea(this.target2.nativeElement);
+    if(target1Inside){
+      this.target1Reached = true;
+    }
+    if(target2Inside && this.target1Reached){
+      this.addSuccess();
+    }
+  }
+
+  public addSuccess(aborted? : boolean){
+    this.taskEvaluationService.endTask(aborted);
+    if(aborted){
       this.target2Reached = false;
       this.target1Reached = false;
-      this.activateSelectedInputType();
       this.randomizationService.nextRep();
-    }, 2000)
+    }
+    else{ 
+      this.target2Reached = true;
+      this.stopAllInputs();
+      setTimeout(() => {
+        this.target2Reached = false;
+        this.target1Reached = false;
+        this.activateSelectedInputType();
+        this.randomizationService.nextRep();
+      }, 2000)
+    }
   }
-}
 
-public stopAllInputs(){
-  const content = document.getElementById("content");
-  console.log("stopAllInputs scroll component")
-  content?.scrollTo(0,0);
-  //mouse
-  content!.removeEventListener("scroll", this.bound_changeTargetReached); 
-  //end Eye Input
-  clearInterval(this.interval_mix2);
-  clearInterval(this.interval_eye);
-  //end Mix1 click event
-  document.body.removeEventListener('keydown', this.bound_Mix1Input);
-  document.body.removeEventListener('keyup', this.removeMix1ScrollInterval);
-  this.removeMix1ScrollInterval();
-  this.newENTERPress = true;
-  //MIX2
-  this.mix2loaded = false;
-  this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
-}
+  //disable scroll
+  private preventDefault(event : any){
+    event.preventDefault();
+  }
 
+  private preventMouseScroll(){ 
+    window.addEventListener('wheel', this.preventDefault, { passive: false })
+  }
 
+  private allowMouseScroll(){ 
+    window.removeEventListener('wheel', this.preventDefault)
+  }
+
+  public stopAllInputs(){
+    this.allowMouseScroll();
+    const content = document.getElementById("content");
+    console.log("stopAllInputs scroll component")
+    content?.scrollTo(0,0);
+    //mouse
+    content!.removeEventListener("scroll", this.bound_changeTargetReached); 
+    //end Eye Input
+    clearInterval(this.interval_mix2);
+    clearInterval(this.interval_eye);
+    //end Mix1 click event
+    document.body.removeEventListener('keydown', this.bound_Mix1Input);
+    document.body.removeEventListener('keyup', this.removeMix1ScrollInterval);
+    this.removeMix1ScrollInterval();
+    this.newENTERPress = true;
+    //MIX2
+    this.mix2loaded = false;
+    this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
+  }
 }
 
 
