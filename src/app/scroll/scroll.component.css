@@ -58,3 +58,22 @@
 .large{
     height: 30%;
 }
+
+#successBox{
+    opacity: 0;
+    /* visibility: hidden; */
+    padding: 10px 15px;
+    border-radius: 15px;
+    color: #fff;
+    background: var(--green);
+    width: fit-content;
+}
+
+@keyframes slide-in {
+    from {
+      transform: translateX(-200px);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
