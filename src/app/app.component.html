@@ -121,15 +121,15 @@
         <div *ngIf="showTaskPopup" style="display:flex;justify-content:center;">
             <div class="popup-background"></div>
             <!-- if new input method -->
-                <div *ngIf="randomizationService.tasksDone == 1 && showInputMethodPopup" class="Popup">
+                <div *ngIf="randomizationService.tasksDone == 1 && showInputMethodPopup" class="Popup" style="background-color: var(--apricot);">
                     <div class="popup-header">
                         Your Input Method now:
-                        <span style="font-weight: bold; color: #f7c7b9;">{{randomizationService.selectedInputType}}</span>
+                        <span style="font-weight: bold; color: #a3cce0;">{{randomizationService.selectedInputType}}</span>
                     </div>
                     <div style="margin-bottom: 25px;">
                         {{randomizationService.inputMethodInstructions}}
                     </div>
-                    <button (click)="showInputMethodPopup=false; this.blur($event)">OK</button>
+                    <button style="background-color: var(--blue);" (click)="showInputMethodPopup=false; this.blur($event)">OK</button>
                 </div>
             <!-- new task -->
                 <div class="Popup" *ngIf="randomizationService.tasksDone > 1 || !showInputMethodPopup">
