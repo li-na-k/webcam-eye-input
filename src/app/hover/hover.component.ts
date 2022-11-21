@@ -1,164 +1,210 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { EyesOnlyInputService } from 'src/services/eyes-only-input.service';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { EyeInputService } from 'src/app/services/eye-input.service';
 import { Store } from '@ngrx/store';
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { InputType } from '../enums/input-type';
 import { AppState } from '../state/app.state';
-import { selectInputType } from '../state/expConditions/expconditions.selector';
-
+import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
+import { WebgazerService } from '../services/webgazer.service';
+import { TaskEvaluationService } from '../services/task-evaluation.service';
+import { RandomizationService } from '../services/randomization.service';
 
 @Component({
   selector: 'app-hover',
+  providers: [{ provide: BaseTasksComponent, useExisting: HoverComponent }],
   templateUrl: './hover.component.html',
   styleUrls: ['./hover.component.css']
 })
-export class HoverComponent implements OnInit, OnDestroy {
+export class HoverComponent extends BaseTasksComponent implements OnInit, OnDestroy {
 
-  public interval : any;
-  public moveArrowinterval : any;
-  public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
-  public selectedInputType : InputType = InputType.EYE;
-  public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+  public hoverAreas : HTMLCollectionOf<HTMLElement> | null = null;
 
-  constructor(private store : Store<AppState>, private eyesOnlyInput : EyesOnlyInputService) { }
+  public tooltipDuration : number = 2000;
+  public tooltipTimers : any[] = [0,0,0,0];
 
-  public taskElementID : string = "recthover";
-  public taskElement : HTMLElement | null = document.getElementById(this.taskElementID);
+  public intervals : any[] = [0,0,0,0]; //one for each click Area
+  public success: boolean = false;
 
-  ngOnInit(): void {
-    this.taskElement = document.getElementById(this.taskElementID);
-    this.arrow = document.getElementById("arrow");
-    this.sandbox = document.getElementById("experimentSandbox");
-    this.selectedInputType$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(d => this.selectedInputType = d);
-    this.activateSelectedInputType();
+
+  constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) { 
+    super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
   }
 
-  ngOnDestroy(): void {
-    clearInterval(this.interval);
-    this.destroy$.next(true);
-    this.destroy$.complete();
-  } 
-
-  
-  public startMouseInput = this.changeElApricot.bind(this);
-  //todo switch back to blue afterwards
-  
-  public changeElApricot(){
-    this.taskElement!.style.backgroundColor = "var(--apricot)";
+  ngAfterViewInit(): void {
+    this.hoverAreas = document.getElementsByClassName("hoverArea") as HTMLCollectionOf<HTMLElement>;
   }
 
-  public changeElBlue(){
-    this.taskElement!.style.backgroundColor = "var(--blue)";
+  // public bound_showTooltip = this.showTooltip.bind(this);
+  public showTooltip(element : HTMLElement){
+    let tooltip = element.firstElementChild as HTMLElement;
+    if(tooltip){
+      this.checkIfError(tooltip);
+      tooltip!.style.visibility = "visible"
+      tooltip!.style.opacity = "1"
+    }
+    else{
+      console.error("Tooltip element not found.")
+    }
+  }
+
+  public checkIfError(tooltip : HTMLElement){
+    setTimeout(() => {
+      this.hideTooltip(tooltip.parentElement!); 
+    }, 3000)
+    if(tooltip.id != "success"){ //error
+      this.taskEvaluationService.addError();
+    }
+    else{ //success
+      this.addSuccess();
+    }
+  }
+
+  public addSuccess(aborted? : boolean){
+    this.taskEvaluationService.endTask(aborted);
+    if(aborted){
+      this.randomizationService.nextRep();
+    }
+    else{
+      this.stopAllInputs(); 
+      setTimeout(() => {
+        this.success = true; // between-reps: Blank page because eyes should be in middle of screen again
+        this.arrow!.style.left = "400px";
+        this.arrow!.style.top = "400px";
+        setTimeout(() => {
+          this.success = false;
+          this.activateSelectedInputType();
+          this.randomizationService.nextRep();
+        }, 5000)
+      }, 3000);
+    }
+  }
+  
+  // public bound_hideTooltip = this.hideTooltip.bind(this);
+  public hideTooltip(element : HTMLElement){
+    let tooltip = element.firstElementChild as HTMLElement;
+    if(tooltip){
+      tooltip!.style.visibility = "hidden"
+      tooltip!.style.opacity = "0"
+    }
+    else{
+      console.log("Tooltip element not found.")
+    }
+  }
+  
+  public handler_show = (event : any) => this.showTooltip(event.target as HTMLElement);
+  public handler_hide = (event : any) => this.hideTooltip(event.target as HTMLElement);
+  public startMouseInput(){
+    for (let i = 0; i < this.hoverAreas!.length; i++){
+      let currentHoverArea = this.hoverAreas![i];
+      currentHoverArea.addEventListener('mouseover', this.handler_show);
+      currentHoverArea.addEventListener('mouseleave', this.handler_hide);
+    }
   }
 
   public startEyeInput(){
-    var inside : boolean | undefined = false;
-    this.interval = setInterval(() => {
-      inside = this.eyesOnlyInput.areEyesInsideElement(this.taskElement!);
-      if (inside == true && this.taskElement){
-        this.changeElApricot();
+    for (let i = 0; i < this.hoverAreas!.length; i++){
+      let currentHoverArea = this.hoverAreas![i]; 
+      let inside : boolean = false;
+      let visible : boolean = false;
+      this.intervals[i] = setInterval(() => {
+        inside = this.eyeInputService.areEyesInsideElement(currentHoverArea);
+        if (inside){
+          visible = true;
+          clearTimeout(this.tooltipTimers[i]) 
+          this.changeApricot(currentHoverArea);
+          this.showTooltip(currentHoverArea); //error evaluation
+        }
+        else { 
+          this.changeBlue(currentHoverArea);
+          if(visible){
+            this.tooltipTimers[i] = setTimeout(() => {
+              this.hideTooltip(currentHoverArea); 
+              visible = false;
+            }, this.tooltipDuration)
+          }
+        }
+      }, 100);
+    }
+  }
+
+public bound_Mix1Input = this.Mix1Input.bind(this); 
+public Mix1Input(e : any){
+  if(e.keyCode == 13){
+    for (let i = 0; i < this.hoverAreas!.length; i++){
+      let currentHoverArea = this.hoverAreas![i]; 
+      let inside : boolean = false;
+      if(currentHoverArea){   
+        inside = this.eyeInputService.areEyesInsideElement(currentHoverArea);
+        if (inside == true){
+          this.changeApricot(currentHoverArea)
+          this.showTooltip(currentHoverArea);
+          this.tooltipTimers[i] = setTimeout(() => {
+            this.hideTooltip(currentHoverArea); 
+            this.changeBlue(currentHoverArea);
+          }, this.tooltipDuration)
+        }
+        // else if(inside == false){
+        //   this.changeBlue(currentHoverArea)
+        //   this.hideTooltip(currentHoverArea); //TODO: Check if task element needed... probably not because success id already on tooltip
+        // }
       }
-      else if(inside == false && this.taskElement){
-        this.changeElBlue();
+    }
+  }
+}
+
+public startMix1Input(): void {
+  document.body.addEventListener('keydown', this.bound_Mix1Input);
+}
+
+public startMix2Input(){
+  console.log("start hover mix2")
+  console.log(this.sandbox);
+  this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+  setTimeout(() => {
+    this.mix2loaded = true;
+  }, 500)
+  for (let i = 0; i < this.hoverAreas!.length; i++){
+    let currentHoverArea = this.hoverAreas![i]; 
+    let inside : boolean | undefined = false;
+    this.intervals[i] = setInterval(() => { 
+      inside = this.eyeInputService.isInside(currentHoverArea, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
+      if (inside == true){
+        this.changeApricot(currentHoverArea);
+        this.showTooltip(currentHoverArea);
+      }
+      else if(inside == false){
+        this.changeBlue(currentHoverArea);
+        this.hideTooltip(currentHoverArea);
       }
     }, 100);
   }
+}
 
-public binded_startMix1Input = this.startMix1Input.bind(this);
-public startMix1Input(e : any){
-  if(e.keyCode == 13){
-    var inside : boolean = false;
-    if(this.taskElement){    
-      inside = this.eyesOnlyInput.areEyesInsideElement(this.taskElement);
-      if (inside == true){ 
-        this.changeElApricot()
-      }
-      else if(inside == false){
-        this.changeElBlue()
-      }
-    }
+public stopAllInputs(){
+  console.log("stop all INputs called")
+  for(let i of this.tooltipTimers){clearTimeout(i)};
+  //MOUSE + hide tooltips from before
+  for (let i = 0; i < this.hoverAreas!.length; i++){
+    let currentHoverArea = this.hoverAreas![i];
+    this.hideTooltip(currentHoverArea); //TODO: not needed if all timers ended?
+    currentHoverArea.removeEventListener('mouseover', this.handler_show);
+    currentHoverArea.removeEventListener('mouseleave', this.handler_hide);
   }
-}
-//TODO: after hover, switch to blue again (timeout?)
-
-public mouseInput : boolean = false;
-public timeOutAfterMouseInput : any;
-public arrow : HTMLElement | null = null;
-public sandbox : HTMLElement | null = null;
-
-public startMix2Input(){
-  this.arrow!.style.visibility = 'visible';
-  this.sandbox!.style.cursor = 'none';
-  //activate eye input
-  this.moveArrowinterval = setInterval(() => {
-    if(!this.mouseInput){
-      this.arrow!.classList.add("smoothTransition");
-      this.eyesOnlyInput.moveArrowWithEyes();
-    }
-    else{
-      this.arrow!.classList.remove("smoothTransition");
-    }
-  }, 100);
-  //activate mouse input
-  window.document.addEventListener('mousemove', this.binded_mouseTakeover);
-  //hover color effect
-  var inside : boolean | undefined = false;
-  this.interval = setInterval(() => {
-    inside = this.eyesOnlyInput.isInside(this.taskElement!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
-    if (inside == true){
-      this.changeElApricot();
-    }
-    else if(inside == false){
-      this.changeElBlue();
-    }
-  }, 100);
-}
-
-public binded_mouseTakeover = this.mouseTakeover.bind(this);
-public mouseTakeover(e : any){
-  clearTimeout(this.timeOutAfterMouseInput);
-  this.mouseInput = true;
-  this.eyesOnlyInput.moveArrowWithMouse(e, this.arrow!, this.sandbox!);
-  this.timeOutAfterMouseInput = setTimeout(() => {
-    this.mouseInput = false;
-  }, 1500)
-}
-
-public stopOtherInputs(){
-  this.taskElement!.style.backgroundColor = "var(--blue)";
   //EYE & MIX2 interval
-  clearInterval(this.interval);
-  //MOUSE
-  this.taskElement?.removeEventListener('hover', this.changeElApricot);
+  for(let i of this.intervals){clearInterval(i)}; //TODO: can be used twice?
   //MIX1
-  document.body.removeEventListener('keydown', this.binded_startMix1Input); 
+  document.body.removeEventListener('keydown', this.bound_Mix1Input); 
   //MIX2
-  window.document.removeEventListener('mousemove', this.binded_mouseTakeover);
-  this.arrow = document.getElementById("arrow");
-  this.arrow!.style.visibility = 'hidden';
-  this.sandbox!.style.cursor = '';
-  clearTimeout(this.timeOutAfterMouseInput);
-  clearInterval(this.moveArrowinterval);
+  this.mix2loaded = false;
+  this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
+  
 }
 
-public activateSelectedInputType(){
-  this.stopOtherInputs();
-  if(this.selectedInputType == InputType.EYE){
-    this.startEyeInput();
-  }
-  if(this.selectedInputType == InputType.MOUSE){
-    this.taskElement?.addEventListener('mouseover', this.startMouseInput);
-  }
-  if(this.selectedInputType == InputType.MIX1){
-    document.body.addEventListener('keydown', this.binded_startMix1Input); 
-  }
-  if(this.selectedInputType == InputType.MIX2){
-    this.startMix2Input();
-  }
+public changeApricot(el : HTMLElement){
+  el.style.backgroundColor = "var(--apricot)";
 }
 
+public changeBlue(el : HTMLElement){
+  el.style.backgroundColor = "var(--blue)";
+}
 
 
 }

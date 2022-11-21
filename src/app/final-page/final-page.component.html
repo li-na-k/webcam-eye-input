@@ -1,0 +1,25 @@
+<div *ngIf="randomizationService.showQuestionnaireInfo && !randomizationService.everythingDone" style="display:flex;justify-content:center;align-items:center; flex-direction: column; text-align: center;">
+    <h1>You finished all tasks for this input method.</h1>
+    <p>Please go back to the questionnaire now, but <strong>do not close this tab</strong>.</p>
+    <div style="transform: scale(1.5);"><mat-icon fontIcon="arrow_right_alt"></mat-icon><mat-icon fontIcon="quiz"></mat-icon></div>
+    <div style="margin-top: 50px; padding: 15px; border: 1px solid black; border-radius: 15px;" *ngIf="questionnaireCountdownDone">
+        <h2>Are you done with answering the questions about this input method?</h2>
+        <p>Then, please click the button below.</p>
+        <button (click)="confirmNextInput()">Yes, I just answered the questions about the Input Method "{{randomizationService.inputOrder[randomizationService.inputsDone-2]}}".</button>
+    </div> 
+</div>
+
+<div *ngIf="randomizationService.everythingDone" style="display:flex;justify-content:center;align-items:center; flex-direction: column; text-align: center;">
+    <h1>You finished all tasks!</h1>
+    <p>Your browser should just have downloaded a csv-document with your results. If not, please click on the button below and allow the download.</p>
+    <button mat-mini-fab color="accent">
+        <mat-icon>file_download</mat-icon>
+    </button>
+    <p>
+        Please make sure that the download was successful and make sure to <strong>save your data in a place where you can find it later.</strong> 
+        In the questionnaire, you will be asked to submit this file.
+    </p>
+    <mat-divider style="margin:25px; width: 100%;"></mat-divider>
+    <p>As soon as you have saved the file, go back to the questionnaire tab.</p>
+    <div style="margin-top: 20px; transform: scale(1.5);"><mat-icon fontIcon="arrow_right_alt"></mat-icon><mat-icon fontIcon="quiz"></mat-icon></div>
+</div>

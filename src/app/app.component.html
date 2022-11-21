@@ -1,174 +1,155 @@
-<div *ngIf="!webgazerLoaded" 
-style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;">
-    <div class="loading">
+<app-header></app-header>
+
+<div *ngIf="!webgazerService.webgazerLoaded" class="FlexboxCentered"> 
+    <div class="popup-full-background"></div>
+    <div class="Popup">            
         <mat-spinner [diameter]="30" ></mat-spinner>
         <div>
             Please wait. Everything is being prepared...
-        </div>
+        </div>            
         <div style="padding-top: 30px; font-weight: bold;">
             If your browser asks for permission to use your camera, please click "Allow".
+        </div>        
+    </div>
+</div>
+
+<div *ngIf="webgazerService.webgazerLoaded && !userIDSubmitted" class="FlexboxCentered">
+    <div class="popup-full-background"></div>
+    <div class="Popup">                     
+        <div style="padding-top: 30px; font-weight: bold;">
+            <label for="userID">Please paste your copied participant ID here:</label>
+        </div> 
+
+        <input class="form-control"
+            id="userID"  type="text"
+            required minlength="6" maxlength="6"
+            [(ngModel)]="enteredUserID" name="userID"
+            #userID="ngModel">
+        <div [hidden]="userID.valid || userID.pristine"
+            class="alert">Please enter a valid participant ID.</div>
+        <div style="margin-top: 10px;">
+            <button type="submit" [disabled]="!userID.valid" (click)="userIDSubmit(); this.blur($event)">Submit</button>
         </div>
     </div>
 </div>
 
-
-<div *ngIf="webgazerLoaded" style="padding: 30px;">
-    <!-- <h1>Eye Input for Visualization</h1> -->
-    <div *ngIf="calibrationDone" class="instructions">{{this.instructions}}</div>
-    <div style="position: absolute; top: 0px; left: auto; right: 230px; padding: 15px; width: 270px;">
-        <div>x: <span id="x"></span></div>
-        <div>y: <span id="y"></span></div>
-
-        <!-- <div>Store:</div>
-        <div>x: <span>{{(currentEyePos$ | async).x}}</span></div>
-        <div>y: <span>{{(currentEyePos$ | async).y}}</span></div> -->
-
-        <span *ngIf="!paused">
-            <button  mat-icon-button style="margin: 20px 0px;" type="button" (click)="pauseWebgazer()">
-                <mat-icon>pause_circle_outline</mat-icon>
-            </button>
-        </span>
-        <span *ngIf="paused">
-            <button mat-icon-button style="margin: 20px 10px;" type="button" (click)="pauseWebgazer()">
-                <mat-icon>play_circle_outline</mat-icon>
-            </button>
-        </span>
-        <button mat-icon-button style="margin: 20px 10px;" type="button" (click)="showExplanation();">
-            <mat-icon>help_outline</mat-icon>
-        </button>
-        <button style="margin: 20px 10px;" type="button" *ngIf="!calibrationDone"
-        (click)="calibrationDone = true;">Skip callibration
-        </button>
+ <!-- Drop Down Task -->
+ <div class="dropdowns" style="margin-left: 20px;" *ngIf="calibrationDone">
+    <div>
+        <span class="dropdown-label">Task: </span>
+        <select [(ngModel)]="randomizationService.selectedTask" (change)="randomizationService.selectTask()"> 
+            <option *ngFor="let item of TaskType | keyvalue">{{item.value}}</option>
+        </select>
     </div>
-
-    <div *ngIf="!calibrationDone">
-        <div *ngIf="showPopup" style="display:flex;justify-content:center;">
-            <div class="popup-background">
-            </div>
-            <div class="Popup">
-                <div class="popup-header">
-                    <button class="Popup-close" (click)="showPopup=false;">×</button>
-                </div>
-                <div *ngIf="explanationNr==0">
-                    Before you start, please click through this short guide and read it carefully. 
-                    If you want to review the instructions later, click on the question mark icon ( <mat-icon style="vertical-align: middle;">help_outline</mat-icon> ).
-                    <div style="margin-top: 15px;">Now click on "Next".</div>
-                </div>
-                <div *ngIf="explanationNr==1">
-                    In the upper right corner you can see the recording of your webcam. 
-                    <div style="text-align: left; margin-top: 15px;">
-                        Please make sure ... 
-                        <ul>
-                            <li>that your face is always inside the green square. Ideally, your face should fill the square completely.</li>
-                            <li>that your face is well illuminated.</li>
-                            <li>that the square always remains green. A red square indicates that your face position is wrong.</li>
-                        </ul>
-                    </div>
-                    Now find a comfortable position for the calibration that meets these criteria and maintain this position for the entire experiment.
-                    Keep your head still and try not to move it.
-                    <div style="margin-top: 15px;">Now click on "Next".</div>
-                </div>
-                <div *ngIf="explanationNr==2">
-                    The red circle shows where the system assumes your eye-gaze. To ensure that the prediction is as accurate as possible, the system must first be calibrated.
-                    <div style="margin-top: 15px;">Now click on "Next".</div>
-                </div>
-                <div *ngIf="explanationNr==3">
-                    For the calibration, click each point {{clickGoal}} times until all points are completely green.
-                    While clicking, fixate the points with your eyes.
-                    <div style="margin-top: 15px;">To start the calibration, close this window with "OK".</div>
-                </div>
-                <div style="margin-top: 25px;">
-                    <button style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
-                        Next <mat-icon style="margin-left: 5px;" fontIcon="arrow_forward"></mat-icon>
-                    </button>
-                    <button *ngIf="explanationNr!=0" style="display: flex; align-items: center; float: left;" type="button" (click)="previousExplanation();">
-                        <mat-icon style="margin-right: 5px;" fontIcon="arrow_back"></mat-icon> Back
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="calibrationPoints">
-            <div class="Flexbox">
-                <input type="button" class="CalibrationPt" id="CPt0" (click)="changeButtonColor(0)" >
-                <input type="button" class="CalibrationPt" id="CPt1" (click)="changeButtonColor(1)" >
-                <input type="button" class="CalibrationPt" id="CPt2" (click)="changeButtonColor(2)" >
-                <input type="button" class="CalibrationPt" id="CPt3" (click)="changeButtonColor(3)" >
-                <input type="button" class="CalibrationPt" id="CPt4" (click)="changeButtonColor(4)" >
-                <input type="button" class="CalibrationPt" id="CPt5" (click)="changeButtonColor(5)" >
-            </div>
-            <div class="Flexbox">
-                <input type="button" class="CalibrationPt" id="CPt6" (click)="changeButtonColor(6)" >
-                <input type="button" class="CalibrationPt" id="CPt7" (click)="changeButtonColor(7)" >
-                <input type="button" class="CalibrationPt" id="CPt8" (click)="changeButtonColor(8)" >
-                <input type="button" class="CalibrationPt" id="CPt9" (click)="changeButtonColor(9)" >
-                <input type="button" class="CalibrationPt" id="CPt10" (click)="changeButtonColor(10)" >
-                <input type="button" class="CalibrationPt" id="CPt11" (click)="changeButtonColor(11)" >
-            </div>
-            <div class="Flexbox">
-                <input type="button" class="CalibrationPt" id="CPt12" (click)="changeButtonColor(12)" >
-                <input type="button" class="CalibrationPt" id="CPt13" (click)="changeButtonColor(13)" >
-                <input type="button" class="CalibrationPt" id="CPt14" (click)="changeButtonColor(14)" >
-                <input type="button" class="CalibrationPt" id="CPt15" (click)="changeButtonColor(15)" >
-                <input type="button" class="CalibrationPt" id="CPt16" (click)="changeButtonColor(16)" >
-                <input type="button" class="CalibrationPt" id="CPt17" (click)="changeButtonColor(17)" >
-            </div>
-            <div class="Flexbox">
-                <input type="button" class="CalibrationPt" id="CPt18" (click)="changeButtonColor(18)" >
-                <input type="button" class="CalibrationPt" id="CPt19" (click)="changeButtonColor(19)" >
-                <input type="button" class="CalibrationPt" id="CPt20" (click)="changeButtonColor(20)" >
-                <input type="button" class="CalibrationPt" id="CPt21" (click)="changeButtonColor(21)" >
-                <input type="button" class="CalibrationPt" id="CPt22" (click)="changeButtonColor(22)" >
-                <input type="button" class="CalibrationPt" id="CPt23" (click)="changeButtonColor(23)" >
-            </div>
-        </div>
+    
+    <!-- Drop Down InputType -->
+    <div>
+        <span class="dropdown-label">Input variant: </span>
+        <select [(ngModel)]="randomizationService.selectedInputType" (change)="randomizationService.selectInputType()" > 
+            <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
+        </select>
     </div>
+    <button (click)="confirmSelection(); this.blur($event)">Select</button>
+</div>
 
+<!-- <button (click)="taskEvaluationService.startTask()">Start</button>
+<button (click)="taskEvaluationService.endTask()">End</button>
+<button (click)="taskEvaluationService.exportResults()">Export</button> -->
 
-    <div *ngIf="calibrationDone">
+<div *ngIf="!randomizationService.showQuestionnaireInfo" class="button-header-container">
 
-        <!-- Drop Down Task -->
+    <div *ngIf="calibrationDone" 
+        style="background-color: white; border-radius: 15px; padding: 10px 15px; 
+        display: flex; justify-content: space-between; align-items:center; width: 300px;">
+        <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.sizeOrder; index as i">
+            <span *ngIf="i + 1 <= randomizationService.repsDone">●</span>
+            <span *ngIf="i + 1 > randomizationService.repsDone">○</span>
+        </span>
+        <div style="font-size: 12px;" *ngIf="this.randomizationService.selectedInputType == InputType.MIX2">To skip press "escape".</div>
+        <button *ngIf="this.randomizationService.selectedInputType != InputType.MIX2" style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">I can't do it - skip this one</button>
+    </div>
+    <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
+        (click)="setCalibrationDone(true); this.blur($event)">Skip callibration
+    </button>
+    <!-- <span *ngIf="!webgazerService.paused">
+        <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="webgazerService.togglePauseWebgazer(); this.blur($event)">
+            <mat-icon>pause</mat-icon>
+        </button>
+    </span>
+    <span *ngIf="webgazerService.paused">
+        <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="webgazerService.togglePauseWebgazer(); this.blur($event)">
+            <mat-icon>play_arrow</mat-icon>
+        </button>
+    </span> -->
+    <button *ngIf="!calibrationDone" class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="showCalibExplanation(); this.blur($event);">
+        <mat-icon>question_mark</mat-icon>
+    </button>
+    <span style="background-color: white; padding: 10px 15px; border-radius: 15px; height: 80px; text-align: center;" *ngIf="calibrationDone" >
         <div>
-            <span class="dropdown-label">Task: </span>
-            <select [(ngModel)]="selectedTask"(change)="selectTask()"> 
-                <option *ngFor="let item of TaskType | keyvalue">{{item.value}}</option>
-            </select>
+            <span style="font-weight: bold;">{{randomizationService.selectedTask$ | async}}</span>
+            via 
+            <span style="font-weight: bold;">{{randomizationService.selectedInputType$ | async}}</span>
         </div>
+        <button style="display:block;" class="button-header" mat-icon-button style="margin: 10px 10px;" type="button" (click)="showTaskPopup = true; this.blur($event);">
+            <mat-icon>question_mark</mat-icon>
+        </button>
+    </span>
+</div>
         
 
-        <!-- Drop Down InputType -->
-        <div>
-            <span class="dropdown-label">Input variant: </span>
-            <select [(ngModel)]="selectedInputType" (change)="selectInputType()"> 
-                <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
-            </select>
-        </div>
-        
-        
-        <div id="experimentSandbox">
-            <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
-            <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>
-            <app-scroll *ngIf="(selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
+<!-- content -->
+<div id="content" class="content" *ngIf="webgazerService.webgazerLoaded && userIDSubmitted">
+
+    <!-- <span class="angle">❯</span>
+    <div class="instructions">{{randomizationService.instructions}}</div> -->
+
+    <app-calibration *ngIf="!calibrationDone && !randomizationService.everythingDone" 
+        (calibrationDoneEvent)="setCalibrationDone($event)"
+        [calibrationExplanationShown]="calibrationExplanationShown">
+    </app-calibration>
+
+    <app-final-page (calibrationDoneEvent)="setCalibrationDone($event)" *ngIf="randomizationService.everythingDone || randomizationService.showQuestionnaireInfo"></app-final-page>
+    
+    <div style="height: 100%;" *ngIf="calibrationDone && !(randomizationService.everythingDone || randomizationService.showQuestionnaireInfo)">
+         <div style="height: 100%;" id="experimentSandbox">
+            <app-click *ngIf="(randomizationService.selectedTask$ | async) == TaskType.SELECT"></app-click>
+            <app-hover *ngIf="(randomizationService.selectedTask$ | async) == TaskType.HOVER"></app-hover>                
+            <app-scroll *ngIf="(randomizationService.selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
             <img id="arrow" class="arrow" src="/assets/arrow.png" />
         </div>
-        
-        
 
-        <div *ngIf="showPopup" style="display:flex;justify-content:center;">
-            <div class="popup-background">
-            </div> 
-            <div class="Popup">
-                <div class="popup-header">
-                    <span>Calibration was successful!</span>
-                    <button class="Popup-close" (click)="showPopup=false;">×</button>
+        <div *ngIf="showTaskPopup" style="display:flex;justify-content:center;">
+            <div class="popup-background"></div>
+            <!-- if new input method -->
+                <div *ngIf="randomizationService.tasksDone == 1 && showInputMethodPopup" class="Popup" style="background-color: var(--apricot);">
+                    <div class="popup-header">
+                        Your Input Method now:
+                        <span style="font-weight: bold; color: #a3cce0;">{{randomizationService.selectedInputType}}</span>
+                    </div>
+                    <div style="margin-bottom: 25px;">
+                        {{randomizationService.inputMethodInstructions}}
+                    </div>
+                    <button style="background-color: var(--blue);" (click)="showInputMethodPopup=false; this.blur($event)">OK</button>
                 </div>
-                Now, your eyes are being tracked :)
-            </div>
+            <!-- new task -->
+                <div class="Popup" *ngIf="randomizationService.tasksDone > 1 || !showInputMethodPopup">
+                    <div class="popup-header">
+                        Your Task now: 
+                        <span style="text-align: center; font-weight: bold; color: #f7c7b9;">{{randomizationService.selectedTask}}</span>
+                    </div>
+                    <div style="margin-bottom: 25px;">
+                        {{randomizationService.taskInstructions}}
+                    </div>
+                    <div style="border-top: 1px solid white; padding: 12px; margin: 35px;">
+                        <div style="font-weight: bold;">Reminder: The current input method is 
+                            <span style="text-align: center; color: #f7c7b9;">{{randomizationService.selectedInputType}}.</span>
+                        </div>
+                        <div>
+                            {{randomizationService.inputMethodInstructions}}
+                        </div>
+                    </div>
+                    <button (click)="showTaskPopup=false; showInputMethodPopup = true; confirmSelection(); this.blur($event)">Got it!</button>
+                </div>
         </div>
-
-        <!-- <div class="Flexbox">
-            <div *ngFor="let p of poi;" class="TestPt" id="{{ 'TestPt' + p }}"></div>
-        </div> -->
-
     </div>
 </div>

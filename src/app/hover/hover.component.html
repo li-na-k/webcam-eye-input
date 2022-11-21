@@ -1,13 +1,25 @@
-<div>
-    <div id="recthover" class="clickArea medium">Hover over me!</div>
-    <!-- <div id="HoverPt0" class="clickArea small">Hover over me!</div>
-    <div id="HoverPt1" class="clickArea medium">Hover over me!</div>
-    <div id="HoverPt2" class="clickArea large">Hover over me!</div> -->
+<div class="container">
+    <div id="hover-task" style="z-index: 3;" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]" class="hoverArea">Hover over me!
+        <span class="tooltip" id="success">✓ This is a tooltip that explains the element.</span>
+    </div>
+    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1]]" class="hoverArea">
+        <span class="tooltip">This is another tooltip.</span>
+    </div>
+    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2]]" class="hoverArea">
+        <span class="tooltip">This is another tooltip.</span>
+    </div>
+    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3]]" class="hoverArea">
+        <span class="tooltip">This is another tooltip.</span>
+    </div>
+    <div *ngIf="success" class="centeredOverlay">
+        <div style="margin-bottom: 20px; margin-top: -100px; width: 150px;">Move your eye gaze and your mouse here:</div>
+        <div style="font-size: 80px; color: var(--blue); width: 100%;">⦿</div>
+    </div>
 </div>
 
 
+<app-popup-pointer-lock-stop *ngIf="pointerLockedStopped()" (addSuccess)="addSuccess(true)" (startMix2)="activateSelectedInputType()"></app-popup-pointer-lock-stop>
 
-<!-- mehrere Durchgänge, zufälliger (oder einfach aus 6 positionen zufällig?) Ort, 3 verschiedene Größen -->
-<!-- Text on hover -->
-<!-- Hover muss bestimmte Zeit gehalten werden... -->
+
+
 

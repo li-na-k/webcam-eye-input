@@ -1,6 +1,6 @@
 export enum InputType {
     MOUSE = "Mouse",
-    EYE = "Eye",
-    MIX1 = "Mix 1",
-    MIX2 = "Mix 2"
+    EYE = "Eye-gaze",
+    MIX1 = "Eye-gaze + ENTER",
+    MIX2 = "Eye-gaze + Mouse"
 }

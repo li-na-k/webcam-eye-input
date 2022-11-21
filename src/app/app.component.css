@@ -1,65 +1,16 @@
-
-.Flexbox {
-    display: flex;
-    justify-content: space-between;
-    margin: 110px 10px 10px 10px;
+.content{
+    margin: 15px 20px;
+    background-color: white;
+    height: 500px;
+    overflow-y: scroll;
+    border-radius: 15px;
+    padding: 30px;
 }
 
-.CalibrationPt {
-    width: 25px;
-    height: 25px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    border-radius: 25px;
-    background-color: var(--red);
-    border-color: var(--red);
-    border-style: solid;
-}
-
-.CalibrationPt:hover {
-    cursor: pointer;
-}
-
-.TestPt{
-    background-color: var(--blue);
-    width: 400px;
-    height: 400px;
-}
-
-.Popup{
-    position: absolute;
-    top: 20%;
-    left: 30%;
-    color: white;
-    border-radius: 15px; 
-    padding: 50px; 
-    background-color: var(--blue); 
-    z-index: 3;
-    text-align: center;
-    width: 40%;
-}
-
-.Popup-close{
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    cursor: pointer;
-    background-color: transparent;
-    font-size: 30px;
-}
-
-.popup-header {
-    padding: 20px 0px 40px 0px;
-    font-size: 30px;
-  }
-
-.loading{
-    max-width: 300px;
-    color: #fff;
-    border-radius: 15px; 
-    padding: 50px; 
-    background-color: var(--blue); 
-    text-align: center;
+.mat-icon-button{
+    line-height: 0px;
+    height: auto;
+    width: auto;
 }
 
 .mat-spinner{
@@ -68,36 +19,78 @@
     margin-bottom: 15px;
 }
 
-.popup-background {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2;
-} 
-
-.calibrationPoints{
-    margin-top: 200px;
-}
-
 .dropdown-label{
     font-size: 15px;
     font-weight: bold;
 }
 
 #experimentSandbox{
-    margin-top: 100px;
-    height: 600px;
-    /* padding: 10px; */
-    /* border: 1px solid grey;
-    border-radius: 15px; */
     z-index: 0;
 }
 
+.button-header{
+    color: black;
+    background-color: transparent;
+    border: black 2px solid;
+}
+
+.button-header:hover{
+    border: black 3px solid;
+}
+
+.button-header-container{
+    position: absolute; 
+    top: 0px; 
+    left: auto;
+    right: 180px; 
+    padding: 15px; 
+    height: 50px;
+    display: flex; 
+    align-items: flex-start;
+    gap: 15px; 
+
+}
+
 .instructions{
-    width: 50%;
+    position: absolute; 
+    top: 10px; 
+    left: auto;
+    right: 200px; 
+    padding: 10px 20px; 
+    height: 50px;
+    width: 300px;
+}
+
+.angle{
+    position: absolute;
+    top: 20px;
+    left: auto;
+    right: 520px;
+    font-size: 60px;
+    padding-right: 10px;
+}
+
+/* user id input form */
+input{
+    border-radius: 15px;
+    margin: 20px;
+    border: 2px solid grey;
+}
+
+.alert{
+    color: var(--red);
+}
+
+.ng-valid[required], .ng-valid.required  {
+    background-color: var(--green-background);
+  }
+  
+.ng-dirty.ng-invalid {
+    background-color: var(--red-background);
+}
+
+button:disabled{
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
 }

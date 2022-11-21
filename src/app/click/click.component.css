@@ -1,16 +1,53 @@
-.clickArea{
-    background-color: var(--blue);
-    margin: 20px;
+.success{
+    font-size: 70px;
+    color: var(--green);
     display:flex;
-    justify-content: center;
+    justify-content:center;
     align-items:center;
-    color: white;
-    border-radius: 15px;
+    margin: 50px;
 }
 
+.flex-container{
+    display: flex; 
+    flex-direction: column; 
+    height: 100%; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
+mat-card{
+    border: 2px solid var(--blue);
+    margin: 5px;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+mat-card:hover{
+    cursor: pointer;
+}
+
+mat-card-title{
+    padding-bottom: 10px;
+}
+
+.clickArea.green{
+    background-color: var(--green);
+    opacity: 0.3;
+    padding: 5px;
+    text-align: center;
+    width: 30%;
+    left: auto;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 0 12px 12px 0px;
+    position: absolute;
+}
+
+
 .small{
-    width: 150px;
-    height: 40px;
+    width: 190px;
+    height: 44px;
 }
 
 .medium{
@@ -19,24 +56,22 @@
 }
 
 .large{
-    width: 600px;
-    height: 160px;
+    width: 760px;
+    height: 110px;
 }
 
-.arrow {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 20px;
-    visibility: hidden; 
-    pointer-events: none;
-    z-index: 1000;
-    -webkit-filter: drop-shadow(2px 4px 6px black);
-    filter: drop-shadow(2px 4px 6px black);
+.pos1{
+    order: 1;
 }
 
-.smoothTransition{
-    -webkit-filter: none;
-    filter: none;
-    transition: all 0.5s linear;
+.pos2{
+    order: 2;
+}
+
+.pos3{
+    order: 3;
+}
+
+.pos4{
+   order: 4;
 }
