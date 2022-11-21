@@ -14,11 +14,11 @@ export class CalibrationComponent implements OnInit{
   @Input() calibrationExplanationShown : boolean = true;
   public showPopup : boolean = true;
 
-  public numberOfCPt = 6*4;
+  public numberOfCPt = 9;
   public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   public greenPtCount : number = 0;
   //settings
-  public clickGoal = 2;
+  public clickGoal = 5;
   //explanation
   protected explanationNr : number = 0;
 

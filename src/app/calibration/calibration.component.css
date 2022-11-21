@@ -1,12 +1,13 @@
 .Flexbox {
     display: flex;
     justify-content: space-between;
-    margin: 110px 10px 10px 10px;
 }
 
 .calibrationPoints{
-    margin-top: -100px;
-    margin-bottom: -100px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
 }
 
 .CalibrationPt {
