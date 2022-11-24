@@ -82,11 +82,11 @@ input{
 }
 
 .ng-valid[required], .ng-valid.required  {
-    background-color: var(--green-background);
+    background-color: var(--green-transparent);
   }
   
 .ng-dirty.ng-invalid {
-    background-color: var(--red-background);
+    background-color: var(--red-transparent);
 }
 
 button:disabled{
