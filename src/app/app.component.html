@@ -69,7 +69,7 @@
         <button *ngIf="this.randomizationService.selectedInputType != InputType.MIX2" style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">I can't do it - skip this one</button>
     </div>
     <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
-        (click)="setCalibrationDone(true); this.blur($event)">Skip callibration
+        (click)="setCalibrationDone(true); this.blur($event)">Skip calibration
     </button>
     <!-- <span *ngIf="!webgazerService.paused">
         <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="webgazerService.togglePauseWebgazer(); this.blur($event)">
@@ -81,10 +81,17 @@
             <mat-icon>play_arrow</mat-icon>
         </button>
     </span> -->
-    <button *ngIf="!calibrationDone" class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="showCalibExplanation(); this.blur($event);">
-        <mat-icon>question_mark</mat-icon>
-    </button>
-    <span style="background-color: white; padding: 10px 15px; border-radius: 15px; height: 80px; text-align: center;" *ngIf="calibrationDone" >
+    
+    <span *ngIf="!calibrationDone" style="background-color: white; padding: 10px 15px; border-radius: 15px; height: 70px; text-align: center;">
+        <div>
+            Click each point until all are completely green.
+        </div>
+        <button class="button-header" mat-icon-button style="margin: 10px 10px;" type="button" (click)="showCalibExplanation(); this.blur($event);">
+            <mat-icon>question_mark</mat-icon>
+        </button>
+    </span>
+
+    <span style="background-color: white; padding: 10px 15px; border-radius: 15px; height: 70px; text-align: center;" *ngIf="calibrationDone" >
         <div>
             <span style="font-weight: bold;">{{randomizationService.selectedTask$ | async}}</span>
             via 
@@ -123,6 +130,15 @@
             <!-- if new input method -->
                 <div *ngIf="randomizationService.tasksDone == 1 && showInputMethodPopup" class="Popup">
                     <div class="popup-header">
+                        <mat-icon style="display: block; 
+                        color: var(--blue);
+                        color: var(--blue);
+                        margin-left: auto;
+                        margin-right: auto;
+                        font-size: 40px;
+                        margin-bottom: 20px;
+                        width: 40px;
+                        height: 40px;">change_circle</mat-icon>
                         Your Input Method now:
                         <span style="font-weight: bold; color: var(--apricot);">{{randomizationService.selectedInputType}}</span>
                     </div>
