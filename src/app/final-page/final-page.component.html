@@ -1,6 +1,6 @@
 <div *ngIf="randomizationService.showQuestionnaireInfo && !randomizationService.everythingDone" style="display:flex;justify-content:center;align-items:center; flex-direction: column; text-align: center;">
     <h1>You finished all tasks for this input method.</h1>
-    <p>Please go back to the questionnaire now, click "Next" and select {{randomizationService.inputOrder[randomizationService.inputsDone-2]}} in the drop-down. <strong>Do not close this tab</strong>.</p>
+    <p>Please go back to the questionnaire now, click "Next" and select "{{randomizationService.inputOrder[randomizationService.inputsDone-2]}}" in the drop-down. <strong>Do not close this tab</strong>.</p>
     <div style="transform: scale(1.5);"><mat-icon fontIcon="arrow_right_alt"></mat-icon><mat-icon fontIcon="quiz"></mat-icon></div>
     <div style="margin-top: 50px; padding: 15px; border: 1px solid black; border-radius: 15px;" *ngIf="questionnaireCountdownDone">
         <h2>Are you done with answering the questions about this input method?</h2>
