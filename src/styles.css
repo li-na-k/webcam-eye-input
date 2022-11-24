@@ -1,7 +1,6 @@
 :root {
     --blue:#85a7b8;
-    --green: #a0bd41;
-    --yellow: #f0cf65;
+    --green: #98B63E;
     --apricot: #d7816a;
     --red: #bd4f6c;
     --red-background: #bd4f6c84;
@@ -75,6 +74,18 @@ button:hover{
 .Popup{
     position: absolute;
     top: 10%;
+    color: black;
+    border-radius: 15px; 
+    padding: 50px; 
+    background-color: white; 
+    z-index: 3;
+    text-align: center;
+    width: 50%;
+}
+
+.Popup-blue{
+    position: absolute;
+    top: 10%;
     color: white;
     border-radius: 15px; 
     padding: 50px; 
@@ -107,7 +118,7 @@ button:hover{
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: 2;
 } 
 
