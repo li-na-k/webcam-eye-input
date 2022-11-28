@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { RandomizationService } from '../services/randomization.service';
+import { TaskEvaluationService } from '../services/task-evaluation.service';
 
 @Component({
   selector: 'app-final-page',
@@ -8,7 +9,7 @@ import { RandomizationService } from '../services/randomization.service';
 })
 export class FinalPageComponent implements OnInit {
 
-  constructor(public randomizationService : RandomizationService) { }
+  constructor(public randomizationService : RandomizationService, protected taskEvaluationService : TaskEvaluationService) { }
 
   questionnaireCountdownDone : boolean = false;
   @Output() calibrationDoneEvent = new EventEmitter<boolean>();

@@ -31,7 +31,7 @@
 } */
 
 .scroll-area{
-    border: dotted 1px rgb(213, 211, 211);
+    border: dotted 2px darkgrey;
     pointer-events: none;
 }
 
