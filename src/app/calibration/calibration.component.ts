@@ -27,20 +27,22 @@ export class CalibrationComponent implements OnInit{
   }
 
   public changeButtonColor(buttonNr: number){
-    this.buttonClicks[buttonNr]++
-    let button = document.getElementById("CPt"+buttonNr)
-    if(button && this.buttonClicks[buttonNr] == this.clickGoal){ //turns green
-      button.style.backgroundColor = "var(--green)"
-      this.greenPtCount++;
-      if(this.greenPtCount == this.numberOfCPt){
-        this.calibrationDoneEvent.emit(true);
+    if(this.buttonClicks[buttonNr] < this.clickGoal){
+      this.buttonClicks[buttonNr]++
+      let button = document.getElementById("CPt"+buttonNr)
+      if(this.buttonClicks[buttonNr] == this.clickGoal){ //turns fully green
+        button!.style.backgroundColor = "var(--green)"
+        this.greenPtCount++;
+        if(this.greenPtCount == this.numberOfCPt){
+          this.calibrationDoneEvent.emit(true);
+        }
       }
-    }
-    else if(button){
-      button.style.opacity = "1.0";
-      button.style.borderColor = "var(--green)";
-      let newBorderWidth = this.buttonClicks[buttonNr] + 2;
-      button.style.borderWidth = String(newBorderWidth)+"px";
+      else {
+        button!.style.opacity = "1.0";
+        button!.style.borderColor = "var(--green)";
+        let newBorderWidth = this.buttonClicks[buttonNr] + 2;
+        button!.style.borderWidth = String(newBorderWidth)+"px";
+      }
     }
   }
 

@@ -65,7 +65,7 @@
             <span *ngIf="i + 1 <= randomizationService.repsDone">●</span>
             <span *ngIf="i + 1 > randomizationService.repsDone">○</span>
         </span>
-        <div style="font-size: 12px;" *ngIf="this.randomizationService.selectedInputType == InputType.MIX2">To skip press "escape".</div>
+        <div style="font-size: 12px;" *ngIf="this.randomizationService.selectedInputType == InputType.MIX2">To skip press esc.</div>
         <button *ngIf="this.randomizationService.selectedInputType != InputType.MIX2" style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">I can't do it - skip this one</button>
     </div>
     <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
@@ -145,6 +145,8 @@
                     <div style="margin-bottom: 25px;">
                         {{randomizationService.inputMethodInstructions}}
                     </div>
+                    <div *ngIf="randomizationService.selectedInputType != InputType.MIX2" style="font-size: 12px; margin-bottom: 5px;">If you cannot complete a task, click the skip button at the top.</div>
+                    <div *ngIf="randomizationService.selectedInputType == InputType.MIX2" style="font-size: 12px;  margin-bottom: 5px;">If you cannot complete a task, press esc and then click the skip button.</div>
                     <button (click)="showInputMethodPopup=false; this.blur($event)">OK</button>
                 </div>
             <!-- new task -->

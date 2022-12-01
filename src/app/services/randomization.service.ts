@@ -143,10 +143,10 @@ export class RandomizationService {
           this.taskInstructions = "Move the red dot over the button that says 'Hover over me!'."
           break;
         case Tasks.SCROLL:
-          this.taskInstructions = "Move the red dot to the screen borders to scroll in the respective direction. Scroll to the headline that says „Scroll here!“, then scroll to the top of the page again."
+          this.taskInstructions = "Move the red dot to the screen borders (framed area) to scroll in the respective direction. Scroll to the headline that says „Scroll here!“, then scroll to the top of the page again."
           break;
         case Tasks.SELECT:
-            this.taskInstructions = "Move the red dot over the button that says 'Select me!' for some seconds to select it."
+            this.taskInstructions = "Move the red dot over the green area of the button that says 'Select me!' for some seconds to select it."
             break;
       }
     }
@@ -157,7 +157,7 @@ export class RandomizationService {
           this.taskInstructions = "Move the red dot over the button that says 'Hover over me!' and confirm with ENTER."
           break;
         case Tasks.SCROLL:
-          this.taskInstructions = "Move the red dot to the screen borders and press ENTER to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
+          this.taskInstructions = "Move the red dot to the screen borders (framed area) and press ENTER to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
           break;
         case Tasks.SELECT:
             this.taskInstructions = "Move the red dot over the button that says 'Select me!' and confirm with ENTER."
@@ -165,13 +165,13 @@ export class RandomizationService {
       }
     }
     if(input == InputType.MIX2){
-      this.inputMethodInstructions = "Move the red dot with your eye-gaze. With the mouse you can override eye input and thus do the finetuning of the cursor movement."
+      this.inputMethodInstructions = "Move the cursor with your eye-gaze. With the mouse you can override eye input and thus do the finetuning of the cursor movement."
       switch(task){
         case Tasks.HOVER:
           this.taskInstructions = "Move the cursor over the button that says 'Hover over me!'."
           break;
         case Tasks.SCROLL:
-          this.taskInstructions = "Move the cursor to the screen borders to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
+          this.taskInstructions = "Move the cursor to the screen borders (framed area) to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
           break;
         case Tasks.SELECT:
             this.taskInstructions = "Move the cursor over the button that says 'Select me!'. Click (with your mouse) to select the button."

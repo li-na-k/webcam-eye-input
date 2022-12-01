@@ -2,7 +2,7 @@
 <div *ngIf="showPopup" class="FlexboxCentered">
     <div class="popup-background">
     </div>
-    <div class="Popup">
+    <div class="Popup" style="width: 60%;">
         <div class="popup-header">
             <button class="Popup-close" (click)="closePopup()">×</button>
         </div>
@@ -13,15 +13,20 @@
         </div>
         <div *ngIf="explanationNr==1">
             In the upper right corner you can see the recording of your webcam. 
-            <div style="text-align: left; margin-top: 15px;">
-                Please make sure ... 
-                <ul>
-                    <li>that your face is always inside the green square. Ideally, your face should fill the square completely.</li>
-                    <li>that your face is well illuminated.</li>
-                    <li>that the square always remains green. A red square indicates that your face position is wrong.</li>
-                </ul>
+            <div style="display: flex; margin: 25px 0px;">
+                <div style="text-align: left; margin-top: 15px;">
+                    Please make sure ... 
+                    <ul>
+                        <li>that your face is very well illuminated.</li>
+                        <li>that your face is always inside the green square. Ideally, your face should fill the square completely.</li>
+                        <li>that the square always remains green. A red square indicates that your face position is wrong.</li>
+                    </ul>
+                </div>
+                <div>
+                    <img src="/assets/laptop_window_calibration.png" style="border-radius: 15px; width: 200px;" />
+                </div>
             </div>
-            Now find a comfortable position for the calibration that meets these criteria and maintain this position.
+            Find a comfortable position for the calibration that meets these criteria and maintain this position.
             Keep your head still and try not to move it.
             <div style="margin-top: 15px;">Now click on "Next".</div>
         </div>
