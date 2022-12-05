@@ -32,9 +32,9 @@ export class RandomizationService {
   public tasksDone : number = 0;
 
   // each task: 3 different sizes, two reps each
-  public sizeOrder = [Sizes.S, Sizes.S , Sizes.M, Sizes.M, Sizes.L, Sizes.L];
+  public sizeOrder = [Sizes.S, Sizes.S , Sizes.L, Sizes.L];
   public repsDone : number = 0;
-  public selectedSize : Sizes =  Sizes.M;
+  public selectedSize : Sizes =  Sizes.S;
   //public selectedPos : string = "";
 
   //final page after finishing inputs 

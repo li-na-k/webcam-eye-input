@@ -47,10 +47,10 @@
 </div>
 
    
-<div *ngIf="clicked" class="success">
-    <div *ngIf="!error"> ✓ </div>
-    <div *ngIf="error" style="color: var(--red)"> ✖ </div>
-    <button style="display: block; margin-top: 50px;" (click)="stopAllInputs(); activateSelectedInputType()">Back</button>
+<div *ngIf="clicked">
+    <div class="success" *ngIf="!error"> ✓ </div>
+    <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
+    <div style="text-align:center;">You will be redirected back to the task page in a moment...</div>
 </div>
 
 <app-popup-pointer-lock-stop *ngIf="pointerLockedStopped()" (addSuccess)="addSuccess(true)" (startMix2)="activateSelectedInputType()"></app-popup-pointer-lock-stop>

@@ -93,6 +93,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
         else{ 
           this.addSuccess();
         }
+        this.backToTasksPage() //timeout starts
       }
       else{
         this.clicked = false;
@@ -167,6 +168,13 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     //view port resets
     this.clicked = false;
     this.error = false;
+  }
+
+  public backToTasksPage(){
+    setTimeout(() =>  {
+      this.stopAllInputs(); 
+      this.activateSelectedInputType()
+    }, 4000)  
   }
 
 }
