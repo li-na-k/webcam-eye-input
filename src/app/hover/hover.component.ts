@@ -156,7 +156,7 @@ public startMix2Input(){
   this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
   setTimeout(() => {
     this.mix2loaded = true;
-  }, 500)
+  }, 1500)
   for (let i = 0; i < this.hoverAreas!.length; i++){
     let currentHoverArea = this.hoverAreas![i]; 
     let inside : boolean | undefined = false;

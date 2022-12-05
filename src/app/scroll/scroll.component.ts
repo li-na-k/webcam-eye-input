@@ -14,7 +14,6 @@ import { RandomizationService } from '../services/randomization.service';
 })
 export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDestroy {
 
-  public taskElementID: string = "" //TODO: macht hier kein Sinn eigentlich
   public scrollAreas = document.getElementsByClassName("scroll-area");
 
   // calculations for target area(should be same height + position as content)
@@ -194,7 +193,7 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
     setTimeout(() => {
       successBox!.style.opacity = "0";
       successBox!.style.opacity = "1000ms";
-    }, 3000)
+    }, 5000)
   }
 
   public stopAllInputs(){

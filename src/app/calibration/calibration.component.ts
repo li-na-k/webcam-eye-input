@@ -23,6 +23,9 @@ export class CalibrationComponent implements OnInit{
   protected explanationNr : number = 0;
 
   ngOnInit(){
+    var dot = document.getElementById("webgazerGazeDot");
+    dot!.style.visibility = "visible";
+    dot!.style.opacity = "1";
     this.showPopup = !this.calibrationExplanationShown; //if calibration explanation was already shown, do not show second time
   }
 

@@ -2,13 +2,13 @@
     <div id="hover-task" style="z-index: 3;" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]" class="hoverArea">Hover over me!
         <span class="tooltip" id="success">✓ This is a tooltip that explains the element.</span>
     </div>
-    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1]]" class="hoverArea">
+    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1]]" class="hoverArea">Hello!
         <span class="tooltip">This is another tooltip.</span>
     </div>
-    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2]]" class="hoverArea">
+    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2]]" class="hoverArea">This is another area.
         <span class="tooltip">This is another tooltip.</span>
     </div>
-    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3]]" class="hoverArea">
+    <div [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3]]" class="hoverArea">I am a text!
         <span class="tooltip">This is another tooltip.</span>
     </div>
     <div *ngIf="success" class="centeredOverlay">
