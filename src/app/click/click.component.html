@@ -53,4 +53,4 @@
     <div style="text-align:center;">You will be redirected back to the task page in a moment...</div>
 </div>
 
-<app-popup-pointer-lock-stop *ngIf="pointerLockedStopped()" (addSuccess)="addSuccess(true)" (startMix2)="activateSelectedInputType()"></app-popup-pointer-lock-stop>
+<app-popup-pointer-lock-stop *ngIf="stopped" (addSuccess)="addSuccess(true)" (startMix2)="activateSelectedInputType()"></app-popup-pointer-lock-stop>

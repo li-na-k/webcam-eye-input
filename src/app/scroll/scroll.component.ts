@@ -108,8 +108,6 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
     }
   }
 
-  public mouseInput : boolean = false; //TODO: needed?
-
   public startMix2Input(){
     this.preventMouseScroll();
     this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);

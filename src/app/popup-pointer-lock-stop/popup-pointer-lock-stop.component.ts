@@ -27,14 +27,17 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
 
   public enablePointerLock(): void {
     this.startMix2.emit();
+    this.showPopup = false;
   }
 
   public skipTask(): void{
     this.startMix2.emit(); 
     this.addSuccess.emit();
+    this.showPopup = false;
   }
 
   ngOnInit(): void {
+    //this.addKeyDownListener(); 
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => this.selectedInputType = d);
@@ -48,12 +51,30 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   ngOnDestroy(){
     this.destroy$.next(true);
     this.destroy$.complete();
+    document.body.removeEventListener('keydown', this.bound_popupIfEsc);
   }
 
   closeAndStopMix2() : void{
     this.showPopup = false;
     this.eyeInputService.stopMix2Input(this.sandbox, this.arrow)
     this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
+  }
+
+  
+  // protected stopped = false;
+  public addKeyDownListener(){
+    //if(this.selectedInputType == InputType.MIX2){
+      console.log("addKeyDownListener MIX2")
+      document.body.addEventListener('keydown', this.bound_popupIfEsc); 
+    //}
+  }
+
+  public bound_popupIfEsc = this.popupIfEsc.bind(this); //otherwise function cannot be removed later with removeClickEvent
+  public popupIfEsc(e : any){
+    console.log(e.keyCode)
+    if(e.keyCode == 27 || e.key === "Escape" || e.key === "Esc"){
+      this.showPopup = true;
+    }
   }
 
 }

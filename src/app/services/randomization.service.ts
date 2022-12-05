@@ -102,12 +102,6 @@ export class RandomizationService {
     if(this.repsDone + 1 < this.sizeOrder.length){
       this.selectedSize = this.sizeOrder[this.repsDone+1];
       this.taskEvalutationService.selectedSize = this.selectedSize;
-      // if(this.repsDone >= this.positionOrder.length){ //TODO ??
-      //   this.selectedPos = this.positionOrder[this.repsDone-this.positionOrder.length];
-      // }
-      // else{
-      //   this.selectedPos = this.positionOrder[this.repsDone];
-      // }
       this.shuffle(this.positionOrder); 
       this.repsDone++;
       this.taskEvalutationService.startTask();

@@ -141,10 +141,6 @@ public Mix1Input(e : any){
             this.changeBlue(currentHoverArea);
           }, this.tooltipDuration)
         }
-        // else if(inside == false){
-        //   this.changeBlue(currentHoverArea)
-        //   this.hideTooltip(currentHoverArea); //TODO: Check if task element needed... probably not because success id already on tooltip
-        // }
       }
     }
   }
@@ -179,17 +175,17 @@ public startMix2Input(){
 }
 
 public stopAllInputs(){
-  console.log("stop all INputs called")
+  console.log("'stopAllInputs' called")
   for(let i of this.tooltipTimers){clearTimeout(i)};
   //MOUSE + hide tooltips from before
   for (let i = 0; i < this.hoverAreas!.length; i++){
     let currentHoverArea = this.hoverAreas![i];
-    this.hideTooltip(currentHoverArea); //TODO: not needed if all timers ended?
+    this.hideTooltip(currentHoverArea);
     currentHoverArea.removeEventListener('mouseover', this.handler_show);
     currentHoverArea.removeEventListener('mouseleave', this.handler_hide);
   }
   //EYE & MIX2 interval
-  for(let i of this.intervals){clearInterval(i)}; //TODO: can be used twice?
+  for(let i of this.intervals){clearInterval(i)}; 
   //MIX1
   document.body.removeEventListener('keydown', this.bound_Mix1Input); 
   //MIX2

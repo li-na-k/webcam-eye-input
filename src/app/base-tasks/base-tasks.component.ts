@@ -27,7 +27,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   public arrow : HTMLElement | null = document.getElementById("arrow");
   public sandbox : HTMLElement | null = document.getElementById("experimentSandbox");
 
-  public timeOutAfterMouseInput : number = 500; //TODO: ev. überschreiben je Komponent?
+  public timeOutAfterMouseInput : number = 500;
 
   public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
   public selectedTask : Tasks = Tasks.HOVER; 
@@ -39,6 +39,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
     public randomizationService : RandomizationService) { }  
   
   ngOnInit(): void {
+    this.checkPointerLock();
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => this.selectedInputType = d);
@@ -48,6 +49,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    clearInterval(this.pointerLockInterval);
     this.destroy$.next(true);
     this.destroy$.complete();
   }
@@ -81,13 +83,18 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
     }
   }
 
-  public mix2loaded = false;
-  public pointerLockedStopped() : boolean {
-    if(this.selectedInputType == InputType.MIX2 && this.mix2loaded){
-      return document.pointerLockElement == null;
-    }
-    else{
-      return false;
-    }   
+  protected mix2loaded = false;
+  private pointerLockInterval : any = undefined;
+  protected stopped = false;
+
+  private checkPointerLock(){
+      this.pointerLockInterval = setInterval(() => {
+        if(this.mix2loaded && document.pointerLockElement == null){
+          this.stopped = true;
+        }
+        else{
+          this.stopped = false;
+        }
+      },1000)
   }
 }

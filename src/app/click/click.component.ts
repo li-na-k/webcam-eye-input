@@ -149,7 +149,6 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
   public stopAllInputs(){
-    //TODO: more necessary back sets needed?
     //end Eye Input
     for(let i of this.intervals){clearInterval(i)};
     //end Mix1 click event
