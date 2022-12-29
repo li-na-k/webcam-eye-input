@@ -107,6 +107,7 @@ export class RandomizationService {
       this.taskEvalutationService.startTask();
     }
     else{
+      this.shuffle(this.sizeOrder); 
       this.nextTask();
     }
   }
