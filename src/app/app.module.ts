@@ -31,6 +31,7 @@ import { RandomizationService } from './services/randomization.service';
 import { TaskEvaluationService } from './services/task-evaluation.service';
 import { EyeInputService } from './services/eye-input.service';
 import { FinalPageComponent } from './final-page/final-page.component';
+import { TestInputMethodsComponent } from './test-input-methods/test-input-methods.component';
 
 
 
@@ -44,7 +45,8 @@ import { FinalPageComponent } from './final-page/final-page.component';
     PopupPointerLockStopComponent,
     HeaderComponent,
     CalibrationComponent,
-    FinalPageComponent
+    FinalPageComponent,
+    TestInputMethodsComponent
   ],
   imports: [
     BrowserModule,

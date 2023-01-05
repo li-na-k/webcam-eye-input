@@ -86,7 +86,7 @@ export class TaskEvaluationService {
     }
   }
 
-  private playAudio(){
+  public playAudio(){
     let audio = new Audio();
     audio.src = "assets/success.mp3"; /* source: http://freesoundeffect.net/sound/correct-answer-bling-1-sound-effect */
     audio.load();

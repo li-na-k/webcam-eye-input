@@ -153,7 +153,7 @@ public startMix1Input(): void {
 public startMix2Input(){
   console.log("start hover mix2")
   console.log(this.sandbox);
-  this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+  this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
   setTimeout(() => {
     this.mix2loaded = true;
   }, 1500)

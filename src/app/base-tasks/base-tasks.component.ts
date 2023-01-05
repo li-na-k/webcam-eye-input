@@ -2,12 +2,10 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { InputType } from '../enums/input-type';
-import { TaskResult } from '../classes/task-result';
 import { WebgazerService } from '../services/webgazer.service';
 import { AppState } from '../state/app.state';
 import { selectInputType, selectTask } from '../state/expConditions/expconditions.selector';
 import { Tasks } from '../enums/tasks';
-import { Sizes } from '../enums/sizes';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
 
@@ -30,7 +28,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   public timeOutAfterMouseInput : number = 500;
 
   public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
-  public selectedTask : Tasks = Tasks.HOVER; 
+  public selectedTask : Tasks = Tasks.SELECT; 
 
   constructor(protected store : Store<AppState>, 
     public cdRef: ChangeDetectorRef, 
@@ -42,10 +40,14 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
     this.checkPointerLock();
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(d => this.selectedInputType = d);
+      .subscribe(d => {
+         this.selectedInputType = d
+        });
     this.selectedTask$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(d => this.selectedTask = d); 
+      .subscribe(d => {
+        this.selectedTask = d}
+        ); 
   }
 
   ngOnDestroy(): void {

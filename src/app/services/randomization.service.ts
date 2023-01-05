@@ -15,14 +15,14 @@ import { TaskEvaluationService } from './task-evaluation.service';
 })
 export class RandomizationService {
 
-  public taskInstructions : string = "Please select a task first, then the input method!";
+  private input : InputType = InputType.EYE;
+  private task : Tasks = Tasks.HOVER;
+  public taskInstructions : string = "";
   public inputMethodInstructions : string = "";
-  //selections from dropdown
-  public selectedTask : Tasks | null = null; 
-  public selectedInputType : InputType | null = null; 
+
   // store
-  public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
-  public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
+  private selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
+  private selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
   //order of tasks
   public inputOrder : InputType[] = [InputType.EYE, InputType.MIX1, InputType.MIX2, InputType.MOUSE]; 
@@ -32,7 +32,7 @@ export class RandomizationService {
   public tasksDone : number = 0;
 
   // each task: 3 different sizes, two reps each
-  public sizeOrder = [Sizes.S, Sizes.S , Sizes.L, Sizes.L];
+  public sizeOrder = [Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L];
   public repsDone : number = 0;
   public selectedSize : Sizes =  Sizes.S;
   //public selectedPos : string = "";
@@ -40,7 +40,6 @@ export class RandomizationService {
   //final page after finishing inputs 
   public everythingDone: boolean = false;
   public showQuestionnaireInfo : boolean = false;
-
 
   messageSubject = new Subject();
   
@@ -51,29 +50,34 @@ export class RandomizationService {
     console.log(this.taskOrder);
     console.log(this.sizeOrder);
     console.log(this.positionOrder);
+
+    this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak possible
+      .subscribe(d => {
+        this.input = d
+      });
+    this.selectedTask$
+      .subscribe(d => {
+        this.task = d
+      }); 
   }
 
   //source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-  public shuffle(array : any[]) {
-  let currentIndex = array.length,  randomIndex;
-  // While there remain elements to shuffle.
-  while (currentIndex != 0) {
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]];
-  }
-  return array;
+  private shuffle(array : any[]) {
+    let currentIndex = array.length,  randomIndex;
+    while (currentIndex != 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+    return array;
   }
 
 
   public nextInputMethod(){ 
     this.tasksDone = 0;
     if(this.inputsDone < this.inputOrder.length){
-      this.selectedInputType = this.inputOrder[this.inputsDone];
-      this.selectInputType()
+      this.selectInputType(this.inputOrder[this.inputsDone])
       this.inputsDone++;
       this.nextTask(); //first task
     }
@@ -86,8 +90,7 @@ export class RandomizationService {
   private nextTask(){
     this.repsDone = 0;
     if(this.tasksDone < this.taskOrder.length){
-      this.selectedTask = this.taskOrder[this.tasksDone];
-      this.selectTask()
+      this.selectTask(this.taskOrder[this.tasksDone])
       this.tasksDone++;
       this.messageSubject.next('nextTask'); // emit event: popup with explanation + confirm button that activates input method should be displayed in app.component
     }
@@ -114,26 +117,20 @@ export class RandomizationService {
 
 
 
-  public selectTask(){
-    if(this.selectedTask){
-      this.store.dispatch(changeTask({newTask: this.selectedTask}));
-    }
+  public selectTask(task : Tasks){
+    this.store.dispatch(changeTask({newTask: task}));
     this.setInstruction(); 
   }
 
-  public selectInputType(){
-    if(this.selectedInputType){
-      this.store.dispatch(changeInputType({newInputType: this.selectedInputType}));
-    }
+  public selectInputType(inputType : InputType){
+    this.store.dispatch(changeInputType({newInputType: inputType}));
     this.setInstruction();
   }
 
   public setInstruction(){
-    let input = this.selectedInputType;
-    let task = this.selectedTask;
-    if(input == InputType.EYE){
+    if(this.input == InputType.EYE){
       this.inputMethodInstructions = "Move the red dot with your eye-gaze."
-      switch(task){
+      switch(this.task){
         case Tasks.HOVER:
           this.taskInstructions = "Move the red dot over the button that says 'Hover over me!'."
           break;
@@ -143,11 +140,14 @@ export class RandomizationService {
         case Tasks.SELECT:
             this.taskInstructions = "Move the red dot over the green area of the button that says 'Select me!' for some seconds to select it."
             break;
+        case Tasks.TEST:
+            this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button, move the dot over it for some seconds."
+            break;
       }
     }
-    if(input == InputType.MIX1){
+    if(this.input == InputType.MIX1){
       this.inputMethodInstructions = "Move the red dot with your eye-gaze. To confirm the position press ENTER."
-      switch(task){
+      switch(this.task){
         case Tasks.HOVER:
           this.taskInstructions = "Move the red dot over the button that says 'Hover over me!' and confirm with ENTER."
           break;
@@ -157,11 +157,14 @@ export class RandomizationService {
         case Tasks.SELECT:
             this.taskInstructions = "Move the red dot over the button that says 'Select me!' and confirm with ENTER."
             break;
+        case Tasks.TEST:
+            this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button, move the dot over it and confirm with ENTER."
+            break;
       }
     }
-    if(input == InputType.MIX2){
+    if(this.input == InputType.MIX2){
       this.inputMethodInstructions = "Move the cursor with your eye-gaze. With the mouse you can override eye input and thus do the finetuning of the cursor movement."
-      switch(task){
+      switch(this.task){
         case Tasks.HOVER:
           this.taskInstructions = "Move the cursor over the button that says 'Hover over me!'."
           break;
@@ -170,12 +173,15 @@ export class RandomizationService {
           break;
         case Tasks.SELECT:
             this.taskInstructions = "Move the cursor over the button that says 'Select me!'. Click (with your mouse) to select the button."
+            break;        
+        case Tasks.TEST:
+            this.taskInstructions = "You can move the cursor with your eye-gaze. With the mouse you can override the eye input and thus do the finetuning of the cursor movement. To select the button, move the cursor over it and click (with your mouse). To exit this input method, press the escape key."
             break;
       }
     }
-    if(input == InputType.MOUSE){
+    if(this.input == InputType.MOUSE){
       this.inputMethodInstructions = "Use the mouse, like you normally would."
-      switch(task){
+      switch(this.task){
         case Tasks.HOVER:
           this.taskInstructions = "Hover over the button that says 'Hover over me!'."
           break;
@@ -184,6 +190,9 @@ export class RandomizationService {
           break;
         case Tasks.SELECT:
             this.taskInstructions = "Click the button that says 'Select me!'."
+            break;
+        case Tasks.TEST:
+            this.taskInstructions = "Click this button using the mouse, like you normally would."
             break;
       }
     }

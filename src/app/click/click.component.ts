@@ -138,7 +138,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
 
 
   public startMix2Input(){
-    this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+    this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
     document.addEventListener('mousedown', this.bound_changeOnClick);
     /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
     have been better, but it cannot be removed, which is necessary here (for other input methods)

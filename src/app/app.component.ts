@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from './state/app.state';
 import { InputType } from './enums/input-type';
@@ -11,6 +11,7 @@ import { TaskEvaluationService } from './services/task-evaluation.service';
 import { RandomizationService } from './services/randomization.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ComponentCanDeactivate } from './component-can-deactivate';
+import { selectInputType, selectTask } from './state/expConditions/expconditions.selector';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,7 @@ import { ComponentCanDeactivate } from './component-can-deactivate';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements OnInit, ComponentCanDeactivate{
+export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewChecked{
   title = 'eye-input-visualization';
   @ViewChild(BaseTasksComponent) baseTaskComponent! : BaseTasksComponent;
   @ViewChild(CalibrationComponent) calibrationCmp : CalibrationComponent = new CalibrationComponent();
@@ -29,6 +30,10 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
     return false;
   }
   
+  public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
+  public selectedInputType : InputType = InputType.EYE; 
+  public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
+  public selectedTask : Tasks = Tasks.SELECT; 
   public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
 
   //enums for use in template
@@ -42,8 +47,12 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
     this.calibrationCmp.showPopup = true;
   }
   public calibrationExplanationShown : boolean = false;
+
+  //Test Mode
+  public showTestMode : boolean = true;
+
   //task explanation
-  public showTaskPopup : boolean = true; 
+  public showTaskPopup : boolean = false; 
   public showInputMethodPopup : boolean = true;
 
   constructor(private store : Store<AppState>, 
@@ -51,17 +60,33 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
     public cdRef: ChangeDetectorRef, 
     public taskEvaluationService : TaskEvaluationService,
     public randomizationService : RandomizationService){}
-
-  ngOnInit(): void {
+  
+    ngAfterViewChecked(): void {
+      this.cdRef.detectChanges();
+    }
+  
+    ngOnInit(): void {
     this.webgazerService.startWebgazer();
     this.webgazerService.checkWebGazerLoaded();
+    this.selectedInputType$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(d => {
+         this.selectedInputType = d
+        });
+    this.selectedTask$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(d => {
+        this.selectedTask = d}
+        ); 
     this.randomizationService.messageSubject //will be emitted when nextTask is called in randmizationService
       .pipe(takeUntil(this.destroy$))
       .subscribe(()=>{
         if(this.baseTaskComponent){
           this.baseTaskComponent.stopAllInputs(); //so pop-up can be clicked normally
         }
-        this.showTaskPopup = true;
+        if(this.selectedTask != Tasks.TEST){ 
+          this.showTaskPopup = true;
+        } 
     });
   }
 
@@ -77,7 +102,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate{
       this.calibrationExplanationShown = true; //as soon as (first) calibration is done: set explanation shown to true, so it will not be shown second time
     }
     else{ //SHOW calibration next task
-      if(this.randomizationService.selectedInputType == InputType.MOUSE){ 
+      if(this.selectedInputType == InputType.MOUSE){ 
         this.calibrationDone = true; //no calibration needed if mouse input
       }
       else{
