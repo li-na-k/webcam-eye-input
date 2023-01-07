@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/eye-input-visualization'),
+      dir: require('path').join(__dirname, './coverage/eye-input-webpage'),
       subdir: '.',
       reporters: [
         { type: 'html' },
