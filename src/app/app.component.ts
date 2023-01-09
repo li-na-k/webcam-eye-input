@@ -30,36 +30,36 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     return false;
   }
   
-  public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
-  public selectedInputType : InputType = InputType.EYE; 
-  public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
-  public selectedTask : Tasks = Tasks.SELECT; 
-  public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+  protected selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
+  protected selectedInputType : InputType = InputType.EYE; 
+  protected selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
+  protected selectedTask : Tasks = Tasks.SELECT; 
+  private destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
 
   //enums for use in template
-  public InputType = InputType;
-  public TaskType = Tasks;
+  protected InputType = InputType;
+  protected TaskType = Tasks;
 
   //calibration status
-  public calibrationDone : boolean = false;
+  protected calibrationDone : boolean = false;
   //calibration explanation popup
   protected showCalibExplanation(){
-    this.calibrationCmp.showPopup = true;
+    this.calibrationExplanationShown = false;
   }
-  public calibrationExplanationShown : boolean = false;
+  protected calibrationExplanationShown : boolean = false;
 
   //Test Mode
-  public showTestMode : boolean = true;
+  protected showTestMode : boolean = true;
 
   //task explanation
-  public showTaskPopup : boolean = false; 
-  public showInputMethodPopup : boolean = true;
+  protected showTaskPopup : boolean = false; 
+  protected showInputMethodPopup : boolean = true;
 
   constructor(private store : Store<AppState>, 
-    public webgazerService : WebgazerService, 
-    public cdRef: ChangeDetectorRef, 
-    public taskEvaluationService : TaskEvaluationService,
-    public randomizationService : RandomizationService){}
+    protected webgazerService : WebgazerService, 
+    private cdRef: ChangeDetectorRef, 
+    private taskEvaluationService : TaskEvaluationService,
+    protected randomizationService : RandomizationService){}
   
     ngAfterViewChecked(): void {
       this.cdRef.detectChanges();
@@ -96,7 +96,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true
   }
 
-  public setCalibrationDone(done : boolean){ 
+  protected setCalibrationDone(done : boolean){ 
     if(done){ //calibration should NOT be shown next task
       this.calibrationDone = true;
       this.calibrationExplanationShown = true; //as soon as (first) calibration is done: set explanation shown to true, so it will not be shown second time
@@ -120,10 +120,10 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     $event.target.blur();
   }
   
-  public enteredUserID: string = "";
-  public userIDSubmitted : boolean = false;
+  protected enteredUserID: string = "";
+  protected userIDSubmitted : boolean = false;
 
-  userIDSubmit(){
+  protected userIDSubmit(){
     this.taskEvaluationService.userID = this.enteredUserID;
     this.userIDSubmitted = true;
   }

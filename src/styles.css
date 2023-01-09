@@ -55,8 +55,8 @@ button:hover{
 
 .arrow {
     position: fixed;
-    top: 10px;
-    left: 10px;
+    top: 400px;
+    left: 400px;
     width: 20px;
     visibility: hidden; 
     pointer-events: none;

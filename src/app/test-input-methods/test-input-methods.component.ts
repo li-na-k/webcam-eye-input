@@ -17,15 +17,16 @@ import { baseColors } from 'ng2-charts';
 })
 export class TestInputMethodsComponent extends BaseTasksComponent implements OnInit, OnDestroy, AfterViewInit {
   
-    public readonly dwellTime = 1000;
-    public className : string = "clickArea"
-    public clickArea : HTMLElement | null = null; //all areas
-    public interval : any = 0; //one for each click Area
-    public Input = InputType;
+    private readonly dwellTime = 1000;
+    private clickArea : HTMLElement | null = null; //all areas
+    private interval : any = 0; //one for each click Area
+    protected Input = InputType;
   
-    public taskElementID : string = "click-task"; //area that shows success when clicked
-    public originalFirstInputMethod : InputType = InputType.EYE;
-    public originalFirstTask : Tasks = Tasks.HOVER;
+    private taskElementID : string = "click-task"; //area that shows success when clicked
+    protected success = false;
+
+    private originalFirstInputMethod : InputType = InputType.EYE;
+    private originalFirstTask : Tasks = Tasks.HOVER;
 
     @Output() endTestEvent = new EventEmitter<void>();
   
@@ -49,7 +50,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       this.selectInputType(InputType.MOUSE);
     }
     
-    public startEyeInput(){
+    protected startEyeInput(){
           let wentInsideAt : number|null = null; 
           let inside : boolean = false;
           this.interval = setInterval(() => {
@@ -76,12 +77,12 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
           }, 100);
     }
   
-    public startMix1Input(){
+    protected startMix1Input(){
       document.body.addEventListener('keydown', this.bound_Mix1Input); 
     }
   
-    public bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
-    public Mix1Input(e : any){
+    private bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
+    private Mix1Input(e : any){
       if(e.keyCode == 13){
           let inside : boolean = false;   
           inside = this.eyeInputService.areEyesInsideElement(this.clickArea!);
@@ -95,18 +96,20 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     public addSuccess(){
       this.taskEvaluationService.playAudio();
         this.clickArea?.classList.add("success")
+        this.success = true;
       setTimeout(() => {
         this.clickArea?.classList.remove("success");
+        this.success = false;
       },2000);
     }
   
   
-    public startMouseInput(){
+    protected startMouseInput(){
       this.clickArea!.addEventListener('mousedown', this.bound_changeOnClick);
     }
   
-    public bound_changeOnClick = this.changeOnClick.bind(this);
-    public changeOnClick(ev : any){
+    private bound_changeOnClick = this.changeOnClick.bind(this);
+    private changeOnClick(){
       if(this.selectedInputType == InputType.MIX2){
           let inside = this.eyeInputService.isInside(this.clickArea!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
           if(inside){
@@ -119,7 +122,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     }
   
   
-    public startMix2Input(){
+    protected startMix2Input(){
       this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
       document.addEventListener('mousedown', this.bound_changeOnClick);
       /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
@@ -149,7 +152,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     }
 
 
-    selectInputType(inputMethod : InputType){
+    protected selectInputType(inputMethod : InputType){
       var allChips = document.getElementsByClassName("chip");
       for (let i = 0; i < allChips.length; i++){
         let chip = allChips![i] as HTMLElement;

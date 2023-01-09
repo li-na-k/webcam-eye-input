@@ -18,23 +18,23 @@ declare var webgazer: any;
 export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   readonly InputType = InputType;
-  public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
-  public selectedInputType : InputType = InputType.EYE; 
-  public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
-  public moveArrowinterval : any;
-  public arrow : HTMLElement | null = document.getElementById("arrow");
-  public sandbox : HTMLElement | null = document.getElementById("experimentSandbox");
+  protected selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
+  protected selectedInputType : InputType = InputType.EYE; 
+  protected destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+  protected moveArrowinterval : any;
+  protected arrow : HTMLElement | null = document.getElementById("arrow");
+  protected sandbox : HTMLElement | null = document.getElementById("experimentSandbox");
 
-  public timeOutAfterMouseInput : number = 500;
+  protected timeOutAfterMouseInput : number = 500;
 
-  public selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
-  public selectedTask : Tasks = Tasks.SELECT; 
+  protected selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
+  protected selectedTask : Tasks = Tasks.SELECT; 
 
   constructor(protected store : Store<AppState>, 
-    public cdRef: ChangeDetectorRef, 
-    public webgazerService : WebgazerService,
-    public taskEvaluationService : TaskEvaluationService, //will be used in derived classes
-    public randomizationService : RandomizationService) { }  
+    protected cdRef: ChangeDetectorRef, 
+    protected webgazerService : WebgazerService,
+    protected taskEvaluationService : TaskEvaluationService, //will be used in derived classes
+    protected randomizationService : RandomizationService) { }  
   
   ngOnInit(): void {
     this.checkPointerLock();
@@ -56,10 +56,10 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  abstract startEyeInput() : void;
-  abstract startMouseInput() : void;
-  abstract startMix1Input() : void;
-  abstract startMix2Input() : void;
+  protected abstract startEyeInput() : void;
+  protected abstract startMouseInput() : void;
+  protected abstract startMix1Input() : void;
+  protected abstract startMix2Input() : void;
   abstract stopAllInputs() : void;
   abstract addSuccess(aborted?: boolean) : void;
 
@@ -87,15 +87,16 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   protected mix2loaded = false;
   private pointerLockInterval : any = undefined;
-  protected stopped = false;
+  protected pointerLockStopped = false;
 
   private checkPointerLock(){
       this.pointerLockInterval = setInterval(() => {
         if(this.mix2loaded && document.pointerLockElement == null){
-          this.stopped = true;
+          this.pointerLockStopped = true;
+          console.log("pointer lock zero!")
         }
         else{
-          this.stopped = false;
+          this.pointerLockStopped = false;
         }
       },1000)
   }

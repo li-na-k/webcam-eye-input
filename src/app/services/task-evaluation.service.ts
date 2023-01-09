@@ -17,11 +17,11 @@ type NewType = Observable<Tasks>;
 })
 export class TaskEvaluationService {
 
-  public selectedTask : Tasks | null = null; 
-  public selectedInputType : InputType | null = null; 
-  public selectedTask$ : NewType = this.store.select(selectTask);
-  public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
-  public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+  private selectedTask : Tasks | null = null; 
+  private selectedInputType : InputType | null = null; 
+  private selectedTask$ : NewType = this.store.select(selectTask);
+  private selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
+  private destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
 
   constructor(private store : Store<AppState>) {
     this.selectedInputType$
@@ -118,12 +118,6 @@ export class TaskEvaluationService {
         return keys.map(k => {
           let key = k as keyof TaskResult;
           let cell = row[key] === null || row[key] === undefined ? '' : row[key];
-          // cell = cell instanceof Date
-          //   ? cell.toLocaleString()
-          //   : cell.toString().replace(/"/g, '""');
-          // if (cell.search(/("|,|\n)/g) >= 0) {
-          //   cell = `"${cell}"`;
-          // }
           return cell;
         }).join(separator);
       }).join('\n');

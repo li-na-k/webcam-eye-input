@@ -24,8 +24,8 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   protected contentTop = this.contentTopPx.toString() + 'px'; 
   protected contentHeight = this.contentHeightPx.toString() + 'px'; 
 
-  public interval_eye : any = null;
-  public interval_mix2 : any = null;
+  private interval_eye : any = null;
+  private interval_mix2 : any = null;
   protected mix1ScrollInterval : any[] = [null,null,null,null]; 
 
 
@@ -33,7 +33,7 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
     super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
    }
 
-  public scroll(scrollArea : HTMLElement){
+  private scroll(scrollArea : HTMLElement){
     const content = document.getElementById("content");
     if(content){
       if(scrollArea.classList.contains("bottom")){
@@ -52,12 +52,12 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
     } 
   }
 
-  startMouseInput(): void {
+  protected startMouseInput(): void {
     const content = document.getElementById("content");
     content!.addEventListener("scroll", this.bound_changeTargetReached);
   }
   
-  public startEyeInput(){
+  protected startEyeInput(){
     this.preventMouseScroll();
     let inside : boolean = false;
     this.interval_eye = setInterval(() => {
@@ -72,14 +72,14 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   }
 
 
-  public startMix1Input(): void {
+  protected startMix1Input(): void {
     this.preventMouseScroll();
     document.body.addEventListener('keydown', this.bound_Mix1Input);
     document.body.addEventListener('keyup', this.bound_removeMix1ScrollInterval);
   }
 
-  protected bound_removeMix1ScrollInterval = this.removeMix1ScrollInterval.bind(this);
-  protected removeMix1ScrollInterval(){
+  private bound_removeMix1ScrollInterval = this.removeMix1ScrollInterval.bind(this);
+  private removeMix1ScrollInterval(){
     this.newENTERPress = true;
     for(let i = 0; i < this.mix1ScrollInterval.length; i++){
       clearInterval(this.mix1ScrollInterval[i]); 
@@ -87,8 +87,8 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   }
 
   private newENTERPress : boolean = true;
-  public bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
-  public Mix1Input(e : any){
+  private bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
+  private Mix1Input(e : any){
     if(e.keyCode == 13 && this.newENTERPress){
       this.newENTERPress = false; 
       for(let i = 0; i < this.scrollAreas.length; i++){
@@ -107,7 +107,7 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
     }
   }
 
-  public startMix2Input(){
+  protected startMix2Input(){
     this.preventMouseScroll();
     this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
     let inside : boolean | undefined = false;
@@ -126,12 +126,12 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
     console.log(this.mix2loaded)
   }
 
-  public target1Reached : boolean = false;
-  public target2Reached : boolean = false;
+  protected target1Reached : boolean = false;
+  protected target2Reached : boolean = false;
   @ViewChild('target1', { static: true }) target1!: ElementRef;
   @ViewChild('target2', { static: true }) target2!: ElementRef;
 
-  public isHeadingInTargetArea(heading : HTMLElement): boolean{
+  private isHeadingInTargetArea(heading : HTMLElement): boolean{
     const targetArea = document.getElementById("target-area")
     let headingBoundingBox = heading.getBoundingClientRect();
     let inside = this.eyeInputService.isInside(targetArea!, undefined, headingBoundingBox.bottom)
@@ -139,8 +139,8 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
   }
 
 
-  public bound_changeTargetReached = this.changeTargetReached.bind(this);
-  public changeTargetReached(){
+  private bound_changeTargetReached = this.changeTargetReached.bind(this);
+  private changeTargetReached(){
     let target1Inside = this.isHeadingInTargetArea(this.target1.nativeElement);
     let target2Inside = this.isHeadingInTargetArea(this.target2.nativeElement);
     if(target1Inside){

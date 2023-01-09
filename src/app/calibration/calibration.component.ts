@@ -12,13 +12,13 @@ export class CalibrationComponent implements OnInit{
 
   @Output() calibrationDoneEvent = new EventEmitter<boolean>();
   @Input() calibrationExplanationShown : boolean = true;
-  public showPopup : boolean = true;
+  protected showPopup : boolean = true; 
 
-  public numberOfCPt = 9;
-  public buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
-  public greenPtCount : number = 0;
+  private numberOfCPt = 9;
+  private buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
+  private greenPtCount : number = 0;
   //settings
-  public clickGoal = 5;
+  protected clickGoal = 5;
   //explanation
   protected explanationNr : number = 0;
 
@@ -29,7 +29,7 @@ export class CalibrationComponent implements OnInit{
     this.showPopup = !this.calibrationExplanationShown; //if calibration explanation was already shown, do not show second time
   }
 
-  public changeButtonColor(buttonNr: number){
+  protected changeButtonColor(buttonNr: number){
     if(this.buttonClicks[buttonNr] < this.clickGoal){
       this.buttonClicks[buttonNr]++
       let button = document.getElementById("CPt"+buttonNr)
@@ -49,20 +49,20 @@ export class CalibrationComponent implements OnInit{
     }
   }
 
-  public closePopup(){
+  protected closePopup(){
     this.showPopup = false;
     this.explanationNr = 1;
   }
 
-  public numberInstructions : number = 4;
-  public nextExplanation(){
+  private numberInstructions : number = 4;
+  protected nextExplanation(){
     if(this.explanationNr >= (this.numberInstructions-1)){
       this.closePopup();
     }
     this.explanationNr = this.explanationNr+1; 
   }
 
-  public previousExplanation(){
+  protected previousExplanation(){
     this.explanationNr = this.explanationNr-1; 
   }
 

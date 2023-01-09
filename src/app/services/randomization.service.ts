@@ -127,7 +127,7 @@ export class RandomizationService {
     this.setInstruction();
   }
 
-  public setInstruction(){
+  private setInstruction(){
     if(this.input == InputType.EYE){
       this.inputMethodInstructions = "Move the red dot with your eye-gaze."
       switch(this.task){

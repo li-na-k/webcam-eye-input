@@ -84,13 +84,13 @@
 
     <app-final-page (calibrationDoneEvent)="setCalibrationDone($event)" *ngIf="randomizationService.everythingDone || randomizationService.showQuestionnaireInfo"></app-final-page>
     
+    <img id="arrow" class="arrow" src="assets/arrow.png" />
 
     <div style="height: 100%;" *ngIf="!showTestMode && calibrationDone && !(randomizationService.everythingDone || randomizationService.showQuestionnaireInfo)"> 
         <div style="height: 100%;" id="experimentSandbox">            
             <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
             <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>                
             <app-scroll *ngIf="(selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
-            <img id="arrow" class="arrow" src="assets/arrow.png" />
         </div>
 
         <div *ngIf="showTaskPopup" style="display:flex;justify-content:center;">
@@ -140,4 +140,7 @@
         </div>
     </div>
 
+</div>
+<div class="footer">
+    Contact > Lina Klass, lina.klass@uni-weimar.de
 </div>

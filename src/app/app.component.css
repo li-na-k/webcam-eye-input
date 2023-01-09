@@ -113,3 +113,11 @@ button:disabled{
     font-size: 14px;
     line-height: 18px;
 }
+
+.footer{
+    padding: 0px 22px;
+    font-size: 10px;
+    position: fixed;
+    top: auto;
+    bottom: -5px;
+}

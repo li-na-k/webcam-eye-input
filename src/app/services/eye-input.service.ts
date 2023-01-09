@@ -10,15 +10,15 @@ import { AppState } from 'src/app/state/app.state';
 })
 export class EyeInputService implements OnDestroy {
 
-  public currentEyePos$ : Observable<any> = this.store.select(selectCurrentEyePos);
-  public destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+  private currentEyePos$ : Observable<any> = this.store.select(selectCurrentEyePos);
+  private destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
   // properties for Mix 2
-  public mouseInput : boolean = false;
-  public timeOutAfterMouseInput : any;
-  public moveArrowInterval : any;
-  public arrow : HTMLElement | null = null;
-  public sandbox : HTMLElement | null = null;
-  public timeout : number = 0;
+  private mouseInput : boolean = false;
+  private timeOutAfterMouseInput : any;
+  private moveArrowInterval : any;
+  private arrow : HTMLElement | null = null;
+  private sandbox : HTMLElement | null = null;
+  private timeout : number = 0;
 
   constructor(private store : Store<AppState>) { }
 
@@ -65,7 +65,7 @@ export class EyeInputService implements OnDestroy {
     return (tb_inside && lr_inside)
   }
 
-  public moveArrowWithEyes(arrow : HTMLElement | null){
+  private moveArrowWithEyes(arrow : HTMLElement | null){
     let x = 0.0;
     let y = 0.0;
     this.currentEyePos$
@@ -83,7 +83,7 @@ export class EyeInputService implements OnDestroy {
     }
   } 
 
-  public moveArrowWithMouse(e : any, arrow : HTMLElement, sandbox : HTMLElement){
+  private moveArrowWithMouse(e : any, arrow : HTMLElement, sandbox : HTMLElement){
     let x = parseInt(arrow!.style.left, 10) + e.movementX;
     let y = parseInt(arrow!.style.top, 10) + e.movementY;
     const sbRight = sandbox!.getBoundingClientRect().right;

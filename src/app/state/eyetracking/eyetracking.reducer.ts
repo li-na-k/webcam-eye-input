@@ -3,16 +3,12 @@ import * as EyetrackingActions from "./eyetracking.action";
 
 export interface EyetrackingState{
     x: number,
-    y: number,
-    time: number,
-    status: "ok" | "error"
+    y: number
 }
 
 const initialState : EyetrackingState = {
     x: 0.0, 
-    y: 0.0,
-    time: 0,
-    status: "ok"
+    y: 0.0
 }
 
 export const eyetrackingReducer = createReducer(
@@ -30,13 +26,3 @@ export const eyetrackingReducer = createReducer(
         }
     })
 )
-
-/*export function eyetrackingReducer(state: EyetrackingState = [initialState], action: EyetrackingActions.Actions){
-    switch(action.type){
-        case EyetrackingActions.CHANGE_X:
-            return [...state, action.payload];
-        case EyetrackingActions.CHANGE_Y:
-            return [...state, action.payload];
-        default: return state;
-    }
-}*/
