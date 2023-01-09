@@ -92,7 +92,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
 
   ngAfterViewInit(){
     this.randomizationService.nextInputMethod();
-    this.setCalibrationDone(false);
+    this.calibrationDone = false; //not using this.setCalibrationDone(false) here because in the beginning a calibration is needed (for test mode) even if first input is mouse
     this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true
   }
 
