@@ -8,7 +8,6 @@ import { Tasks } from '../enums/tasks';
 import { AppState } from '../state/app.state';
 import { selectInputType, selectTask } from '../state/expConditions/expconditions.selector';
 import * as FileSaver from 'file-saver';
-import { RandomizationService } from './randomization.service';
 
 type NewType = Observable<Tasks>;
 

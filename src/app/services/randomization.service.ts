@@ -62,7 +62,7 @@ export class RandomizationService {
   }
 
   //source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-  private shuffle(array : any[]) {
+  private shuffle(array : any[]) : any[]{
     let currentIndex = array.length,  randomIndex;
     while (currentIndex != 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
@@ -74,7 +74,7 @@ export class RandomizationService {
   }
 
 
-  public nextInputMethod(){ 
+  public nextInputMethod() : void{ 
     this.tasksDone = 0;
     if(this.inputsDone < this.inputOrder.length){
       this.selectInputType(this.inputOrder[this.inputsDone])
@@ -87,7 +87,8 @@ export class RandomizationService {
     }
   }
 
-  private nextTask(){
+  private nextTask() : void{
+    this.shuffle(this.sizeOrder);
     this.repsDone = 0;
     if(this.tasksDone < this.taskOrder.length){
       this.selectTask(this.taskOrder[this.tasksDone])
@@ -100,7 +101,7 @@ export class RandomizationService {
     }
   }
 
-  public nextRep(){
+  public nextRep() : void {
     //endTask(); must be called separatly!
     if(this.repsDone + 1 < this.sizeOrder.length){
       this.selectedSize = this.sizeOrder[this.repsDone+1];
@@ -109,25 +110,24 @@ export class RandomizationService {
       this.repsDone++;
       this.taskEvalutationService.startTask();
     }
-    else{
-      this.shuffle(this.sizeOrder); 
+    else{ 
       this.nextTask();
     }
   }
 
 
 
-  public selectTask(task : Tasks){
+  public selectTask(task : Tasks) : void{
     this.store.dispatch(changeTask({newTask: task}));
     this.setInstruction(); 
   }
 
-  public selectInputType(inputType : InputType){
+  public selectInputType(inputType : InputType) : void{
     this.store.dispatch(changeInputType({newInputType: inputType}));
     this.setInstruction();
   }
 
-  private setInstruction(){
+  private setInstruction() : void{
     if(this.input == InputType.EYE){
       this.inputMethodInstructions = "Move the red dot with your eye-gaze."
       switch(this.task){
@@ -198,7 +198,7 @@ export class RandomizationService {
     }
   }
 
-  private randomize(){
+  private randomize() : void{
     this.shuffle(this.inputOrder);
     this.shuffle(this.taskOrder);
     this.shuffle(this.sizeOrder); 

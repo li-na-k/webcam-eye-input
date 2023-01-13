@@ -8,7 +8,6 @@ import { WebgazerService } from '../services/webgazer.service';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
 import { Tasks } from '../enums/tasks';
-import { baseColors } from 'ng2-charts';
 
 @Component({
   selector: 'app-test-input-methods',
