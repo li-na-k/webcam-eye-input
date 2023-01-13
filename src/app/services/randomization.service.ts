@@ -83,7 +83,6 @@ export class RandomizationService {
     }
     else{
       this.everythingDone = true;
-      this.taskEvalutationService.exportResults();
     }
   }
 
