@@ -11,7 +11,9 @@ export class FinalPageComponent implements OnInit {
 
   constructor(public randomizationService : RandomizationService, protected taskEvaluationService : TaskEvaluationService) { }
 
-  questionnaireCountdownDone : boolean = false;
+  protected questionnaireCountdownDone : boolean = false;
+  protected showExportPage : boolean = false;
+
   @Output() calibrationDoneEvent = new EventEmitter<boolean>();
 
   ngOnInit(): void {
@@ -23,6 +25,11 @@ export class FinalPageComponent implements OnInit {
   confirmNextInput(){
     this.randomizationService.showQuestionnaireInfo = false; 
     this.calibrationDoneEvent.emit(false); 
+  }
+
+  goToExportPage(){
+    this.showExportPage = true;
+    this.taskEvaluationService.exportResults();
   }
 
 }
