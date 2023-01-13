@@ -103,7 +103,11 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   public addSuccess(aborted?: boolean){
     this.error = false; 
     this.taskEvaluationService.endTask(aborted);
-    this.randomizationService.nextRep();
+    if(aborted){
+      this.stopAllInputs(); 
+      this.activateSelectedInputType();
+      this.randomizationService.nextRep();
+    }
   }
 
 
@@ -172,7 +176,8 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   private backToTasksPage(){
     setTimeout(() =>  {
       this.stopAllInputs(); 
-      this.activateSelectedInputType()
+      this.activateSelectedInputType();
+      this.randomizationService.nextRep();
     }, 4000)  
   }
 
