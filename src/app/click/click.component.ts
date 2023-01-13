@@ -16,15 +16,15 @@ import { Sizes } from '../enums/sizes';
 })
 export class ClickComponent extends BaseTasksComponent implements OnInit, OnDestroy  {
 
-  public readonly dwellTime = 1000;
-  public className : string = "clickArea"
-  public clickAreas : HTMLCollectionOf<Element> | null = null; //all areas
-  public intervals : any[] = [0,0,0,0]; //one for each click Area
-  public Sizes = Sizes;
+  private readonly dwellTime = 1000;
+  private className : string = "clickArea"
+  private clickAreas : HTMLCollectionOf<Element> | null = null; //all areas
+  private intervals : any[] = [0,0,0,0]; //one for each click Area
+  protected Sizes = Sizes;
 
-  public taskElementID : string = "click-task"; //area that shows success when clicked
-  public clicked : boolean = false;
-  public error : boolean = false;
+  private taskElementID : string = "click-task"; //area that shows success when clicked
+  protected  clicked : boolean = false;
+  protected error : boolean = false;
 
   constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
    super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
@@ -34,7 +34,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     this.clickAreas = document.getElementsByClassName(this.className)
   }
 
-  public startEyeInput(){
+  protected startEyeInput(){
       for (let i = 0; i < this.clickAreas!.length; i++){
         let clickArea = this.clickAreas![i] as HTMLElement;
         let wentInsideAt : number|null = null; 
@@ -63,12 +63,12 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
       }
   }
 
-  public startMix1Input(){
+  protected startMix1Input(){
     document.body.addEventListener('keydown', this.bound_Mix1Input); 
   }
 
-  public bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
-  public Mix1Input(e : any){
+  private bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
+  private Mix1Input(e : any){
     if(e.keyCode == 13){
       for (let i = 0; i < this.clickAreas!.length; i++){
         let clickArea = this.clickAreas![i] as HTMLElement;
@@ -82,7 +82,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
 
-  public checkIfError(clickArea : HTMLElement | null){
+  protected checkIfError(clickArea : HTMLElement | null){
       if(clickArea){ //if not clicked outside of click area
         this.clicked = true;
         //Check if right area clicked
@@ -93,6 +93,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
         else{ 
           this.addSuccess();
         }
+        this.backToTasksPage() //timeout starts
       }
       else{
         this.clicked = false;
@@ -106,15 +107,15 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
 
-  public startMouseInput(){
+  protected startMouseInput(){
     for (let i = 0; i < this.clickAreas!.length; i++){
       let clickArea = this.clickAreas![i] as HTMLElement;
       clickArea.addEventListener('mousedown', this.bound_changeOnClick);
     }
   }
 
-  public bound_changeOnClick = this.changeOnClick.bind(this);
-  public changeOnClick(ev : any){
+  private bound_changeOnClick = this.changeOnClick.bind(this);
+  private changeOnClick(ev : any){
     let currentClickArea : HTMLElement | null = null; //reset from last click
     if(this.selectedInputType == InputType.MIX2){
       for (let i = 0; i < this.clickAreas!.length; i++){
@@ -136,8 +137,8 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
 
-  public startMix2Input(){
-    this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+  protected startMix2Input(){
+    this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
     document.addEventListener('mousedown', this.bound_changeOnClick);
     /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
     have been better, but it cannot be removed, which is necessary here (for other input methods)
@@ -148,7 +149,6 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
   public stopAllInputs(){
-    //TODO: more necessary back sets needed?
     //end Eye Input
     for(let i of this.intervals){clearInterval(i)};
     //end Mix1 click event
@@ -167,6 +167,13 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     //view port resets
     this.clicked = false;
     this.error = false;
+  }
+
+  private backToTasksPage(){
+    setTimeout(() =>  {
+      this.stopAllInputs(); 
+      this.activateSelectedInputType()
+    }, 4000)  
   }
 
 }

@@ -33,29 +33,6 @@
     </div>
 </div>
 
- <!-- Drop Down Task -->
- <div class="dropdowns" style="margin-left: 20px;" *ngIf="calibrationDone">
-    <div>
-        <span class="dropdown-label">Task: </span>
-        <select [(ngModel)]="randomizationService.selectedTask" (change)="randomizationService.selectTask()"> 
-            <option *ngFor="let item of TaskType | keyvalue">{{item.value}}</option>
-        </select>
-    </div>
-    
-    <!-- Drop Down InputType -->
-    <div>
-        <span class="dropdown-label">Input variant: </span>
-        <select [(ngModel)]="randomizationService.selectedInputType" (change)="randomizationService.selectInputType()" > 
-            <option *ngFor="let item of InputType | keyvalue">{{item.value}}</option>
-        </select>
-    </div>
-    <button (click)="confirmSelection(); this.blur($event)">Select</button>
-</div>
-
-<!-- <button (click)="taskEvaluationService.startTask()">Start</button>
-<button (click)="taskEvaluationService.endTask()">End</button>
-<button (click)="taskEvaluationService.exportResults()">Export</button> -->
-
 <div *ngIf="!randomizationService.showQuestionnaireInfo" class="button-header-container">
 
     <div *ngIf="calibrationDone" 
@@ -65,22 +42,13 @@
             <span *ngIf="i + 1 <= randomizationService.repsDone">●</span>
             <span *ngIf="i + 1 > randomizationService.repsDone">○</span>
         </span>
-        <div style="font-size: 12px;" *ngIf="this.randomizationService.selectedInputType == InputType.MIX2">To skip press esc.</div>
-        <button *ngIf="this.randomizationService.selectedInputType != InputType.MIX2" style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">I can't do it - skip this one</button>
+        <div style="font-size: 12px; line-height: 15px; padding-left: 15px;" *ngIf="selectedInputType == InputType.MIX2">To skip press esc.</div>
+        <button [disabled]="showTestMode" *ngIf="selectedInputType != InputType.MIX2" style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">Skip</button>
     </div>
+
     <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
         (click)="setCalibrationDone(true); this.blur($event)">Skip calibration
     </button>
-    <!-- <span *ngIf="!webgazerService.paused">
-        <button  class="button-header" mat-icon-button style="margin: 0px 0px;" type="button" (click)="webgazerService.togglePauseWebgazer(); this.blur($event)">
-            <mat-icon>pause</mat-icon>
-        </button>
-    </span>
-    <span *ngIf="webgazerService.paused">
-        <button class="button-header" mat-icon-button style="margin: 0px 10px;" type="button" (click)="webgazerService.togglePauseWebgazer(); this.blur($event)">
-            <mat-icon>play_arrow</mat-icon>
-        </button>
-    </span> -->
     
     <span *ngIf="!calibrationDone" style="background-color: white; padding: 10px 15px; border-radius: 15px; height: 70px; text-align: center;">
         <div>
@@ -91,13 +59,13 @@
         </button>
     </span>
 
-    <span style="background-color: white; padding: 10px 15px; border-radius: 15px; height: 70px; text-align: center;" *ngIf="calibrationDone" >
+    <span class="white-box" *ngIf="calibrationDone" >
         <div>
-            <span style="font-weight: bold;">{{randomizationService.selectedTask$ | async}}</span>
-            via 
-            <span style="font-weight: bold;">{{randomizationService.selectedInputType$ | async}}</span>
+            <span style="font-weight: bold;">{{selectedTask$ | async}}</span>
+            with 
+            <span style="font-weight: bold;">{{selectedInputType$ | async}}</span>
         </div>
-        <button style="display:block;" class="button-header" mat-icon-button style="margin: 10px 10px;" type="button" (click)="showTaskPopup = true; this.blur($event);">
+        <button *ngIf="!showTestMode" class="button-header" mat-icon-button style="margin: 10px 10px; display:block;" type="button" (click)="showTaskPopup = true; this.blur($event);">
             <mat-icon>question_mark</mat-icon>
         </button>
     </span>
@@ -107,22 +75,22 @@
 <!-- content -->
 <div id="content" class="content" *ngIf="webgazerService.webgazerLoaded && userIDSubmitted">
 
-    <!-- <span class="angle">❯</span>
-    <div class="instructions">{{randomizationService.instructions}}</div> -->
-
     <app-calibration *ngIf="!calibrationDone && !randomizationService.everythingDone" 
         (calibrationDoneEvent)="setCalibrationDone($event)"
         [calibrationExplanationShown]="calibrationExplanationShown">
     </app-calibration>
 
+    <app-test-input-methods (endTestEvent)="showTestMode = false;" *ngIf="calibrationDone && showTestMode && !(randomizationService.everythingDone || randomizationService.showQuestionnaireInfo)"></app-test-input-methods>
+
     <app-final-page (calibrationDoneEvent)="setCalibrationDone($event)" *ngIf="randomizationService.everythingDone || randomizationService.showQuestionnaireInfo"></app-final-page>
     
-    <div style="height: 100%;" *ngIf="calibrationDone && !(randomizationService.everythingDone || randomizationService.showQuestionnaireInfo)">
-         <div style="height: 100%;" id="experimentSandbox">
-            <app-click *ngIf="(randomizationService.selectedTask$ | async) == TaskType.SELECT"></app-click>
-            <app-hover *ngIf="(randomizationService.selectedTask$ | async) == TaskType.HOVER"></app-hover>                
-            <app-scroll *ngIf="(randomizationService.selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
-            <img id="arrow" class="arrow" src="/assets/arrow.png" />
+    <img id="arrow" class="arrow" src="assets/arrow.png" />
+
+    <div style="height: 100%;" *ngIf="!showTestMode && calibrationDone && !(randomizationService.everythingDone || randomizationService.showQuestionnaireInfo)"> 
+        <div style="height: 100%;" id="experimentSandbox">            
+            <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
+            <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>                
+            <app-scroll *ngIf="(selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
         </div>
 
         <div *ngIf="showTaskPopup" style="display:flex;justify-content:center;">
@@ -140,34 +108,39 @@
                         width: 40px;
                         height: 40px;">change_circle</mat-icon>
                         Your Input Method now:
-                        <span style="font-weight: bold; color: var(--apricot);">{{randomizationService.selectedInputType}}</span>
+                        <span style="font-weight: bold; color: var(--apricot);">{{selectedInputType}}</span>
                     </div>
                     <div style="margin-bottom: 25px;">
                         {{randomizationService.inputMethodInstructions}}
                     </div>
-                    <div *ngIf="randomizationService.selectedInputType != InputType.MIX2" style="font-size: 12px; margin-bottom: 5px;">If you cannot complete a task, click the skip button at the top.</div>
-                    <div *ngIf="randomizationService.selectedInputType == InputType.MIX2" style="font-size: 12px;  margin-bottom: 5px;">If you cannot complete a task, press esc and then click the skip button.</div>
+                    <div *ngIf="selectedInputType != InputType.MIX2" style="font-size: 12px; margin-bottom: 5px;">If you cannot complete a task, click the skip button at the top.</div>
+                    <div *ngIf="selectedInputType == InputType.MIX2" style="font-size: 12px;  margin-bottom: 5px;">If you cannot complete a task, press esc and then click the skip button.</div>
                     <button (click)="showInputMethodPopup=false; this.blur($event)">OK</button>
                 </div>
             <!-- new task -->
                 <div class="Popup" *ngIf="randomizationService.tasksDone > 1 || !showInputMethodPopup">
                     <div class="popup-header">
                         Your Task now: 
-                        <span style="text-align: center; font-weight: bold; color: var(--apricot);">{{randomizationService.selectedTask}}</span>
+                        <span style="text-align: center; font-weight: bold; color: var(--apricot);">{{selectedTask}}</span>
                     </div>
                     <div style="margin-bottom: 25px;">
                         {{randomizationService.taskInstructions}}
                     </div>
-                    <div style="border-top: 1px solid black; padding: 12px; margin: 35px;">
-                        <div style="font-weight: bold;">Reminder: The current input method is 
-                            <span style="text-align: center; color: var(--apricot);">{{randomizationService.selectedInputType}}.</span>
+                    <button (click)="showTaskPopup=false; showInputMethodPopup = true; confirmSelection(); this.blur($event)">Got it!</button>
+                    <div class="reminder">
+                        <div>Reminder: The current input method is 
+                            <span style="text-align: center; color: var(--apricot);">{{selectedInputType}}.</span>
                         </div>
                         <div>
                             {{randomizationService.inputMethodInstructions}}
                         </div>
                     </div>
-                    <button (click)="showTaskPopup=false; showInputMethodPopup = true; confirmSelection(); this.blur($event)">Got it!</button>
+                    
                 </div>
         </div>
     </div>
+
+</div>
+<div class="footer">
+    Contact > Lina Klass, lina.klass@uni-weimar.de
 </div>

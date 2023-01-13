@@ -1,0 +1,33 @@
+
+    <div class="explanation ex1">
+        <mat-icon class="arrow-explanation material-symbols-rounded">straight</mat-icon>
+        Here you can see which task you are supposed to solve and which input method you are currently using.
+    </div>
+    
+    <div class="explanation ex2">
+        <mat-icon class="arrow-explanation material-symbols-rounded">straight</mat-icon>
+        During the experiment you will see how many repetitions of a task you have already done. <b>Use the skip only if you are not able to do a repetition.</b>
+    </div>
+    
+    <div id="experimentSandbox" style="position: absolute;">
+        <h2 style="margin-top: 150px;">Test Mode</h2>
+        Choose an input method to try it:
+     
+        <div style="display: inline-flex;">
+            <button id="Mouse-chip" class="chip" (click)="selectInputType(Input.MOUSE); this.blur($event)">Mouse</button>
+            <button id="Eye-chip" class="chip" (click)="selectInputType(Input.EYE); this.blur($event)">Eye</button>
+            <button id="Eye + ENTER-chip" class="chip" (click)="selectInputType(Input.MIX1); this.blur($event)">Eye + ENTER</button>
+            <button id="Eye + Mouse-chip" class="chip" (click)="selectInputType(Input.MIX2); this.blur($event)">Eye + Mouse</button>
+            <span style="padding: 0px 10px 0px 10px; font-size: 20px;"> | </span>
+            <button id="Eye + Mouse-chip" class="chip" (click)="endTestMode()">Exit test mode and start experiment</button>
+        </div>
+    
+        <div class="instruction">
+            <span style="font-weight: bold;">❯</span> {{randomizationService.taskInstructions}}
+        </div>
+    
+        <mat-card class="clickArea large" id="click-task" style="margin-top: 50px;"> 
+            <mat-card-title *ngIf="!success">Try to select me!</mat-card-title>
+            <div *ngIf="success" class="success">✓</div>    
+        </mat-card>
+    </div>

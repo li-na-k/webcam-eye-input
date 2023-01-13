@@ -94,3 +94,30 @@ button:disabled{
     background-color: #cccccc;
     color: #666666;
 }
+
+.white-box{
+    background-color: white; 
+    padding: 10px 15px; 
+    border-radius: 15px; 
+    height: 70px; 
+    min-width: 200px; 
+    text-align: center; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-wrap: wrap
+}
+
+.reminder{
+    margin: 35px;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.footer{
+    padding: 0px 22px;
+    font-size: 10px;
+    position: fixed;
+    top: auto;
+    bottom: -5px;
+}

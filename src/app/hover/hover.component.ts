@@ -15,13 +15,13 @@ import { RandomizationService } from '../services/randomization.service';
 })
 export class HoverComponent extends BaseTasksComponent implements OnInit, OnDestroy {
 
-  public hoverAreas : HTMLCollectionOf<HTMLElement> | null = null;
+  private hoverAreas : HTMLCollectionOf<HTMLElement> | null = null;
 
-  public tooltipDuration : number = 2000;
-  public tooltipTimers : any[] = [0,0,0,0];
+  private tooltipDuration : number = 2000;
+  private tooltipTimers : any[] = [0,0,0,0];
 
-  public intervals : any[] = [0,0,0,0]; //one for each click Area
-  public success: boolean = false;
+  private intervals : any[] = [0,0,0,0]; //one for each click Area
+  protected success: boolean = false;
 
 
   constructor(cdRef: ChangeDetectorRef, store : Store<AppState>, private eyeInputService : EyeInputService, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) { 
@@ -32,8 +32,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     this.hoverAreas = document.getElementsByClassName("hoverArea") as HTMLCollectionOf<HTMLElement>;
   }
 
-  // public bound_showTooltip = this.showTooltip.bind(this);
-  public showTooltip(element : HTMLElement){
+  private showTooltip(element : HTMLElement){
     let tooltip = element.firstElementChild as HTMLElement;
     if(tooltip){
       this.checkIfError(tooltip);
@@ -45,7 +44,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     }
   }
 
-  public checkIfError(tooltip : HTMLElement){
+  private checkIfError(tooltip : HTMLElement){
     setTimeout(() => {
       this.hideTooltip(tooltip.parentElement!); 
     }, 3000)
@@ -77,8 +76,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     }
   }
   
-  // public bound_hideTooltip = this.hideTooltip.bind(this);
-  public hideTooltip(element : HTMLElement){
+  private hideTooltip(element : HTMLElement){
     let tooltip = element.firstElementChild as HTMLElement;
     if(tooltip){
       tooltip!.style.visibility = "hidden"
@@ -89,9 +87,9 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     }
   }
   
-  public handler_show = (event : any) => this.showTooltip(event.target as HTMLElement);
-  public handler_hide = (event : any) => this.hideTooltip(event.target as HTMLElement);
-  public startMouseInput(){
+  private handler_show = (event : any) => this.showTooltip(event.target as HTMLElement);
+  private handler_hide = (event : any) => this.hideTooltip(event.target as HTMLElement);
+  protected startMouseInput(){
     for (let i = 0; i < this.hoverAreas!.length; i++){
       let currentHoverArea = this.hoverAreas![i];
       currentHoverArea.addEventListener('mouseover', this.handler_show);
@@ -99,7 +97,7 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     }
   }
 
-  public startEyeInput(){
+  protected startEyeInput(){
     for (let i = 0; i < this.hoverAreas!.length; i++){
       let currentHoverArea = this.hoverAreas![i]; 
       let inside : boolean = false;
@@ -125,8 +123,8 @@ export class HoverComponent extends BaseTasksComponent implements OnInit, OnDest
     }
   }
 
-public bound_Mix1Input = this.Mix1Input.bind(this); 
-public Mix1Input(e : any){
+private bound_Mix1Input = this.Mix1Input.bind(this); 
+private Mix1Input(e : any){
   if(e.keyCode == 13){
     for (let i = 0; i < this.hoverAreas!.length; i++){
       let currentHoverArea = this.hoverAreas![i]; 
@@ -141,26 +139,22 @@ public Mix1Input(e : any){
             this.changeBlue(currentHoverArea);
           }, this.tooltipDuration)
         }
-        // else if(inside == false){
-        //   this.changeBlue(currentHoverArea)
-        //   this.hideTooltip(currentHoverArea); //TODO: Check if task element needed... probably not because success id already on tooltip
-        // }
       }
     }
   }
 }
 
-public startMix1Input(): void {
+protected startMix1Input(): void {
   document.body.addEventListener('keydown', this.bound_Mix1Input);
 }
 
-public startMix2Input(){
+protected startMix2Input(){
   console.log("start hover mix2")
   console.log(this.sandbox);
-  this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+  this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
   setTimeout(() => {
     this.mix2loaded = true;
-  }, 500)
+  }, 1500)
   for (let i = 0; i < this.hoverAreas!.length; i++){
     let currentHoverArea = this.hoverAreas![i]; 
     let inside : boolean | undefined = false;
@@ -179,17 +173,17 @@ public startMix2Input(){
 }
 
 public stopAllInputs(){
-  console.log("stop all INputs called")
+  console.log("'stopAllInputs' called")
   for(let i of this.tooltipTimers){clearTimeout(i)};
   //MOUSE + hide tooltips from before
   for (let i = 0; i < this.hoverAreas!.length; i++){
     let currentHoverArea = this.hoverAreas![i];
-    this.hideTooltip(currentHoverArea); //TODO: not needed if all timers ended?
+    this.hideTooltip(currentHoverArea);
     currentHoverArea.removeEventListener('mouseover', this.handler_show);
     currentHoverArea.removeEventListener('mouseleave', this.handler_hide);
   }
   //EYE & MIX2 interval
-  for(let i of this.intervals){clearInterval(i)}; //TODO: can be used twice?
+  for(let i of this.intervals){clearInterval(i)}; 
   //MIX1
   document.body.removeEventListener('keydown', this.bound_Mix1Input); 
   //MIX2
@@ -198,11 +192,11 @@ public stopAllInputs(){
   
 }
 
-public changeApricot(el : HTMLElement){
+private changeApricot(el : HTMLElement){
   el.style.backgroundColor = "var(--apricot)";
 }
 
-public changeBlue(el : HTMLElement){
+private changeBlue(el : HTMLElement){
   el.style.backgroundColor = "var(--blue)";
 }
 

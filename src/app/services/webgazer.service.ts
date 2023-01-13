@@ -57,10 +57,10 @@ export class WebgazerService {
         store.dispatch(changeYPos({newy: data.y}));
 
         //display current x and y
-        let xDisplay = document.getElementById("x");
-        let yDisplay = document.getElementById("y");
-        if(xDisplay){xDisplay.innerHTML = data.x;}
-        if(yDisplay){yDisplay.innerHTML = data.y;}
+        // let xDisplay = document.getElementById("x");
+        // let yDisplay = document.getElementById("y");
+        // if(xDisplay){xDisplay.innerHTML = data.x;}
+        // if(yDisplay){yDisplay.innerHTML = data.y;}
     }).begin()
   }
 

@@ -16,22 +16,24 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   @Output() startMix2 = new EventEmitter();
   @Output() addSuccess = new EventEmitter();
 
-  public selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
-  public selectedInputType : InputType = InputType.EYE; 
-  public sandbox : HTMLElement | null = document.getElementById("experimentSandbox"); 
-  public arrow : HTMLElement | null = document.getElementById("arrow"); 
-  public destroy$ : Subject<boolean> = new Subject<boolean>(); 
-  public showPopup = true;
+  protected selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
+  protected selectedInputType : InputType = InputType.EYE; 
+  protected sandbox : HTMLElement | null = document.getElementById("experimentSandbox"); 
+  protected arrow : HTMLElement | null = document.getElementById("arrow"); 
+  private destroy$ : Subject<boolean> = new Subject<boolean>(); 
+  protected showPopup = true;
 
   constructor(protected store : Store<AppState>, protected eyeInputService : EyeInputService) { }
 
-  public enablePointerLock(): void {
+  protected enablePointerLock(): void {
     this.startMix2.emit();
+    this.showPopup = false;
   }
 
-  public skipTask(): void{
+  protected skipRep(): void{
     this.startMix2.emit(); 
     this.addSuccess.emit();
+    this.showPopup = false;
   }
 
   ngOnInit(): void {
@@ -48,9 +50,10 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   ngOnDestroy(){
     this.destroy$.next(true);
     this.destroy$.complete();
+    //document.body.removeEventListener('keydown', this.bound_popupIfEsc);
   }
 
-  closeAndStopMix2() : void{
+  protected closeAndStopMix2() : void{
     this.showPopup = false;
     this.eyeInputService.stopMix2Input(this.sandbox, this.arrow)
     this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
