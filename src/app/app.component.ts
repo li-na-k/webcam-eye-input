@@ -43,10 +43,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   //calibration status
   protected calibrationDone : boolean = false;
   //calibration explanation popup
-  protected showCalibExplanation(){
-    this.calibrationExplanationShown = false;
-  }
-  protected calibrationExplanationShown : boolean = false;
+  protected showCalibExplanation : boolean = true
 
   //Test Mode
   protected showTestMode : boolean = true;
@@ -96,10 +93,10 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true
   }
 
-  protected setCalibrationDone(done : boolean){ 
+  protected updateCalibrationDone(done : boolean){ 
     if(done){ //calibration should NOT be shown next task
       this.calibrationDone = true;
-      this.calibrationExplanationShown = true; //as soon as (first) calibration is done: set explanation shown to true, so it will not be shown second time
+      this.showCalibExplanation = false; //as soon as (first) calibration is done: explanation will not be shown second time
     }
     else{ //SHOW calibration next task
       if(this.selectedInputType == InputType.MOUSE){ 

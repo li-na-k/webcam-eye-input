@@ -11,8 +11,9 @@ export class CalibrationComponent implements OnInit{
   constructor() { }
 
   @Output() calibrationDoneEvent = new EventEmitter<boolean>();
-  @Input() calibrationExplanationShown : boolean = true;
-  protected showPopup : boolean = true; 
+  //two-way data binding
+  @Input() showExplanation : boolean = false;
+  @Output() showExplanationChange = new EventEmitter<boolean>();
 
   private numberOfCPt = 9;
   private buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
@@ -26,7 +27,6 @@ export class CalibrationComponent implements OnInit{
     var dot = document.getElementById("webgazerGazeDot");
     dot!.style.visibility = "visible";
     dot!.style.opacity = "1";
-    this.showPopup = !this.calibrationExplanationShown; //if calibration explanation was already shown, do not show second time
   }
 
   protected changeButtonColor(buttonNr: number){
@@ -50,7 +50,8 @@ export class CalibrationComponent implements OnInit{
   }
 
   protected closePopup(){
-    this.showPopup = false;
+    this.showExplanation = false;
+    this.showExplanationChange.emit(false);
     this.explanationNr = 1;
   }
 

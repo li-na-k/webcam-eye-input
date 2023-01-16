@@ -47,14 +47,14 @@
     </div>
 
     <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
-        (click)="setCalibrationDone(true); this.blur($event)">Skip calibration
+        (click)="updateCalibrationDone(true); this.blur($event)">Skip calibration
     </button>
     
     <span *ngIf="!calibrationDone" style="background-color: white; padding: 10px 15px; border-radius: 15px; height: 70px; text-align: center;">
         <div>
             Click each point until all are completely green.
         </div>
-        <button class="button-header" mat-icon-button style="margin: 10px 10px;" type="button" (click)="showCalibExplanation(); this.blur($event);">
+        <button class="button-header" mat-icon-button style="margin: 10px 10px;" type="button" (click)="showCalibExplanation = true; this.blur($event);">
             <mat-icon>question_mark</mat-icon>
         </button>
     </span>
@@ -76,13 +76,13 @@
 <div id="content" class="content" *ngIf="webgazerService.webgazerLoaded && userIDSubmitted">
 
     <app-calibration *ngIf="!calibrationDone && !randomizationService.everythingDone" 
-        (calibrationDoneEvent)="setCalibrationDone($event)"
-        [calibrationExplanationShown]="calibrationExplanationShown">
+        (calibrationDoneEvent)="updateCalibrationDone($event)"
+        [(showExplanation)]="showCalibExplanation">
     </app-calibration>
 
     <app-test-input-methods (endTestEvent)="showTestMode = false;" *ngIf="calibrationDone && showTestMode && !(randomizationService.everythingDone || randomizationService.showQuestionnaireInfo)"></app-test-input-methods>
 
-    <app-final-page (calibrationDoneEvent)="setCalibrationDone($event)" *ngIf="randomizationService.everythingDone || randomizationService.showQuestionnaireInfo"></app-final-page>
+    <app-final-page (calibrationDoneEvent)="updateCalibrationDone($event)" *ngIf="randomizationService.everythingDone || randomizationService.showQuestionnaireInfo"></app-final-page>
     
     <img id="arrow" class="arrow" src="assets/arrow.png" />
 
