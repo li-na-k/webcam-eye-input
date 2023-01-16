@@ -162,7 +162,7 @@ export class RandomizationService {
       }
     }
     if(this.input == InputType.MIX2){
-      this.inputMethodInstructions = "Move the cursor with your eye-gaze. With the mouse you can override eye input and thus do the finetuning of the cursor movement."
+      this.inputMethodInstructions = "Move the cursor with your eye-gaze. Move your mouse to override the eye input and thus do the finetuning of the cursor movement."
       switch(this.task){
         case Tasks.HOVER:
           this.taskInstructions = "Move the cursor over the button that says 'Hover over me!'."
@@ -174,7 +174,7 @@ export class RandomizationService {
             this.taskInstructions = "Move the cursor over the button that says 'Select me!'. Click (with your mouse) to select the button."
             break;        
         case Tasks.TEST:
-            this.taskInstructions = "You can move the cursor with your eye-gaze. With the mouse you can override the eye input and thus do the finetuning of the cursor movement. To select the button, move the cursor over it and click (with your mouse). To exit this input method, press the escape key."
+            this.taskInstructions = "You can move the cursor with your eye-gaze. <strong>Move your mouse to override the eye input</strong> and thus do the finetuning of the cursor movement. To select the button, move the cursor over it and click (with your mouse). <strong>To exit this input method, press the escape key.</strong>"
             break;
       }
     }

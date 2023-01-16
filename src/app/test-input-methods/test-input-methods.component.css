@@ -82,6 +82,7 @@ mat-card-title{
 .instruction{
     width: 60%;
     padding-top: 10px;
+    margin-left: 250px;
 }
 
 .success{
