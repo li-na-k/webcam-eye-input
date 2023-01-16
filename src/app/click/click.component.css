@@ -30,8 +30,7 @@ mat-card-title{
     padding-bottom: 10px;
 }
 
-.clickArea.green{
-    background-color: var(--green);
+.clickArea.eye{
     opacity: 0.3;
     padding: 5px;
     text-align: center;
@@ -44,20 +43,16 @@ mat-card-title{
     position: absolute;
 }
 
-
-.small{
-    width: 190px;
-    height: 44px;
+/* both values 0.5 of size large -> area of 18.750 px */
+.small{ 
+    width: 250px;
+    height: 75px;
 }
 
-.medium{
-    width: 300px;
-    height: 80px;
-}
-
+/* area of 75.000 px */
 .large{
-    width: 760px;
-    height: 110px;
+    width: 500px;
+    height: 150px;
 }
 
 .pos1{
