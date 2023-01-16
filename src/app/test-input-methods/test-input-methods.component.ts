@@ -64,8 +64,8 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
                 }
                 else if (wentInsideAt + this.dwellTime < Date.now()) { //click
                   this.clickArea.style.border = "";
-                  clearInterval(this.interval);
                   this.addSuccess();
+                  wentInsideAt = Date.now();
                 }
               }
               else{
@@ -94,8 +94,8 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
 
     public addSuccess(){
       this.taskEvaluationService.playAudio();
-        this.clickArea?.classList.add("success")
-        this.success = true;
+      this.clickArea?.classList.add("success");
+      this.success = true;
       setTimeout(() => {
         this.clickArea?.classList.remove("success");
         this.success = false;
