@@ -1,5 +1,5 @@
 <!-- explanation popup -->
-<div *ngIf="showPopup" class="FlexboxCentered">
+<div *ngIf="showExplanation" class="FlexboxCentered">
     <div class="popup-background">
     </div>
     <div class="Popup" style="width: 60%;">
@@ -35,7 +35,7 @@
             <div style="margin-top: 15px;">Now click on "Next".</div>
         </div>
         <div *ngIf="explanationNr==3">
-            For the calibration, click each red point {{clickGoal}} times until all points are completely green.
+            For the calibration, click each red point <strong style="text-decoration: underline;">{{clickGoal}} times</strong> until all points are completely green.
             While clicking, fixate the points with your eyes.
             <div style="margin-top: 15px;">To start the calibration, close this window with "OK".</div>
         </div>

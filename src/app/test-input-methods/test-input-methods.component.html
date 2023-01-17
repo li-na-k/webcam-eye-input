@@ -23,7 +23,8 @@
         </div>
     
         <div class="instruction">
-            <span style="font-weight: bold;">❯</span> {{randomizationService.taskInstructions}}
+            <span style="font-weight: bold;">❯ </span>
+            <span [innerHTML]="randomizationService.taskInstructions"></span>
         </div>
     
         <mat-card class="clickArea large" id="click-task" style="margin-top: 50px;"> 

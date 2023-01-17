@@ -35,6 +35,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
   protected startEyeInput(){
+      this.clickAreas = document.getElementsByClassName(this.className) //necessary because different HTML elements for different sizes
       for (let i = 0; i < this.clickAreas!.length; i++){
         let clickArea = this.clickAreas![i] as HTMLElement;
         let wentInsideAt : number|null = null; 
@@ -83,6 +84,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
 
 
   protected checkIfError(clickArea : HTMLElement | null){
+      let success = false;
       if(clickArea){ //if not clicked outside of click area
         this.clicked = true;
         //Check if right area clicked
@@ -92,8 +94,9 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
         }
         else{ 
           this.addSuccess();
+          success = true;
         }
-        this.backToTasksPage() //timeout starts
+        this.backToTasksPage(success) //timeout starts
       }
       else{
         this.clicked = false;
@@ -173,11 +176,13 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     this.error = false;
   }
 
-  private backToTasksPage(){
+  private backToTasksPage(success? : boolean){
     setTimeout(() =>  {
       this.stopAllInputs(); 
+      if(success){
+        this.randomizationService.nextRep(); 
+      }
       this.activateSelectedInputType();
-      this.randomizationService.nextRep();
     }, 4000)  
   }
 
