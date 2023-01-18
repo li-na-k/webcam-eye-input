@@ -120,7 +120,6 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       }
     }
   
-  
     protected startMix2Input(){
       this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
       document.addEventListener('mousedown', this.bound_changeOnClick);
