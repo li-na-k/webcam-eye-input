@@ -134,10 +134,10 @@ export class RandomizationService {
           this.taskInstructions = "Move the red dot over the button that says 'Hover over me!'."
           break;
         case Tasks.SCROLL:
-          this.taskInstructions = "Move the red dot to the screen borders (framed area) to scroll in the respective direction. Scroll to the headline that says „Scroll here!“, then scroll to the top of the page again."
+          this.taskInstructions = "Move the red dot to the screen borders (dotted area) to scroll in the respective direction. Scroll to the headline that says „Scroll here!“, then scroll to the top of the page again."
           break;
         case Tasks.SELECT:
-            this.taskInstructions = "Move the red dot over the green area of the button that says 'Select me!' for some seconds to select it."
+            this.taskInstructions = "Move the red dot over the button that says 'Select me!' for some seconds to select it."
             break;
         case Tasks.TEST:
             this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button, move the dot over it for some seconds."
@@ -151,7 +151,7 @@ export class RandomizationService {
           this.taskInstructions = "Move the red dot over the button that says 'Hover over me!' and confirm with ENTER."
           break;
         case Tasks.SCROLL:
-          this.taskInstructions = "Move the red dot to the screen borders (framed area) and press ENTER to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
+          this.taskInstructions = "Move the red dot to the screen borders (dotted area) and keep ENTER pressed to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
           break;
         case Tasks.SELECT:
             this.taskInstructions = "Move the red dot over the button that says 'Select me!' and confirm with ENTER."
@@ -168,7 +168,7 @@ export class RandomizationService {
           this.taskInstructions = "Move the cursor over the button that says 'Hover over me!'."
           break;
         case Tasks.SCROLL:
-          this.taskInstructions = "Move the cursor to the screen borders (framed area) to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
+          this.taskInstructions = "Move the cursor to the screen borders (dotted area) to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
           break;
         case Tasks.SELECT:
             this.taskInstructions = "Move the cursor over the button that says 'Select me!'. Click (with your mouse) to select the button."
