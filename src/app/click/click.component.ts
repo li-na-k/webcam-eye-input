@@ -48,7 +48,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
               if (!wentInsideAt) { //entered -> dwell time start
                 wentInsideAt = Date.now()
                 //visualize dwell time
-                clickArea.style.border = "5px solid black";
+                clickArea.style.border = "5px solid #00000050";
               }
               else if (wentInsideAt + this.dwellTime < Date.now()) { //click
                 clickArea.style.border = "";
