@@ -21,13 +21,17 @@
             <span style="padding: 0px 10px 0px 10px; font-size: 20px;"> | </span>
             <button id="Eye + Mouse-chip" class="chip" (click)="endTestMode()">Exit test mode and start experiment</button>
         </div>
+        <div style="width: 350px; font-size: 12px; left: 630px; position: absolute;"
+            *ngIf="mix2loaded">
+            Press escape to be able to click a button again.
+        </div>
     
         <div class="instruction">
             <span style="font-weight: bold;">❯ </span>
             <span [innerHTML]="randomizationService.taskInstructions"></span>
         </div>
     
-        <mat-card class="clickArea large" id="click-task" style="margin-top: 50px;"> 
+        <mat-card class="clickArea large" id="click-task" style="margin-top: 30px;"> 
             <mat-card-title *ngIf="!success">Try to select me!</mat-card-title>
             <div *ngIf="success" class="success">✓</div>    
         </mat-card>
