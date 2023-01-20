@@ -14,12 +14,12 @@
         Choose an input method to try it:
      
         <div style="display: inline-flex;">
-            <button id="Mouse-chip" class="chip" (click)="selectInputType(Input.MOUSE); this.blur($event)">Mouse</button>
-            <button id="Eye-chip" class="chip" (click)="selectInputType(Input.EYE); this.blur($event)">Eye</button>
-            <button id="Eye + ENTER-chip" class="chip" (click)="selectInputType(Input.MIX1); this.blur($event)">Eye + ENTER</button>
-            <button id="Eye + Mouse-chip" class="chip" (click)="selectInputType(Input.MIX2); this.blur($event)">Eye + Mouse</button>
+            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Mouse-chip" class="chip" (click)="selectInputType(Input.MOUSE); this.blur($event)">Mouse</button>
+            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye-chip" class="chip" (click)="selectInputType(Input.EYE); this.blur($event)">Eye</button>
+            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye + ENTER-chip" class="chip" (click)="selectInputType(Input.MIX1); this.blur($event)">Eye + ENTER</button>
+            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye + Mouse-chip" class="chip" (click)="selectInputType(Input.MIX2); this.blur($event)">Eye + Mouse</button>
             <span style="padding: 0px 10px 0px 10px; font-size: 20px;"> | </span>
-            <button id="Eye + Mouse-chip" class="chip" (click)="endTestMode()">Exit test mode and start experiment</button>
+            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye + Mouse-chip" class="chip" (click)="endTestMode()">Exit test mode and start experiment</button>
         </div>
         <div style="width: 350px; font-size: 12px; left: 630px; position: absolute;"
             *ngIf="mix2loaded">
