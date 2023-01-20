@@ -60,7 +60,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
                 if (!wentInsideAt) { //entered -> dwell time start
                   wentInsideAt = Date.now()
                   //visualize dwell time
-                  this.clickArea.style.border = "5px solid black";
+                  this.clickArea.style.border = "5px solid #00000050";
                 }
                 else if (wentInsideAt + this.dwellTime < Date.now()) { //click
                   this.clickArea.style.border = "";

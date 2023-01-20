@@ -2,7 +2,9 @@ import { Component, EventEmitter, Output, OnInit, OnDestroy, AfterViewChecked, A
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil} from 'rxjs';
 import { EyeInputService } from 'src/app/services/eye-input.service';
+import { AppComponent } from '../app.component';
 import { InputType } from '../enums/input-type';
+import { RandomizationService } from '../services/randomization.service';
 import { AppState } from '../state/app.state';
 import { selectInputType } from '../state/expConditions/expconditions.selector';
 
@@ -23,7 +25,7 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   private destroy$ : Subject<boolean> = new Subject<boolean>(); 
   protected showPopup = true;
 
-  constructor(protected store : Store<AppState>, protected eyeInputService : EyeInputService) { }
+  constructor(protected store : Store<AppState>, protected eyeInputService : EyeInputService, protected randomizationService : RandomizationService) { }
 
   protected enablePointerLock(): void {
     this.startMix2.emit();

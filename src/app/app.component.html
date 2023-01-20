@@ -65,7 +65,7 @@
             with 
             <span style="font-weight: bold;">{{selectedInputType$ | async}}</span>
         </div>
-        <button *ngIf="!showTestMode" class="button-header" mat-icon-button style="margin: 10px 10px; display:block;" type="button" (click)="showTaskPopup = true; this.blur($event);">
+        <button *ngIf="!showTestMode && selectedInputType != InputType.MIX2" class="button-header" mat-icon-button style="margin: 10px 10px; display:block;" type="button" (click)="showTaskPopup = true; this.blur($event);">
             <mat-icon>question_mark</mat-icon>
         </button>
     </span>

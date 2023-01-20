@@ -1,30 +1,17 @@
-<div class="flex-container" *ngIf="!clicked && !(selectedInputType == InputType.EYE)">
-    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]" class="clickArea">
+<div class="container" *ngIf="!clicked">
+    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']">
         <mat-card-title>Hello!</mat-card-title>
     </mat-card>
-    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1]]" class="clickArea" id="click-task" > 
+    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea']" id="click-task"> 
         <mat-card-title>Select me!</mat-card-title>
     </mat-card>
-    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2]]" class="clickArea">
+    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2], 'clickArea']">
         <mat-card-title>I am a Headline</mat-card-title>
     </mat-card>
-</div>
-
-<div class="flex-container" *ngIf="!clicked && selectedInputType==InputType.EYE">
-    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0]]">
-        <div style="width: -webkit-fill-available; border-radius: 12px; padding: 0px;" class="clickArea eye"></div>
-        <mat-card-title>Hello!</mat-card-title>
-    </mat-card>
-    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1]]">
-        <div style="width: -webkit-fill-available; border-radius: 12px; padding: 0px;" class="clickArea eye" id="click-task"></div>
-        <mat-card-title>Select me!</mat-card-title>
-    </mat-card>
-    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2]]" >
-        <div style="width: -webkit-fill-available; border-radius: 12px; padding: 0px;" class="clickArea eye"></div>
-        <mat-card-title>I am a Headline</mat-card-title>
+    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3], 'clickArea']">
+        <mat-card-title>Lorem Ipsum</mat-card-title>
     </mat-card>
 </div>
-
    
 <div *ngIf="clicked">
     <div class="success" *ngIf="!error"> ✓ </div>

@@ -48,7 +48,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
               if (!wentInsideAt) { //entered -> dwell time start
                 wentInsideAt = Date.now()
                 //visualize dwell time
-                clickArea.style.border = "5px solid black";
+                clickArea.style.border = "5px solid #00000050";
               }
               else if (wentInsideAt + this.dwellTime < Date.now()) { //click
                 clickArea.style.border = "";
@@ -105,14 +105,11 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
 
   public addSuccess(aborted?: boolean){
     this.error = false; 
-    this.taskEvaluationService.endTask(aborted);
+    this.taskEvaluationService.endTask(aborted); 
     if(aborted){
-      this.stopAllInputs(); 
-      this.activateSelectedInputType();
       this.randomizationService.nextRep();
     }
   }
-
 
   protected startMouseInput(){
     for (let i = 0; i < this.clickAreas!.length; i++){
@@ -123,7 +120,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
 
   private bound_changeOnClick = this.changeOnClick.bind(this);
   private changeOnClick(ev : any){
-    let currentClickArea : HTMLElement | null = null; //reset from last click
+    let currentClickArea : HTMLElement | null = null;
     if(this.selectedInputType == InputType.MIX2){
       for (let i = 0; i < this.clickAreas!.length; i++){
         let clickArea = this.clickAreas![i] as HTMLElement;
@@ -133,7 +130,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
           break; //exit for loop as soon as clicked area found
         }
       }
-      if(currentClickArea == null){ 
+      if(currentClickArea == null || this.pointerLockStopped){ 
         this.clicked = false;
       }
     }
@@ -143,7 +140,6 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     this.checkIfError(currentClickArea);
   }
 
-
   protected startMix2Input(){
     this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
     document.addEventListener('mousedown', this.bound_changeOnClick);
@@ -152,7 +148,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     -> using Renderer2 might have been an option but this works, so keeeping it like this for the moment */
     setTimeout(() =>
       {this.mix2loaded = true;}
-    ,500) //no other option because pointer lock request does not return observable to check success 
+    ,1000) //no other option because pointer lock request does not return observable to check success 
   }
 
   public stopAllInputs(){
@@ -171,19 +167,18 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
     this.mix2loaded = false;
     this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
     document.removeEventListener('mousedown', this.bound_changeOnClick); 
-    //view port resets
-    this.clicked = false;
-    this.error = false;
   }
 
   private backToTasksPage(success? : boolean){
+    this.stopAllInputs();
     setTimeout(() =>  {
-      this.stopAllInputs(); 
+      this.activateSelectedInputType();
       if(success){
         this.randomizationService.nextRep(); 
       }
-      this.activateSelectedInputType();
-    }, 4000)  
+      this.clicked = false;
+      this.error = false;
+    }, 4000)          
   }
 
 }
