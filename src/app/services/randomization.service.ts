@@ -140,7 +140,7 @@ export class RandomizationService {
             this.taskInstructions = "Move the red dot over the button that says 'Select me!' for some seconds to select it."
             break;
         case Tasks.TEST:
-            this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button, move the dot over it for some seconds."
+            this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button below, move the dot over it for some seconds."
             break;
       }
     }
@@ -157,7 +157,7 @@ export class RandomizationService {
             this.taskInstructions = "Move the red dot over the button that says 'Select me!' and confirm with ENTER."
             break;
         case Tasks.TEST:
-            this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button, move the dot over it and confirm with ENTER."
+            this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button below, move the dot over it and confirm with ENTER."
             break;
       }
     }
@@ -174,7 +174,7 @@ export class RandomizationService {
             this.taskInstructions = "Move the cursor over the button that says 'Select me!'. Click (with your mouse) to select the button."
             break;        
         case Tasks.TEST:
-            this.taskInstructions = "You can move the cursor with your eye-gaze. <strong>Move your mouse to override the eye input</strong> and thus do the finetuning of the cursor movement. To select the button, move the cursor over it and click (with your mouse)."
+            this.taskInstructions = "You can move the cursor with your eye-gaze. <strong>You can also move your mouse to override the eye input</strong> and thus do the finetuning of the cursor movement. To select the button, move the cursor over it and click (with your mouse)."
             break;
       }
     }
