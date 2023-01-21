@@ -38,7 +38,7 @@ export class RandomizationService {
 
   //final page after finishing inputs 
   public everythingDone: boolean = false;
-  public showQuestionnaireInfo : boolean = false;
+  public showFinalPageComponent : boolean = false;
 
   messageSubject = new Subject();
   
@@ -92,7 +92,7 @@ export class RandomizationService {
       this.messageSubject.next('nextTask'); // emit event: popup with explanation + confirm button that activates input method should be displayed in app.component
     }
     else{
-      this.showQuestionnaireInfo = true;
+      this.showFinalPageComponent = true;
       this.nextInputMethod();
     }
   }
