@@ -172,12 +172,12 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   private backToTasksPage(success? : boolean){
     this.stopAllInputs();
     setTimeout(() =>  {
+      this.clicked = false;
+      this.error = false;
       this.activateSelectedInputType();
       if(success){
         this.randomizationService.nextRep(); 
       }
-      this.clicked = false;
-      this.error = false;
     }, 4000)          
   }
 
