@@ -33,7 +33,7 @@
     </div>
 </div>
 
-<div *ngIf="!randomizationService.showQuestionnaireInfo" class="button-header-container">
+<div *ngIf="!randomizationService.showFinalPageComponent" class="button-header-container">
 
     <div *ngIf="calibrationDone" 
         style="background-color: white; border-radius: 15px; padding: 10px 15px; 
@@ -80,13 +80,13 @@
         [(showExplanation)]="showCalibExplanation">
     </app-calibration>
 
-    <app-test-input-methods (endTestEvent)="showTestMode = false;" *ngIf="calibrationDone && showTestMode && !(randomizationService.everythingDone || randomizationService.showQuestionnaireInfo)"></app-test-input-methods>
+    <app-test-input-methods (endTestEvent)="showTestMode = false;" *ngIf="calibrationDone && showTestMode && !(randomizationService.everythingDone || randomizationService.showFinalPageComponent)"></app-test-input-methods>
 
-    <app-final-page (calibrationDoneEvent)="updateCalibrationDone($event)" *ngIf="randomizationService.everythingDone || randomizationService.showQuestionnaireInfo"></app-final-page>
+    <app-final-page (calibrationDoneEvent)="updateCalibrationDone($event)" *ngIf="randomizationService.everythingDone || randomizationService.showFinalPageComponent"></app-final-page>
     
     <img id="arrow" class="arrow" src="assets/arrow.png" />
 
-    <div style="height: 100%;" *ngIf="!showTestMode && calibrationDone && !(randomizationService.everythingDone || randomizationService.showQuestionnaireInfo)"> 
+    <div style="height: 100%;" *ngIf="!showTestMode && calibrationDone && !(randomizationService.everythingDone || randomizationService.showFinalPageComponent)"> 
         <div style="height: 100%;" id="experimentSandbox">            
             <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
             <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>                

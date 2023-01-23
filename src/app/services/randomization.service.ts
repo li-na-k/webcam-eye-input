@@ -1,8 +1,8 @@
-import { BoundElementProperty } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { InputType } from '../enums/input-type';
+import { Positions } from '../enums/positions';
 import { Sizes } from '../enums/sizes';
 import { Tasks } from '../enums/tasks';
 import { AppState } from '../state/app.state';
@@ -27,7 +27,7 @@ export class RandomizationService {
   //order of tasks
   public inputOrder : InputType[] = [InputType.EYE, InputType.MIX1, InputType.MIX2, InputType.MOUSE]; 
   public taskOrder : Tasks[] = [Tasks.SCROLL, Tasks.SELECT]; //to include the hover tasks, add "Tasks.HOVER" here
-  public positionOrder : string[] = ["pos1", "pos2", "pos3", "pos4"];
+  public positionOrder : Positions[] = [Positions.POS1, Positions.POS2, Positions.POS3, Positions.POS4];
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
 
@@ -35,15 +35,13 @@ export class RandomizationService {
   public sizeOrder = [Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L];
   public repsDone : number = 0;
   public selectedSize : Sizes =  Sizes.S;
-  //public selectedPos : string = "";
 
   //final page after finishing inputs 
   public everythingDone: boolean = false;
-  public showQuestionnaireInfo : boolean = false;
+  public showFinalPageComponent : boolean = false;
 
   messageSubject = new Subject();
   
-
   constructor(private store : Store<AppState>, private taskEvalutationService : TaskEvaluationService) { 
     this.randomize();
     console.log(this.inputOrder);
@@ -73,7 +71,6 @@ export class RandomizationService {
     return array;
   }
 
-
   public nextInputMethod() : void{ 
     this.tasksDone = 0;
     if(this.inputsDone < this.inputOrder.length){
@@ -95,7 +92,7 @@ export class RandomizationService {
       this.messageSubject.next('nextTask'); // emit event: popup with explanation + confirm button that activates input method should be displayed in app.component
     }
     else{
-      this.showQuestionnaireInfo = true;
+      this.showFinalPageComponent = true;
       this.nextInputMethod();
     }
   }
@@ -113,8 +110,6 @@ export class RandomizationService {
       this.nextTask();
     }
   }
-
-
 
   public selectTask(task : Tasks) : void{
     this.store.dispatch(changeTask({newTask: task}));

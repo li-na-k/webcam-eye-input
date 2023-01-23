@@ -1,4 +1,4 @@
-<div *ngIf="randomizationService.showQuestionnaireInfo && !randomizationService.everythingDone" style="display:flex;justify-content:center;align-items:center; flex-direction: column; text-align: center;">
+<div *ngIf="randomizationService.showFinalPageComponent && !randomizationService.everythingDone" style="display:flex;justify-content:center;align-items:center; flex-direction: column; text-align: center;">
     <h1>You finished all tasks for this input method.</h1>
     <img src="../../assets/change_tab.gif">
     <p>Please go back to the questionnaire now, <strong style="color: var(--apricot);">click "Next" and select "{{randomizationService.inputOrder[randomizationService.inputsDone-2]}}"</strong> in the drop-down. <strong>Do not close this tab</strong>.</p>

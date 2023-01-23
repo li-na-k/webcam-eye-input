@@ -23,7 +23,7 @@ export class FinalPageComponent implements OnInit {
   }
 
   confirmNextInput(){
-    this.randomizationService.showQuestionnaireInfo = false; 
+    this.randomizationService.showFinalPageComponent = false; 
     this.calibrationDoneEvent.emit(false); 
   }
 
