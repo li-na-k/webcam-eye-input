@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
+import { WebgazerService } from '../services/webgazer.service';
 
 @Component({
   selector: 'app-calibration',
@@ -8,7 +9,7 @@ import { Output, EventEmitter } from '@angular/core';
 })
 export class CalibrationComponent implements OnInit{
 
-  constructor() { }
+  constructor(private webgazerService : WebgazerService) { }
 
   @Output() calibrationDoneEvent = new EventEmitter<boolean>();
   //two-way data binding
@@ -27,6 +28,7 @@ export class CalibrationComponent implements OnInit{
     var dot = document.getElementById("webgazerGazeDot");
     dot!.style.visibility = "visible";
     dot!.style.opacity = "1";
+    this.webgazerService.resumeWebgazer();
   }
 
   protected changeButtonColor(buttonNr: number){
