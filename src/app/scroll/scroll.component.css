@@ -48,11 +48,11 @@
 }
 
 .small{
-    height: 15%;
+    height: 100px;
 }
 
 .large{
-    height: 30%;
+    height: 200px;
 }
 
 #successBox{
