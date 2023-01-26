@@ -146,7 +146,7 @@ export class RandomizationService {
           this.taskInstructions = "Move the red dot over the button that says 'Hover over me!' and confirm with ENTER."
           break;
         case Tasks.SCROLL:
-          this.taskInstructions = "Move the red dot to the screen borders (dotted area) and keep ENTER pressed to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
+          this.taskInstructions = "Move the red dot to the screen borders (dotted area) and <strong>keep ENTER pressed as long as you want to scroll</strong> in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
           break;
         case Tasks.SELECT:
             this.taskInstructions = "Move the red dot over the button that says 'Select me!' and confirm with ENTER."

@@ -123,9 +123,7 @@
                         Your Task now: 
                         <span style="text-align: center; font-weight: bold; color: var(--apricot);">{{selectedTask}}</span>
                     </div>
-                    <div style="margin-bottom: 25px;">
-                        {{randomizationService.taskInstructions}}
-                    </div>
+                    <div style="margin-bottom: 25px;" [innerHTML]="randomizationService.taskInstructions"></div>
                     <button (click)="showTaskPopup=false; showInputMethodPopup = true; confirmSelection(); this.blur($event)">Got it!</button>
                     <div class="reminder">
                         <div>Reminder: The current input method is 
