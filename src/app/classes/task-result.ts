@@ -12,6 +12,9 @@ export class TaskResult {
     errors: number = 0;
     aborted : boolean = false;
     eyeMouseDistribution? : number[]; //[eye interval duration, mouse interval duration, eye interval duration, mouse ....]
+    mouseIntervalsDuration? : number;
+    eyeIntervalsDuration? : number;
+    intervalChanges? : number;
 
     public setDuration() { this.duration = this.endTime - this.startTime };
 }

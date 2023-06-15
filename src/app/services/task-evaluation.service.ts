@@ -87,6 +87,11 @@ export class TaskEvaluationService {
       if(aborted){
         result.aborted = aborted;
       }
+      if(result.eyeMouseDistribution){
+        result.eyeIntervalsDuration = result.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 == 0) ? val : 0), 0);
+        result.mouseIntervalsDuration = result.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 != 0) ? val : 0), 0);
+        result.intervalChanges = result.eyeMouseDistribution.length-1;
+      }
       this.taskRunning = false;
       this.playAudio();
       console.log(result);

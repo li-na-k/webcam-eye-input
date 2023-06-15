@@ -93,9 +93,9 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
           this.taskEvaluationService.addError();
         }
         else{ 
+          this.taskEvaluationService.endEyeMouseInterval(); //end last MOUSE interval (during Mix2 only)
           this.addSuccess();
           success = true;
-          this.taskEvaluationService.endEyeMouseInterval(); //end last MOUSE interval (during Mix2 only)
         }
         this.backToTasksPage(success) //timeout starts
       }
