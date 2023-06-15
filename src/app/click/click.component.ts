@@ -95,6 +95,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
         else{ 
           this.addSuccess();
           success = true;
+          this.taskEvaluationService.endEyeMouseInterval(); //end last MOUSE interval (during Mix2 only)
         }
         this.backToTasksPage(success) //timeout starts
       }

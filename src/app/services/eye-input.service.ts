@@ -3,6 +3,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentEyePos } from 'src/app/state/eyetracking/eyetracking.selector';
 import { AppState } from 'src/app/state/app.state';
+import { TaskEvaluationService } from './task-evaluation.service';
 
 
 @Injectable({
@@ -20,7 +21,7 @@ export class EyeInputService implements OnDestroy {
   private sandbox : HTMLElement | null = null;
   private timeout : number = 0;
 
-  constructor(private store : Store<AppState>) { }
+  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService) { }
 
   public areEyesInsideElement(el : HTMLElement) : boolean{
     let x = 0.0;
@@ -143,10 +144,14 @@ export class EyeInputService implements OnDestroy {
   private bound_mouseTakeover = this.mouseTakeover.bind(this);
   private mouseTakeover(e : any){
     clearTimeout(this.timeOutAfterMouseInput);
-    this.mouseInput = true;
+    if(!this.mouseInput){ //until now it was eye input, now change to mouse input
+      this.mouseInput = true;
+      this.taskEvaluationService.endEyeMouseInterval(); //end previous EYE interval
+    }
     this.moveArrowWithMouse(e, this.arrow!, this.sandbox!);
     this.timeOutAfterMouseInput = setTimeout(() => {
       this.mouseInput = false;
+      this.taskEvaluationService.endEyeMouseInterval(); //end previous MOUSE interval, timeout after mouse input (500ms) counts as mouse input
     }, this.timeout)
   }
   

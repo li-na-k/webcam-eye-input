@@ -54,6 +54,9 @@ export class TaskEvaluationService {
       result.inputType = this.selectedInputType;
       result.task = this.selectedTask;
       result.size = this.selectedSize;
+      if(this.selectedInputType == InputType.MIX2){
+        result.eyeMouseDistribution = [];
+      }
     }
   }
 
@@ -63,6 +66,15 @@ export class TaskEvaluationService {
     }
     else{
       console.log("no error was added because task has not been started.")
+    }
+  }
+
+  endEyeMouseInterval(){ //only for Mix2 input!
+    let result : TaskResult = this.results[this.results.length-1] //current result object
+    if(result.eyeMouseDistribution){
+      let prevIntervalsDur = result.eyeMouseDistribution.reduce((a, b) => a + b, 0);
+      let duration : number = Date.now() - (result.startTime + prevIntervalsDur)
+      result.eyeMouseDistribution?.push(duration);
     }
   }
 
