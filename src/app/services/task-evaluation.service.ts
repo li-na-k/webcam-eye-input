@@ -36,7 +36,6 @@ export class TaskEvaluationService {
     this.destroy$.complete();
   }
 
-  public userID : string | null = null;
   public results : TaskResult[] = []; //nicht als rxjs store weil mans einfach gleich hier in eine Datei reinschreibt, es muss ja sonst von nirgendwo drauf zugegriffen werden
   private taskRunning : boolean = false;
   private errorCount : number = 0;
@@ -120,7 +119,7 @@ export class TaskEvaluationService {
           return cell;
         }).join(separator);
       }).join('\n');
-    this.saveAsFile(csvContent, this.userID + ".csv", "csv"); 
+    this.saveAsFile(csvContent, "experimentResults" + ".csv", "csv"); 
   }
 
   private saveAsFile(buffer: any, fileName: string, fileType: string): void {

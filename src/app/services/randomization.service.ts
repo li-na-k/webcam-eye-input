@@ -16,7 +16,7 @@ import { TaskEvaluationService } from './task-evaluation.service';
 export class RandomizationService {
 
   private input : InputType = InputType.EYE;
-  private task : Tasks = Tasks.HOVER;
+  private task : Tasks = Tasks.SELECT;
   public taskInstructions : string = "";
   public inputMethodInstructions : string = "";
 
@@ -25,8 +25,8 @@ export class RandomizationService {
   private selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
   //order of tasks
-  public inputOrder : InputType[] = [InputType.EYE, InputType.MIX1, InputType.MIX2, InputType.MOUSE]; 
-  public taskOrder : Tasks[] = [Tasks.SCROLL, Tasks.SELECT]; //to include the hover tasks, add "Tasks.HOVER" here
+  public inputOrder : InputType[] = [InputType.MIX2, InputType.MOUSE]; 
+  public taskOrder : Tasks[] = [Tasks.SELECT]; //to include selection or hover tasks, add e.g. "Tasks.HOVER" here
   public positionOrder : Positions[] = [Positions.POS1, Positions.POS2, Positions.POS3, Positions.POS4];
   public inputsDone : number = 0; 
   public tasksDone : number = 0;

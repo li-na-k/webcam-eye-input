@@ -13,26 +13,6 @@
     </div>
 </div>
 
-<div *ngIf="webgazerService.webgazerLoaded && !userIDSubmitted" class="FlexboxCentered">
-    <div class="popup-full-background"></div>
-    <div class="Popup-blue">                     
-        <div style="padding-top: 30px; font-weight: bold;">
-            <label for="userID">Please paste your copied participant ID here:</label>
-        </div> 
-
-        <input class="form-control"
-            id="userID"  type="text"
-            required minlength="4" maxlength="6"
-            [(ngModel)]="enteredUserID" name="userID"
-            #userID="ngModel">
-        <div [hidden]="userID.valid || userID.pristine"
-            class="alert">Please enter a valid participant ID.</div>
-        <div style="margin-top: 10px;">
-            <button type="submit" [disabled]="!userID.valid" (click)="userIDSubmit(); this.blur($event)">Submit</button>
-        </div>
-    </div>
-</div>
-
 <div *ngIf="!randomizationService.showFinalPageComponent" class="button-header-container">
 
     <div *ngIf="calibrationDone" 
@@ -73,7 +53,7 @@
         
 
 <!-- content -->
-<div id="content" class="content" *ngIf="webgazerService.webgazerLoaded && userIDSubmitted">
+<div id="content" class="content" *ngIf="webgazerService.webgazerLoaded">
 
     <app-calibration *ngIf="!calibrationDone && !randomizationService.everythingDone" 
         (calibrationDoneEvent)="updateCalibrationDone($event)"

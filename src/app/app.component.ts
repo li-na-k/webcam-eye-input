@@ -116,14 +116,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   blur($event : any){
     $event.target.blur();
   }
-  
-  protected enteredUserID: string = "";
-  protected userIDSubmitted : boolean = false;
 
-  protected userIDSubmit(){
-    this.taskEvaluationService.userID = this.enteredUserID;
-    this.userIDSubmitted = true;
-  }
 }  
 
 
