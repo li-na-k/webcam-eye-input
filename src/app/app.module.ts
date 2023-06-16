@@ -26,6 +26,7 @@ import { HeaderComponent } from './header/header.component';
 import { CalibrationComponent } from './calibration/calibration.component';
 import { FinalPageComponent } from './final-page/final-page.component';
 import { TestInputMethodsComponent } from './test-input-methods/test-input-methods.component';
+import { DualScreenComponent } from './dual-screen/dual-screen.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { TestInputMethodsComponent } from './test-input-methods/test-input-metho
     HeaderComponent,
     CalibrationComponent,
     FinalPageComponent,
-    TestInputMethodsComponent
+    TestInputMethodsComponent,
+    DualScreenComponent
   ],
   imports: [
     BrowserModule,
