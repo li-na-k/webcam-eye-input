@@ -10,7 +10,7 @@ import {
   templateUrl: './dual-screen.component.html',
   styleUrls: ['./dual-screen.component.css'],
 })
-export class DualScreenComponent implements AfterViewInit {
+export class DualScreenComponent {
   @ViewChild('templatePortalContent') templatePortalContent!: TemplateRef<unknown>;
 
   templatePortal!: TemplatePortal<any>;
@@ -25,18 +25,28 @@ export class DualScreenComponent implements AfterViewInit {
     private applicationRef: ApplicationRef){}
 
 
-  ngAfterViewInit(){
-    this.externalWindow = window.open('', '', 'width=600,height=400,left=200,top=200');
-    const outlet = new DomPortalOutlet(this.externalWindow.document.body, this.componentFactoryResolver, this.applicationRef, this.injector);
-    this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
-    outlet.attach(this.templatePortal);
-    // Copy styles from parent window
-    document.querySelectorAll('style').forEach(htmlElement => {
-      this.externalWindow.document.head.appendChild(htmlElement.cloneNode(true));
-    });
-    // Copy stylesheet link from parent window
-    this.styleSheetElement = this.getStyleSheetElement();
-    this.externalWindow.document.head.appendChild(this.styleSheetElement);    
+  openSecondWindow() : Promise<Window>{
+    return new Promise(resolve => {
+      this.externalWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=600,height=400,left=200,top=200');
+      // Wait for window instance to be created
+      this.externalWindow.onload = () => {
+        this.externalWindow.document.body.innerText = '';
+        this.externalWindow.document.title = 'Second Screen';
+        this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
+        const outlet = new DomPortalOutlet(this.externalWindow.document.body, this.componentFactoryResolver, this.applicationRef, this.injector);
+        outlet.attach(this.templatePortal);
+    
+        // Copy styles from parent window
+        document.querySelectorAll('style').forEach(htmlElement => {
+          this.externalWindow.document.head.appendChild(htmlElement.cloneNode(true));
+        });
+        // Copy stylesheet link from parent window
+        this.styleSheetElement = this.getStyleSheetElement();
+        this.externalWindow.document.head.appendChild(this.styleSheetElement);  
+
+        resolve(this.externalWindow);
+      }
+    })     
   }
 
   //source: https://stackblitz.com/edit/portal-simple?file=src%2Fapp%2Fapp.component.ts
@@ -49,7 +59,6 @@ export class DualScreenComponent implements AfterViewInit {
         styleSheetElement.href = absoluteUrl;
       }
     });
-    console.log(styleSheetElement);
     return styleSheetElement;
   }
 

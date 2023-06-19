@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EyeInputService } from 'src/app/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
@@ -14,28 +14,39 @@ import { Sizes } from '../enums/sizes';
   templateUrl: './click.component.html',
   styleUrls: ['./click.component.css']
 })
-export class ClickComponent extends BaseTasksComponent implements OnInit, OnDestroy  {
+export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
+
+  @ViewChild('dualscreen') dualscreen! : any;
 
   private readonly dwellTime = 1000;
   private className : string = "clickArea"
-  private clickAreas : HTMLCollectionOf<Element> | null = null; //all areas
+  private clickAreas : Array<Element> | null = null; //all areas 
   private intervals : any[] = [0,0,0,0]; //one for each click Area
   protected Sizes = Sizes;
 
   private taskElementID : string = "click-task"; //area that shows success when clicked
   protected  clicked : boolean = false;
   protected error : boolean = false;
+  secondScreen: any;
 
   constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
    super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
   }
 
-  ngAfterViewInit(): void {
-    this.clickAreas = document.getElementsByClassName(this.className)
+  async ngAfterViewInit() {
+    this.secondScreen = await this.dualscreen.openSecondWindow(); 
+    this.getclickAreas();
+  }
+
+  async getclickAreas(){
+    console.log("get click areas")
+    const clickAreas_mainScreen = document.getElementsByClassName(this.className)
+    const clickAreas_secondScreen = this.secondScreen.document.getElementsByClassName(this.className);
+    this.clickAreas = [].slice.call(clickAreas_mainScreen).concat([].slice.call(clickAreas_secondScreen)) 
   }
 
   protected startEyeInput(){
-      this.clickAreas = document.getElementsByClassName(this.className) //necessary because different HTML elements for different sizes
+      this.clickAreas = [].slice.call(document.getElementsByClassName(this.className)) //necessary because different HTML elements for different sizes
       for (let i = 0; i < this.clickAreas!.length; i++){
         let clickArea = this.clickAreas![i] as HTMLElement;
         let wentInsideAt : number|null = null; 
@@ -113,6 +124,7 @@ export class ClickComponent extends BaseTasksComponent implements OnInit, OnDest
   }
 
   protected startMouseInput(){
+    this.getclickAreas();
     for (let i = 0; i < this.clickAreas!.length; i++){
       let clickArea = this.clickAreas![i] as HTMLElement;
       clickArea.addEventListener('mousedown', this.bound_changeOnClick);
