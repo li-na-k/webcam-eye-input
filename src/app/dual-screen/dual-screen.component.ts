@@ -1,4 +1,4 @@
-import { AfterViewInit, ApplicationRef, Component, ComponentFactoryResolver, Injector, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ElementRef } from '@angular/core';
+import { AfterViewInit, ApplicationRef, Component, Injector, OnDestroy, TemplateRef, ViewChild, ViewContainerRef, Input } from '@angular/core';
 import {
   TemplatePortal,
   DomPortalOutlet,
@@ -10,47 +10,66 @@ import {
   templateUrl: './dual-screen.component.html',
   styleUrls: ['./dual-screen.component.css'],
 })
-export class DualScreenComponent {
+export class DualScreenComponent implements AfterViewInit, OnDestroy {
   @ViewChild('templatePortalContent') templatePortalContent!: TemplateRef<unknown>;
-
-  templatePortal!: TemplatePortal<any>;
-
-  private externalWindow : any;
-  styleSheetElement: any;
+  @Input() immediateLoad : boolean = false; //if false, component where dualScreen is used must call openSecondWindow()
+  private templatePortal!: TemplatePortal<any>;
+  private secondWindow : any;
+  private styleSheetElement: any;
 
   constructor(
     private _viewContainerRef: ViewContainerRef,
     private injector: Injector,
-    private componentFactoryResolver: ComponentFactoryResolver,
     private applicationRef: ApplicationRef){}
 
 
-  openSecondWindow() : Promise<Window>{
-    return new Promise(resolve => {
-      this.externalWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=600,height=400,left=200,top=200');
-      // Wait for window instance to be created
-      this.externalWindow.onload = () => {
-        this.externalWindow.document.body.innerText = '';
-        this.externalWindow.document.title = 'Second Screen';
-        this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
-        const outlet = new DomPortalOutlet(this.externalWindow.document.body, this.componentFactoryResolver, this.applicationRef, this.injector);
-        outlet.attach(this.templatePortal);
-    
-        // Copy styles from parent window
-        document.querySelectorAll('style').forEach(htmlElement => {
-          this.externalWindow.document.head.appendChild(htmlElement.cloneNode(true));
-        });
-        // Copy stylesheet link from parent window
-        this.styleSheetElement = this.getStyleSheetElement();
-        this.externalWindow.document.head.appendChild(this.styleSheetElement);  
+  ngAfterViewInit(){
+    if(this.immediateLoad){
+      this.openSecondWindow();
+    }
+  }
 
-        resolve(this.externalWindow);
-      }
+  public closeSecondWindow(){
+    this.secondWindow.close()
+  }
+
+  //get second window without re-opening it
+  public getSecondWindow(){
+    return this.secondWindow;
+  }
+
+  public openSecondWindow() : Promise<Window>{
+    return new Promise(resolve => {
+      this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=600,height=400,left=200,top=200');
+      setTimeout(() => {
+        console.log("second window loaded", this.secondWindow)
+        this.attachContent();
+        this.attachStyles();
+        resolve(this.secondWindow);
+      }, 1000)
     })     
   }
 
+  private attachContent(){
+    this.secondWindow.document.body.innerText = '';
+    this.secondWindow.document.title = 'Second Screen';
+    this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
+    const outlet = new DomPortalOutlet(this.secondWindow.document.body, undefined, this.applicationRef, this.injector);
+    outlet.attach(this.templatePortal);
+  }
+
+  private attachStyles(){
+    // Copy styles from parent window
+    document.querySelectorAll('style').forEach(htmlElement => {
+      this.secondWindow.document.head.appendChild(htmlElement.cloneNode(true));
+    });
+    // Copy stylesheet link from parent window
+    this.styleSheetElement = this.getStyleSheetElement();
+    this.secondWindow.document.head.appendChild(this.styleSheetElement);
+  }
+
   //source: https://stackblitz.com/edit/portal-simple?file=src%2Fapp%2Fapp.component.ts
-  getStyleSheetElement() {
+  private getStyleSheetElement() {
     const styleSheetElement = document.createElement('link');
     document.querySelectorAll('link').forEach(htmlElement => {
       if (htmlElement.rel === 'stylesheet') {
@@ -63,7 +82,8 @@ export class DualScreenComponent {
   }
 
   ngOnDestroy(){
-    this.externalWindow.close()
+    //default text when no content is displayed on second screen during the next component
+    this.secondWindow.document.getElementById("content").innerText = "Check the main screen for further instructions."
   }
 
 }
