@@ -34,7 +34,11 @@ export class RandomizationService {
   // each task: 3 different sizes, two reps each
   public sizeOrder = [Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L];
   public repsDone : number = 0;
-  public selectedSize : Sizes =  Sizes.S;
+  public selectedSize : Sizes =  this.sizeOrder[0];
+
+  //order: target on screen 2 or 1?
+  public successTargetOnScreen1Order : boolean[] = [true, false, true, false, true, false, true, false, true, false]; //TODO: randomize??
+  public successTargetOnScreen1 : boolean = this.successTargetOnScreen1Order[0];
 
   //final page after finishing inputs 
   public everythingDone: boolean = false;
@@ -102,7 +106,8 @@ export class RandomizationService {
     if(this.repsDone + 1 < this.sizeOrder.length){
       this.selectedSize = this.sizeOrder[this.repsDone+1];
       this.taskEvalutationService.selectedSize = this.selectedSize;
-      this.shuffle(this.positionOrder); 
+      this.shuffle(this.positionOrder);
+      this.successTargetOnScreen1 = this.successTargetOnScreen1Order[this.repsDone+1]; 
       this.repsDone++;
       this.taskEvalutationService.startTask();
     }

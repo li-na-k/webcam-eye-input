@@ -39,10 +39,9 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   }
 
   async getclickAreas(){
-    console.log("get click areas")
     const clickAreas_mainScreen = document.getElementsByClassName(this.className)
     const clickAreas_secondScreen = this.secondScreen.document.getElementsByClassName(this.className);
-    this.clickAreas = [].slice.call(clickAreas_mainScreen).concat([].slice.call(clickAreas_secondScreen)) 
+    this.clickAreas = [].slice.call(clickAreas_mainScreen).concat([].slice.call(clickAreas_secondScreen)); 
   }
 
   protected startEyeInput(){
@@ -187,10 +186,10 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
     setTimeout(() =>  {
       this.clicked = false;
       this.error = false;
-      this.activateSelectedInputType();
       if(success){
         this.randomizationService.nextRep(); 
       }
+      this.activateSelectedInputType();
     }, 4000)          
   }
 
