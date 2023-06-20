@@ -10,8 +10,13 @@
         <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']">
             <mat-card-title>Hello!</mat-card-title>
         </mat-card>
-
     </div>
+    <div *ngIf="clicked">
+        <div class="success" *ngIf="!error"> ✓ </div>
+        <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
+        <div style="text-align:center;">You will be redirected back to the task page in a moment...</div>
+    </div>
+    
 </dual-screen>
 
 <div class="container" *ngIf="!clicked">
