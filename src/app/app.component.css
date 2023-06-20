@@ -7,13 +7,13 @@
     padding: 30px;
 }
 
-.mat-icon-button{
+.mat-mdc-icon-button{
     line-height: 0px;
     height: auto;
     width: auto;
 }
 
-.mat-spinner{
+mat-spinner{
     margin-left:auto;
     margin-right:auto;
     margin-bottom: 15px;
