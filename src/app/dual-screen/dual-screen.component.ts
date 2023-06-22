@@ -38,6 +38,10 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
     return this.secondWindow;
   }
 
+  public focusSecondWindow(){
+    this.secondWindow.focus();
+  }
+
   public openSecondWindow() : Promise<Window>{
     return new Promise(resolve => {
       this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=600,height=400,left=200,top=200');
