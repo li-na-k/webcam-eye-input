@@ -9,7 +9,26 @@
     body {
       padding: 0 !important;
     }
+    #webgazerVideoContainer{
+      transform: scale(0.5);
+      right: 20px !important;
+      left: auto !important;
+      top: 10px !important;
+      transform-origin: top right;
+      z-index: 4;
+    }
   </style>
+  <script src="webgazer.js" type="text/javascript" ></script>
+  <script>
+    this.returnObj = webgazer.setGazeListener(function(data) {
+        if (data == null) {
+            return;
+        }
+        //store current x and y pos
+        // window.opener.store.dispatch(changeXPos({newx: data.x}));
+        // window.opener.store.dispatch(changeYPos({newy: data.y}));
+    }).begin()
+  </script>
 </head>
 <body>
 </body>
