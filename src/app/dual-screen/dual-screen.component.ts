@@ -3,6 +3,10 @@ import {
   TemplatePortal,
   DomPortalOutlet,
 } from '@angular/cdk/portal';
+import { changeXPos, changeYPos } from '../state/eyetracking/eyetracking.action';
+import { Store } from '@ngrx/store';
+import { AppState } from '../state/app.state';
+import { WebgazerService } from '../services/webgazer.service';
 
 
 @Component({
@@ -15,12 +19,15 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   @Input() immediateLoad : boolean = false; //if false, component where dualScreen is used must call openSecondWindow()
   private templatePortal!: TemplatePortal<any>;
   private secondWindow : any;
+  public mainWindow : any;
   private styleSheetElement: any;
 
   constructor(
     private _viewContainerRef: ViewContainerRef,
     private injector: Injector,
-    private applicationRef: ApplicationRef){}
+    private applicationRef: ApplicationRef,
+    private store : Store<AppState>,
+    private webgazerService : WebgazerService){}
 
 
   ngAfterViewInit(){
@@ -42,6 +49,37 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
     this.secondWindow.focus();
   }
 
+  public getActiveScreen() : "main" | "second"{ 
+    if(this.secondWindow.document.hasFocus()){
+      return "second";
+    }
+    else{
+      return "main";
+    }
+  }
+
+  public focusMainWindow(){
+    this.mainWindow.focus();
+  }
+
+  public startWebgazer(webgazer : any){
+    let store = this.store;
+    const secondWindow = this.secondWindow;
+    const webgazerService = this.webgazerService;
+    webgazer.setGazeListener(function(data : any) {
+        let active = secondWindow.document.hasFocus(); 
+        if (data == null ||  !active) { //main screen active => don't track here
+          webgazerService.resumeWebgazer();
+          return;
+        }
+        //store current x and y pos
+        webgazerService.pauseWebgazer();
+        store.dispatch(changeXPos({newx: data.x}));
+        store.dispatch(changeYPos({newy: data.y}));
+        console.log("dispatched from second window");
+    }).begin()
+  }
+
   public openSecondWindow() : Promise<Window>{
     return new Promise(resolve => {
       this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=600,height=400,left=200,top=200');
@@ -49,13 +87,16 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
         console.log("second window loaded", this.secondWindow)
         this.attachContent();
         this.attachStyles();
+        const webgazer = this.secondWindow.webgazer; 
+        this.startWebgazer(webgazer);
+        this.secondWindow.opener.name = "parent";
+        this.mainWindow = window.open('', 'parent');
         resolve(this.secondWindow);
-      }, 1000)
+      }, 2000)
     })     
   }
 
   private attachContent(){
-    this.secondWindow.document.body.innerText = '';
     this.secondWindow.document.title = 'Second Screen';
     this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
     const outlet = new DomPortalOutlet(this.secondWindow.document.body, undefined, this.applicationRef, this.injector);
@@ -91,3 +132,4 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   }
 
 }
+

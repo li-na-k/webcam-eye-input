@@ -20,14 +20,16 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
 
   private readonly dwellTime = 1000;
   private className : string = "clickArea"
-  private clickAreas : Array<Element> | null = null; //all areas 
+  private clickAreas : Array<Element> | null = null; //all target areas 
   private intervals : any[] = [0,0,0,0]; //one for each click Area
   protected Sizes = Sizes;
 
   private taskElementID : string = "click-task"; //area that shows success when clicked
   protected  clicked : boolean = false;
   protected error : boolean = false;
-  secondScreen: any;
+  protected secondScreen: any;
+  private screenChangeAreas : Array<Element> | null = null;
+  private screenChangeDetection_interval : any = null;
 
   constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
    super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
@@ -42,6 +44,52 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
     const clickAreas_mainScreen = document.getElementsByClassName(this.className)
     const clickAreas_secondScreen = this.secondScreen.document.getElementsByClassName(this.className);
     this.clickAreas = [].slice.call(clickAreas_mainScreen).concat([].slice.call(clickAreas_secondScreen)); 
+  }
+
+  async getScreenChangeAreas(){
+    const screenChangeAreas_mainScreen = document.getElementsByClassName("screen-change-area")
+    const screenChangeAreas_secondScreen = this.secondScreen.document.getElementsByClassName("screen-change-area");
+    this.screenChangeAreas = [].slice.call(screenChangeAreas_mainScreen).concat([].slice.call(screenChangeAreas_secondScreen)); 
+  }
+
+  private startScreenChangeDetection(){
+    this.getScreenChangeAreas();
+    console.log(this.screenChangeAreas?.length)
+    //TODO: Mix2 -> success obwohl nur PopUps bestätigt??
+    this.screenChangeDetection_interval = setInterval(() => {
+      for(let i = 0; i < this.screenChangeAreas!.length; i++){
+        let inside : boolean = false;
+        let el : HTMLElement = this.screenChangeAreas![i] as HTMLElement;
+        if(this.getScreenOfElement(el) != this.dualscreen.getActiveScreen()){ //check if right screen
+          inside = false;
+        }
+        else{
+          inside = this.eyeInputService.areEyesInsideElement(el!)
+        }
+        if (inside == true){
+          this.changeScreen(el)
+        }
+      }
+    }, 100)
+  }
+
+  private getScreenOfElement(el : any): "secondScreen" | "mainScreen"{
+    if(el.classList.contains("secondScreen")){
+      return "secondScreen";
+    }
+    else{
+      return "mainScreen"
+    }
+  }
+
+  private changeScreen(screenChangeArea : HTMLElement){
+    if(screenChangeArea.classList.contains("bottom")){ //from top to bottom (= second to main screen)
+      this.dualscreen.focusMainWindow();
+      console.log("called")
+    }
+    else{ //from bottom to top (= main to second screen)
+      this.dualscreen.focusSecondWindow();
+    }
   }
 
   protected startEyeInput(){
@@ -153,17 +201,27 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   }
 
   protected startMix2Input(){
-    this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
-    document.addEventListener('mousedown', this.bound_changeOnClick);
-    /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
-    have been better, but it cannot be removed, which is necessary here (for other input methods)
-    -> using Renderer2 might have been an option but this works, so keeeping it like this for the moment */
-    setTimeout(() =>
-      {this.mix2loaded = true;}
-    ,1000) //no other option because pointer lock request does not return observable to check success 
+    this.getclickAreas();
+    this.startScreenChangeDetection();
+    for (let i = 0; i < this.clickAreas!.length; i++){
+      let clickArea = this.clickAreas![i] as HTMLElement;
+      clickArea.addEventListener('mousedown', this.bound_changeOnClick);
+    }
+    
+    
+  //   this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
+  //   document.addEventListener('mousedown', this.bound_changeOnClick);
+  //   //addEventListener is actually not a very angular way of handling this... a Host Listener would
+  //   //have been better, but it cannot be removed, which is necessary here (for other input methods)
+  //   //-> using Renderer2 might have been an option but this works, so keeeping it like this for the moment 
+  //   setTimeout(() =>
+  //     {this.mix2loaded = true;}
+  //   ,1000) //no other option because pointer lock request does not return observable to check success 
   }
 
   public stopAllInputs(){
+    //end screen change detection
+    clearInterval(this.screenChangeDetection_interval);
     //end Eye Input
     for(let i of this.intervals){clearInterval(i)};
     //end Mix1 click event

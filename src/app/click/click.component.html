@@ -1,10 +1,13 @@
 <dual-screen #dualscreen>
+    <button (click)="dualscreen.focusMainWindow()">focus main window</button>
+    
+    <div *ngIf="selectedInputType!=InputType.MOUSE" class="bottom screen-change-area"></div>
     <div class="container" *ngIf="!clicked">
-        <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea']" id="click-task"> 
+        <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea', 'secondScreen']" id="click-task"> 
             <mat-card-title>Select me!</mat-card-title>
         </mat-card>
-        <!-- Ersatz falls Select nicht auf Screen2 -->
-        <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea']"> 
+        <!-- show following in case right click target is not on second screen -->
+        <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea', 'secondScreen']"> 
             <mat-card-title>Lorem ipsum</mat-card-title>
         </mat-card>
         <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']">
@@ -19,6 +22,8 @@
     
 </dual-screen>
 
+<div *ngIf="selectedInputType!=InputType.MOUSE" class="top screen-change-area"></div>
+<button (click)="secondScreen.focus();">focus second window</button>
 <div class="container" *ngIf="!clicked">
     <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea']" id="click-task"> 
         <mat-card-title>Select me!</mat-card-title>
