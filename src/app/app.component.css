@@ -1,7 +1,7 @@
 .content{
     margin: 15px 20px;
     background-color: white;
-    height: 500px;
+    height: calc(100% - 200px);
     overflow-y: scroll;
     border-radius: 15px;
     padding: 30px;
