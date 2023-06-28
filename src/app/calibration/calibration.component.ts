@@ -8,6 +8,8 @@ import { WebgazerService } from '../services/webgazer.service';
   styleUrls: ['./calibration.component.css']
 })
 export class CalibrationComponent implements OnInit{
+  @ViewChild('dualscreen') dualscreen! : any;
+
   protected showCalibrationSecondScreen: boolean = false;
 
   constructor(private webgazerService : WebgazerService) { }
@@ -17,7 +19,7 @@ export class CalibrationComponent implements OnInit{
   @Input() showExplanation : boolean = false;
   @Output() showExplanationChange = new EventEmitter<boolean>();
 
-  private numberOfCPt = 9;
+  private numberOfCPt = 2*9;
   private buttonClicks : Array<number> = new Array(this.numberOfCPt).fill(0);
   private greenPtCount : number = 0;
   //settings
@@ -34,8 +36,9 @@ export class CalibrationComponent implements OnInit{
 
   protected changeButtonColor(buttonNr: number){
     if(this.buttonClicks[buttonNr] < this.clickGoal){
-      this.buttonClicks[buttonNr]++
-      let button = document.getElementById("CPt"+buttonNr)
+      this.buttonClicks[buttonNr]++;
+      let button = document.getElementById("CPt"+buttonNr);
+      button ??= this.dualscreen.secondWindow.document.getElementById("CPt"+buttonNr);
       if(this.buttonClicks[buttonNr] == this.clickGoal){ //turns fully green
         button!.style.backgroundColor = "var(--green)"
         this.greenPtCount++;
