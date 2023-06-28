@@ -66,26 +66,25 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
         else{
           inside = this.eyeInputService.areEyesInsideElement(el!)
         }
-        if (inside == true){
+        if (inside){
           this.changeScreen(el)
         }
       }
     }, 100)
   }
 
-  private getScreenOfElement(el : any): "secondScreen" | "mainScreen"{
+  private getScreenOfElement(el : any): "second" | "main"{
     if(el.classList.contains("secondScreen")){
-      return "secondScreen";
+      return "second";
     }
     else{
-      return "mainScreen"
+      return "main";
     }
   }
 
   private changeScreen(screenChangeArea : HTMLElement){
     if(screenChangeArea.classList.contains("bottom")){ //from top to bottom (= second to main screen)
       this.dualscreen.focusMainWindow();
-      console.log("called")
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
