@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
 import { WebgazerService } from '../services/webgazer.service';
 
@@ -8,6 +8,7 @@ import { WebgazerService } from '../services/webgazer.service';
   styleUrls: ['./calibration.component.css']
 })
 export class CalibrationComponent implements OnInit{
+  protected showCalibrationSecondScreen: boolean = false;
 
   constructor(private webgazerService : WebgazerService) { }
 
@@ -55,9 +56,10 @@ export class CalibrationComponent implements OnInit{
     this.showExplanation = false;
     this.showExplanationChange.emit(false);
     this.explanationNr = 1;
+    this.showCalibrationSecondScreen = true;
   }
 
-  private numberInstructions : number = 4;
+  private numberInstructions : number = 5;
   protected nextExplanation(){
     if(this.explanationNr >= (this.numberInstructions-1)){
       this.closePopup();

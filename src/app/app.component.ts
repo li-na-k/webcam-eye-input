@@ -43,7 +43,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   //calibration status
   protected calibrationDone : boolean = false;
   //calibration explanation popup
-  protected showCalibExplanation : boolean = true
+  protected showCalibExplanation : boolean = true;
 
   //Test Mode
   protected showTestMode : boolean = true;
