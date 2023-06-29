@@ -66,7 +66,7 @@ export class EyeInputService implements OnDestroy {
     return (tb_inside && lr_inside)
   }
 
-  private moveArrowWithEyes(arrow : HTMLElement | null){
+  private moveArrowWithEyes(){
     let x = 0.0;
     let y = 0.0;
     this.currentEyePos$
@@ -76,8 +76,8 @@ export class EyeInputService implements OnDestroy {
       y = d.y;
     });
     if(this.arrow){
-      arrow!.style.left = x + "px";
-      arrow!.style.top = y + "px"
+      this.arrow!.style.left = x + "px";
+      this.arrow!.style.top = y + "px"
     }
     else{
       throw Error("Provided arrow is null.")
@@ -132,7 +132,7 @@ export class EyeInputService implements OnDestroy {
     this.moveArrowInterval = setInterval(() => {
       if(!this.mouseInput){
         this.arrow!.classList.add("smoothTransition");
-        this.moveArrowWithEyes(this.arrow);
+        this.moveArrowWithEyes();
       }
       else{
         this.arrow!.classList.remove("smoothTransition");

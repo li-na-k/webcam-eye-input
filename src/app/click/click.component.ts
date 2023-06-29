@@ -215,20 +215,14 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   protected startMix2Input(){
     this.getclickAreas();
     this.startScreenChangeDetection();
-    for (let i = 0; i < this.clickAreas!.length; i++){
-      let clickArea = this.clickAreas![i] as HTMLElement;
-      clickArea.addEventListener('mousedown', this.bound_changeOnClick);
-    }
-    
-    
-  //   this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
-  //   document.addEventListener('mousedown', this.bound_changeOnClick);
-  //   //addEventListener is actually not a very angular way of handling this... a Host Listener would
-  //   //have been better, but it cannot be removed, which is necessary here (for other input methods)
-  //   //-> using Renderer2 might have been an option but this works, so keeeping it like this for the moment 
-  //   setTimeout(() =>
-  //     {this.mix2loaded = true;}
-  //   ,1000) //no other option because pointer lock request does not return observable to check success 
+    this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
+    document.addEventListener('mousedown', this.bound_changeOnClick);
+    //addEventListener is actually not a very angular way of handling this... a Host Listener would
+    //have been better, but it cannot be removed, which is necessary here (for other input methods)
+    //-> using Renderer2 might have been an option but this works, so keeeping it like this for the moment 
+    setTimeout(() =>
+      {this.mix2loaded = true;}
+    ,1000) //no other option because pointer lock request does not return observable to check success 
   }
 
   public stopAllInputs(){
