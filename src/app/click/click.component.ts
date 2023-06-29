@@ -85,9 +85,22 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   private changeScreen(screenChangeArea : HTMLElement){
     if(screenChangeArea.classList.contains("bottom")){ //from top to bottom (= second to main screen)
       this.dualscreen.focusMainWindow();
+      this.setOrangeBackground(false);
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
+      this.setOrangeBackground(true);
+    }
+  }
+
+  private setOrangeBackground(secondWindow:boolean){
+    if(secondWindow){
+      this.dualscreen.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
+      this.dualscreen.mainWindow.document.body.style.backgroundColor = "#d0d0d0";
+    }
+    else{
+      this.dualscreen.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
+      this.dualscreen.secondWindow.document.body.style.backgroundColor = "#d0d0d0";
     }
   }
 
