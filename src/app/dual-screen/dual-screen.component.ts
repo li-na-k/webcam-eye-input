@@ -17,10 +17,13 @@ import { WebgazerService } from '../services/webgazer.service';
 export class DualScreenComponent implements AfterViewInit, OnDestroy {
   @ViewChild('templatePortalContent') templatePortalContent!: TemplateRef<unknown>;
   @Input() immediateLoad : boolean = false; //if false, component where dualScreen is used must call openSecondWindow()
-  private templatePortal!: TemplatePortal<any>;
-  private secondWindow : any;
+  
+  public secondWindow : any;
   public mainWindow : any;
+  
+  private templatePortal!: TemplatePortal<any>;
   private styleSheetElement: any;
+  private dot: any;
 
   constructor(
     private _viewContainerRef: ViewContainerRef,
@@ -63,20 +66,24 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   }
 
   public startWebgazer(webgazer : any){
-    let store = this.store;
-    const secondWindow = this.secondWindow;
-    const webgazerService = this.webgazerService;
-    webgazer.setGazeListener(function(data : any) {
-        let active = secondWindow.document.hasFocus(); 
-        if (data == null ||  !active) { //main screen active => don't track here
-          webgazerService.resumeWebgazer();
+    webgazer.setGazeListener((data : any) => {
+        if (data == null){
+          return;
+        }
+        let active = this.secondWindow.document.hasFocus(); 
+        if(!active) { //main screen active => don't track here
+          this.dot = this.secondWindow.document.getElementById("webgazerGazeDot"); 
+          this.webgazerService.resumeWebgazer(webgazer, this.dot); //give second webgazer instance to first webgazer so it can resume second as soon as necessary
+          webgazer.pause();
+          if(this.dot){
+            this.dot!.style.display = "none";
+            this.dot!.style.opacity = "0";
+          }
           return;
         }
         //store current x and y pos
-        webgazerService.pauseWebgazer();
-        store.dispatch(changeXPos({newx: data.x}));
-        store.dispatch(changeYPos({newy: data.y}));
-        console.log("dispatched from second window");
+        this.store.dispatch(changeXPos({newx: data.x}));
+        this.store.dispatch(changeYPos({newy: data.y}));
     }).begin()
   }
 

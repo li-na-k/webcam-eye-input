@@ -17,44 +17,49 @@ export class WebgazerService {
   public webgazerLoaded : boolean = false;
   public interval : any;
 
-  public togglePauseWebgazer(){ 
-    if(this.paused){
-      this.paused = false;
-      webgazer.resume()
-      document.getElementById("webgazerGazeDot")!.style.display = "block";
-      document.getElementById("webgazerGazeDot")!.style.opacity = "1";
-    }
-    else{
-      this.paused = true;
-      webgazer.pause()
-      document.getElementById("webgazerGazeDot")!.style.display = "none";
-      document.getElementById("webgazerGazeDot")!.style.opacity = "0";
-    }
-  }
+  private dot : HTMLElement | null = null;
+  private secondWebgazer: any;
+  private secondWebgazerDot: HTMLElement | undefined;
 
   public pauseWebgazer(){ 
+    this.dot = document.getElementById("webgazerGazeDot");
     this.paused = true;
-    webgazer.pause()
-    document.getElementById("webgazerGazeDot")!.style.display = "none";
-    document.getElementById("webgazerGazeDot")!.style.opacity = "0";
+    webgazer.pause();
+    if(this.dot){
+      this.dot!.style.display = "none";
+      this.dot!.style.opacity = "0";
+    }
   }
 
-  public resumeWebgazer(){ 
+  public resumeWebgazer(secondWebgazerToStop? : any, secondWebgazerDot? : HTMLElement){ 
     this.paused = false;
-    webgazer.resume()
-    document.getElementById("webgazerGazeDot")!.style.display = "block";
-    document.getElementById("webgazerGazeDot")!.style.opacity = "1";
+    webgazer.resume();
+    if(this.dot){
+      this.dot!.style.display = "block";
+      this.dot!.style.opacity = "1";
+    }
+    if(secondWebgazerToStop && secondWebgazerDot){
+      this.secondWebgazer = secondWebgazerToStop; 
+      this.secondWebgazerDot = secondWebgazerDot;
+    }
   }
 
   public startWebgazer(){
-    let store = this.store;
-    webgazer.setGazeListener(function(data : any) {
+    webgazer.setGazeListener((data : any) => {
         if (data == null) {
-            return;
+          return;
+        }
+        let active = document.hasFocus();
+        if(!active && this.secondWebgazer){
+          this.secondWebgazer.resume();
+          this.secondWebgazerDot!.style.display = "block";
+          this.secondWebgazerDot!.style.opacity = "1";
+          this.pauseWebgazer();
+          return;
         }
         //store current x and y pos
-        store.dispatch(changeXPos({newx: data.x}));
-        store.dispatch(changeYPos({newy: data.y}));
+        this.store.dispatch(changeXPos({newx: data.x}));
+        this.store.dispatch(changeYPos({newy: data.y}));
     }).begin()
   }
 

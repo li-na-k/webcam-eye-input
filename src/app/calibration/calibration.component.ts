@@ -7,7 +7,7 @@ import { WebgazerService } from '../services/webgazer.service';
   templateUrl: './calibration.component.html',
   styleUrls: ['./calibration.component.css']
 })
-export class CalibrationComponent implements OnInit{
+export class CalibrationComponent implements AfterViewInit{
   @ViewChild('dualscreen') dualscreen! : any;
 
   protected showCalibrationSecondScreen: boolean = false;
@@ -27,10 +27,7 @@ export class CalibrationComponent implements OnInit{
   //explanation
   protected explanationNr : number = 0;
 
-  ngOnInit(){
-    var dot = document.getElementById("webgazerGazeDot");
-    dot!.style.visibility = "visible";
-    dot!.style.opacity = "1";
+  ngAfterViewInit(){
     this.webgazerService.resumeWebgazer();
   }
 
