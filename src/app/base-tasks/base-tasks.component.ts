@@ -98,6 +98,6 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
         else{
           this.pointerLockStopped = false;
         }
-      },1000)
+      },2000)
   }
 }

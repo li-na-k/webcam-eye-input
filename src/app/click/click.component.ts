@@ -36,7 +36,6 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   }
 
   async ngAfterViewInit() {
-    this.secondScreen = await this.dualscreen.openSecondWindow(); 
     this.getclickAreas();
   }
 
@@ -70,7 +69,7 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
           this.changeScreen(el)
         }
       }
-    }, 100)
+    }, 300)
   }
 
   private getScreenOfElement(el : any): "second" | "main"{

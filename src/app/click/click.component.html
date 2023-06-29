@@ -1,4 +1,4 @@
-<dual-screen #dualscreen>
+<dual-screen #dualscreen [immediateLoad]="true">
     <button (click)="dualscreen.focusMainWindow()">focus main window</button>
     
     <div *ngIf="selectedInputType!=InputType.MOUSE" [ngClass]="['bottom screen-change-area', 'secondScreen']"></div>

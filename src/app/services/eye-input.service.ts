@@ -137,8 +137,8 @@ export class EyeInputService implements OnDestroy {
       else{
         this.arrow!.classList.remove("smoothTransition");
       }
-    }, 100);
     window.document.addEventListener('mousemove', this.bound_mouseTakeover); 
+    }, 400);
   }
 
   private bound_mouseTakeover = this.mouseTakeover.bind(this);
