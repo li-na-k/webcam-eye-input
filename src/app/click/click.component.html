@@ -1,6 +1,4 @@
 <dual-screen #dualscreen [immediateLoad]="true">
-    <button (click)="dualscreen.focusMainWindow()">focus main window</button>
-    
     <div *ngIf="selectedInputType!=InputType.MOUSE" [ngClass]="['bottom screen-change-area', 'secondScreen']"></div>
     <div class="container" *ngIf="!clicked">
         <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea']" id="click-task"> 
@@ -23,7 +21,6 @@
 </dual-screen>
 
 <div *ngIf="selectedInputType!=InputType.MOUSE" class="top screen-change-area"></div>
-<button (click)="secondScreen.focus();">focus second window</button>
 <div class="container" *ngIf="!clicked">
     <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea']" id="click-task"> 
         <mat-card-title>Select me!</mat-card-title>

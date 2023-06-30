@@ -27,7 +27,6 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   private taskElementID : string = "click-task"; //area that shows success when clicked
   protected  clicked : boolean = false;
   protected error : boolean = false;
-  protected secondScreen: any;
   private screenChangeAreas : Array<Element> | null = null;
   private screenChangeDetection_interval : any = null;
 
@@ -35,19 +34,15 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
    super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
   }
 
-  async ngAfterViewInit() {
-    this.getclickAreas();
-  }
-
   async getclickAreas(){
     const clickAreas_mainScreen = document.getElementsByClassName(this.className)
-    const clickAreas_secondScreen = this.secondScreen.document.getElementsByClassName(this.className);
+    const clickAreas_secondScreen = this.dualscreen.secondWindow.document.getElementsByClassName(this.className);
     this.clickAreas = [].slice.call(clickAreas_mainScreen).concat([].slice.call(clickAreas_secondScreen)); 
   }
 
   async getScreenChangeAreas(){
     const screenChangeAreas_mainScreen = document.getElementsByClassName("screen-change-area")
-    const screenChangeAreas_secondScreen = this.secondScreen.document.getElementsByClassName("screen-change-area");
+    const screenChangeAreas_secondScreen = this.dualscreen.secondWindow.document.getElementsByClassName("screen-change-area");
     this.screenChangeAreas = [].slice.call(screenChangeAreas_mainScreen).concat([].slice.call(screenChangeAreas_secondScreen)); 
   }
 
@@ -63,7 +58,7 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
           inside = false;
         }
         else{
-          inside = this.eyeInputService.areEyesInsideElement(el!)
+          inside = this.eyeInputService.areEyesInsideElement(el!);
         }
         if (inside){
           this.changeScreen(el)
