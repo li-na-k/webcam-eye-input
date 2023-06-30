@@ -213,7 +213,7 @@ export class ScrollComponent extends BaseTasksComponent implements OnInit, OnDes
     this.newENTERPress = true;
     //MIX2
     this.mix2loaded = false;
-    this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
+    this.eyeInputService.stopMix2Input(window.document.body, this.arrow!);
   }
 }
 

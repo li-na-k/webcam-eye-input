@@ -143,7 +143,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       //MIX2
       this.mix2loaded = false;
       if(this.arrow){
-        this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
+        this.eyeInputService.stopMix2Input(this.sandbox!, this.arrow!);
       }
       document.removeEventListener('mousedown', this.bound_changeOnClick); 
       //view port resets

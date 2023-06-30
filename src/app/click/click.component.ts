@@ -235,7 +235,7 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
     }
     //MIX2
     this.mix2loaded = false;
-    this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
+    this.eyeInputService.stopMix2Input(this.sandbox!, this.arrow!);
     document.removeEventListener('mousedown', this.bound_changeOnClick); 
   }
 

@@ -188,7 +188,7 @@ public stopAllInputs(){
   document.body.removeEventListener('keydown', this.bound_Mix1Input); 
   //MIX2
   this.mix2loaded = false;
-  this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
+  this.eyeInputService.stopMix2Input(this.sandbox!, this.arrow!);
   
 }
 

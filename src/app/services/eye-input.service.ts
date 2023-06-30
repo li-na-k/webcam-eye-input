@@ -120,7 +120,7 @@ export class EyeInputService implements OnDestroy {
     if(dot){
       dot.style.visibility = "hidden";
     }
-    //assign method parameters to instance properties to be able to use them in mouseTakeover()
+    //assign method parameters to instance properties to be able to use them in moveArrowWithMouse()
     this.sandbox = sandbox; 
     this.arrow = arrow;
     this.timeout = timeout;
@@ -155,15 +155,15 @@ export class EyeInputService implements OnDestroy {
     }, this.timeout)
   }
   
-  public stopMix2Input(sandbox : HTMLElement | null, arrow : HTMLElement | null){
+  public stopMix2Input(sandbox : HTMLElement, arrow : HTMLElement){
     document.exitPointerLock();
     const dot = document.getElementById("webgazerGazeDot");
     if(dot){
       dot.style.visibility = "";
     }
     window.document.removeEventListener('mousemove', this.bound_mouseTakeover);
-    arrow!.style.visibility = 'hidden';
-    sandbox!.style.cursor = '';
+    arrow.style.visibility = 'hidden';
+    sandbox.style.cursor = '';
     clearTimeout(this.timeOutAfterMouseInput);
     clearInterval(this.moveArrowInterval);
     this.mouseInput = false;

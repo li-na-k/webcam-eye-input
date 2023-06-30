@@ -45,8 +45,8 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   }
 
   ngAfterViewInit(): void {
-    this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
-    this.eyeInputService.stopMix2Input(window.document.body, this.arrow); 
+    this.eyeInputService.stopMix2Input(this.sandbox!, this.arrow!);
+    this.eyeInputService.stopMix2Input(window.document.body, this.arrow!); 
   }
 
   ngOnDestroy(){
@@ -57,8 +57,8 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
 
   protected closeAndStopMix2() : void{
     this.showPopup = false;
-    this.eyeInputService.stopMix2Input(this.sandbox, this.arrow)
-    this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
+    this.eyeInputService.stopMix2Input(this.sandbox!, this.arrow!)
+    this.eyeInputService.stopMix2Input(window.document.body, this.arrow!);
   }
 
 }
