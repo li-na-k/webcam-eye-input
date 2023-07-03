@@ -29,9 +29,6 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   protected error : boolean = false;
   private screenChangeAreas : Array<Element> | null = null;
   private screenChangeDetection_interval : any = null;
-  //this.arrow is currently used arrow, following properties are used to activate mix2 after screen change:
-  private mainScreen_arrow: any;
-  private secondScreen_arrow: any;
 
   constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
    super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
@@ -80,23 +77,13 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   }
 
   private changeScreen(screenChangeArea : HTMLElement){
-    this.secondScreen_arrow = this.dualscreen.secondWindow.document.getElementById("arrow");
-    this.mainScreen_arrow = this.dualscreen.mainWindow.document.getElementById("arrow");
     if(screenChangeArea.classList.contains("bottom")){ //from top to bottom (= second to main screen)
       this.dualscreen.focusMainWindow();
       this.setOrangeBackground(false);
-      this.mix2loaded = false;
-      this.eyeInputService.stopMix2Input(this.dualscreen.secondWindow.document.body, this.secondScreen_arrow);
-      this.eyeInputService.activateMix2Input(this.sandbox!, this.mainScreen_arrow!, this.timeOutAfterMouseInput);
-      this.mix2loaded = true;
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
       this.setOrangeBackground(true);
-      this.mix2loaded = false;
-      this.eyeInputService.stopMix2Input(this.sandbox!, this.mainScreen_arrow);
-      this.eyeInputService.activateMix2Input(this.dualscreen.secondWindow.document.body, this.secondScreen_arrow, this.timeOutAfterMouseInput);
-      this.mix2loaded = true;
     }
   }
 
