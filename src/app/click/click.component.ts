@@ -47,21 +47,28 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   }
 
   private startScreenChangeDetection(){
+    var timeOutAfterScreenChange = false;
     this.getScreenChangeAreas();
     console.log(this.screenChangeAreas?.length)
     //TODO: Mix2 -> success obwohl nur PopUps bestätigt??
     this.screenChangeDetection_interval = setInterval(() => {
-      for(let i = 0; i < this.screenChangeAreas!.length; i++){
-        let inside : boolean = false;
-        let el : HTMLElement = this.screenChangeAreas![i] as HTMLElement;
-        if(this.getScreenOfElement(el) != this.dualscreen.getActiveScreen()){ //check if right screen
-          inside = false;
-        }
-        else{
-          inside = this.eyeInputService.areEyesInsideElement(el!);
-        }
-        if (inside){
-          this.changeScreen(el)
+      if(!timeOutAfterScreenChange){
+        for(let i = 0; i < this.screenChangeAreas!.length; i++){
+          let inside : boolean = false;
+          let el : HTMLElement = this.screenChangeAreas![i] as HTMLElement;
+          if(this.getScreenOfElement(el) != this.dualscreen.getActiveScreen()){ //check if right screen
+            inside = false;
+          }
+          else{
+            inside = this.eyeInputService.areEyesInsideElement(el!);
+          }
+          if (inside){
+            this.changeScreen(el)
+            timeOutAfterScreenChange = true;
+            setTimeout(() => {
+              timeOutAfterScreenChange = false;
+            }, 2000);
+          }
         }
       }
     }, 300)
