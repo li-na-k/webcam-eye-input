@@ -25,7 +25,7 @@ export class RandomizationService {
   private selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
   //order of tasks
-  public inputOrder : InputType[] = [InputType.MIX2, InputType.MOUSE]; 
+  public inputOrder : InputType[] = [InputType.MIX2]; //!!InputType.MOUSE 
   public taskOrder : Tasks[] = [Tasks.SELECT]; //to include selection or hover tasks, add e.g. "Tasks.HOVER" here
   public positionOrder : Positions[] = [Positions.POS1, Positions.POS2, Positions.POS3, Positions.POS4];
   public inputsDone : number = 0; 

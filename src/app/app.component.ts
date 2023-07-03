@@ -46,7 +46,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   protected showCalibExplanation : boolean = true;
 
   //Test Mode
-  protected showTestMode : boolean = true;
+  protected showTestMode : boolean = false; //TODO!
 
   //task explanation
   protected showTaskPopup : boolean = false; 

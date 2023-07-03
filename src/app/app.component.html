@@ -26,9 +26,9 @@
         <button [disabled]="showTestMode" *ngIf="selectedInputType != InputType.MIX2" style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">Skip</button>
     </div>
 
-    <!-- <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
+    <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
         (click)="updateCalibrationDone(true); this.blur($event)">Skip calibration
-    </button> -->
+    </button>
     
     <span *ngIf="!calibrationDone" style="background-color: white; padding: 10px 15px; border-radius: 15px; height: 70px; text-align: center;">
         <div>
