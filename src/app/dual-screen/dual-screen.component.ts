@@ -106,8 +106,8 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   private attachContent(){
     this.secondWindow.document.title = 'Second Screen';
     this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
-    const outlet = new DomPortalOutlet(this.secondWindow.document.body, undefined, this.applicationRef, this.injector);
-    outlet.attach(this.templatePortal);
+    new DomPortalOutlet(this.secondWindow.document.body, undefined, this.applicationRef, this.injector)
+      .attach(this.templatePortal);
   }
 
   private attachStyles(){
