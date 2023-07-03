@@ -52,13 +52,6 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   ngOnDestroy(){
     this.destroy$.next(true);
     this.destroy$.complete();
-    //document.body.removeEventListener('keydown', this.bound_popupIfEsc);
-  }
-
-  protected closeAndStopMix2() : void{
-    this.showPopup = false;
-    this.eyeInputService.stopMix2Input(this.sandbox!, this.arrow!)
-    this.eyeInputService.stopMix2Input(window.document.body, this.arrow!);
   }
 
 }
