@@ -70,12 +70,15 @@ export class TaskEvaluationService {
   }
 
   endEyeMouseInterval(){ //only for Mix2 input!
-    let result : TaskResult = this.results[this.results.length-1] //current result object
-    if(result.eyeMouseDistribution){
-      let prevIntervalsDur = result.eyeMouseDistribution.reduce((a, b) => a + b, 0);
-      let duration : number = Date.now() - (result.startTime + prevIntervalsDur)
-      result.eyeMouseDistribution?.push(duration);
-    }
+    if(this.taskRunning){
+      let result : TaskResult = this.results[this.results.length-1] //current result object
+      if(result.eyeMouseDistribution){
+        let prevIntervalsDur = result.eyeMouseDistribution.reduce((a, b) => a + b, 0);
+        let duration : number = Date.now() - (result.startTime + prevIntervalsDur)
+        result.eyeMouseDistribution?.push(duration);
+        console.log(duration);
+      }
+    } 
   }
 
   endTask(aborted? : boolean){
@@ -84,6 +87,9 @@ export class TaskEvaluationService {
       result.endTime = Date.now();
       result.setDuration();
       result.errors = this.errorCount;
+      this.endEyeMouseInterval(); //end last MOUSE interval (during Mix2 only)
+      this.taskRunning = false;
+      this.playAudio();
       if(aborted){
         result.aborted = aborted;
       }
@@ -92,8 +98,6 @@ export class TaskEvaluationService {
         result.mouseIntervalsDuration = result.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 != 0) ? val : 0), 0);
         result.intervalChanges = result.eyeMouseDistribution.length-1;
       }
-      this.taskRunning = false;
-      this.playAudio();
       console.log(result);
     }
     else{

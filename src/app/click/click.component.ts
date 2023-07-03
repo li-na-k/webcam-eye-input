@@ -164,7 +164,6 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
           this.taskEvaluationService.addError();
         }
         else{ 
-          this.taskEvaluationService.endEyeMouseInterval(); //end last MOUSE interval (during Mix2 only)
           this.addSuccess();
           success = true;
         }
@@ -199,6 +198,10 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   }
 
   protected startMix2Input(){ //in this branch: mix2 uses eye input only for changing screen -> no pointer lock!
+    //Track mouse / eye distribution
+    window.document.addEventListener("mousemove",this.eyeInputService.bound_measureMouseDist);
+    this.dualscreen.secondWindow.document.addEventListener("mousemove",this.eyeInputService.bound_measureMouseDist);
+
     this.getclickAreas();
     this.startScreenChangeDetection();
     for (let i = 0; i < this.clickAreas!.length; i++){

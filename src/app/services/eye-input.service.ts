@@ -19,7 +19,7 @@ export class EyeInputService implements OnDestroy {
   private moveArrowInterval : any;
   private arrow : HTMLElement | null = null;
   private sandbox : HTMLElement | null = null;
-  private timeout : number = 0;
+  private timeout : number = 1000; //in this branch: after what time is mouseInput interval considered to have ended (for TaskResult)
 
   constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService) { }
 
@@ -149,6 +149,19 @@ export class EyeInputService implements OnDestroy {
       this.taskEvaluationService.endEyeMouseInterval(); //end previous EYE interval
     }
     this.moveArrowWithMouse(e, this.arrow!, this.sandbox!);
+    this.timeOutAfterMouseInput = setTimeout(() => {
+      this.mouseInput = false;
+      this.taskEvaluationService.endEyeMouseInterval(); //end previous MOUSE interval, timeout after mouse input (500ms) counts as mouse input
+    }, this.timeout)
+  }
+
+  public bound_measureMouseDist = this.measureMouseDist.bind(this);
+  private measureMouseDist(){ //similar to mouseTakeover but only for measuring, no takeover of fake cursor 
+    clearTimeout(this.timeOutAfterMouseInput);
+    if(!this.mouseInput){ //until now it was eye input, now change to mouse input
+      this.mouseInput = true;
+      this.taskEvaluationService.endEyeMouseInterval(); //end previous EYE intervals
+    }
     this.timeOutAfterMouseInput = setTimeout(() => {
       this.mouseInput = false;
       this.taskEvaluationService.endEyeMouseInterval(); //end previous MOUSE interval, timeout after mouse input (500ms) counts as mouse input
