@@ -194,36 +194,17 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   private bound_changeOnClick = this.changeOnClick.bind(this);
   private changeOnClick(ev : any){
     let currentClickArea : HTMLElement | null = null;
-    if(this.selectedInputType == InputType.MIX2){
-      for (let i = 0; i < this.clickAreas!.length; i++){
-        let clickArea = this.clickAreas![i] as HTMLElement;
-        let inside = this.eyeInputService.isInside(clickArea, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
-        if(inside){
-          currentClickArea = clickArea;
-          break; //exit for loop as soon as clicked area found
-        }
-      }
-      if(currentClickArea == null || this.pointerLockStopped){ 
-        this.clicked = false;
-      }
-    }
-    if(this.selectedInputType == InputType.MOUSE){
-      currentClickArea = ev.target; 
-    }
+    currentClickArea = ev.target; 
     this.checkIfError(currentClickArea);
   }
 
-  protected startMix2Input(){
+  protected startMix2Input(){ //in this branch: mix2 uses eye input only for changing screen -> no pointer lock!
     this.getclickAreas();
     this.startScreenChangeDetection();
-    this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
-    document.addEventListener('mousedown', this.bound_changeOnClick);
-    //addEventListener is actually not a very angular way of handling this... a Host Listener would
-    //have been better, but it cannot be removed, which is necessary here (for other input methods)
-    //-> using Renderer2 might have been an option but this works, so keeeping it like this for the moment 
-    setTimeout(() =>
-      {this.mix2loaded = true;}
-    ,1000) //no other option because pointer lock request does not return observable to check success 
+    for (let i = 0; i < this.clickAreas!.length; i++){
+      let clickArea = this.clickAreas![i] as HTMLElement;
+      clickArea.addEventListener('mousedown', this.bound_changeOnClick);
+    }
   }
 
   public stopAllInputs(){
