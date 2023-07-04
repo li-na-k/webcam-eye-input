@@ -15,6 +15,7 @@ export class TaskResult {
     mouseIntervalsDuration? : number;
     eyeIntervalsDuration? : number;
     intervalChanges? : number;
+    screenChanges : number[] = [];
 
     public setDuration() { this.duration = this.endTime - this.startTime };
 }

@@ -76,9 +76,13 @@ export class TaskEvaluationService {
         let prevIntervalsDur = result.eyeMouseDistribution.reduce((a, b) => a + b, 0);
         let duration : number = Date.now() - (result.startTime + prevIntervalsDur)
         result.eyeMouseDistribution?.push(duration);
-        console.log(duration);
       }
     } 
+  }
+
+  addScreenChange(){
+    let result : TaskResult = this.results[this.results.length-1]; //current result object
+    result.screenChanges.push(Date.now()-result.startTime);
   }
 
   endTask(aborted? : boolean){
