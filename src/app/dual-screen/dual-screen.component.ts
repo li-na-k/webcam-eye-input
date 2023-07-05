@@ -1,4 +1,4 @@
-import { AfterViewInit, ApplicationRef, Component, Injector, OnDestroy, TemplateRef, ViewChild, ViewContainerRef, Input } from '@angular/core';
+import { AfterViewInit, ApplicationRef, Component, Injector, OnDestroy, TemplateRef, ViewChild, ViewContainerRef, Input, ElementRef } from '@angular/core';
 import {
   TemplatePortal,
   DomPortalOutlet,
@@ -16,6 +16,9 @@ import { WebgazerService } from '../services/webgazer.service';
 })
 export class DualScreenComponent implements AfterViewInit, OnDestroy {
   @ViewChild('templatePortalContent') templatePortalContent!: TemplateRef<unknown>;
+  @ViewChild('arrow') secondScreen_arrow!: ElementRef;
+  @ViewChild('sandbox') secondScreen_sandbox!: ElementRef;
+
   @Input() immediateLoad : boolean = false; //if false, component where dualScreen is used must call openSecondWindow()
   
   public secondWindow : any;

@@ -1,9 +1,8 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, ViewChild } from '@angular/core';
 import { EyeInputService } from 'src/app/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
-import { InputType } from '../enums/input-type';
 import { WebgazerService } from '../services/webgazer.service';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
@@ -14,7 +13,13 @@ import { Sizes } from '../enums/sizes';
   templateUrl: './click.component.html',
   styleUrls: ['./click.component.css']
 })
-export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
+export class ClickComponent extends BaseTasksComponent {
+  @HostListener('body:mousemove', ['$event']) 
+  onMouseMove(e : any) {
+    if(this.dualscreen.secondScreen_arrow && this.secondScreen_sandbox_limits){
+      this.eyeInputService.moveArrowWithMouse(e, this.dualscreen.secondScreen_arrow.nativeElement, this.secondScreen_sandbox_limits); 
+    }
+  }
 
   @ViewChild('dualscreen') dualscreen! : any;
 
@@ -29,9 +34,19 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   protected error : boolean = false;
   private screenChangeAreas : Array<Element> | null = null;
   private screenChangeDetection_interval : any = null;
+  private secondScreen_sandbox_limits : undefined | [number, number, number, number];
 
   constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
    super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
+  }
+
+  async getSecondScreenLimits(){
+    this.secondScreen_sandbox_limits = [
+      this.dualscreen.secondScreen_sandbox.nativeElement.getBoundingClientRect().top,
+      this.dualscreen.secondScreen_sandbox.nativeElement.getBoundingClientRect().right,
+      this.dualscreen.secondScreen_sandbox.nativeElement.getBoundingClientRect().bottom,
+      this.dualscreen.secondScreen_sandbox.nativeElement.getBoundingClientRect().left
+    ];
   }
 
   async getclickAreas(){
@@ -49,8 +64,8 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
   private startScreenChangeDetection(){
     var timeOutAfterScreenChange = false;
     this.getScreenChangeAreas();
-    console.log(this.screenChangeAreas?.length)
-    //TODO: Mix2 -> success obwohl nur PopUps bestätigt??
+    this.getSecondScreenLimits();
+
     this.screenChangeDetection_interval = setInterval(() => {
       if(!timeOutAfterScreenChange){
         for(let i = 0; i < this.screenChangeAreas!.length; i++){
@@ -88,11 +103,13 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
       this.dualscreen.focusMainWindow();
       this.setOrangeBackground(false);
       this.taskEvaluationService.addScreenChange();
+      this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
       this.setOrangeBackground(true);
       this.taskEvaluationService.addScreenChange();
+      this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
     }
   }
 
@@ -199,7 +216,7 @@ export class ClickComponent extends BaseTasksComponent implements OnDestroy  {
     this.checkIfError(currentClickArea);
   }
 
-  protected startMix2Input(){ //in this branch: mix2 uses eye input only for changing screen -> no pointer lock!
+  protected startMix2Input(){
     //Track mouse / eye distribution
     window.document.addEventListener("mousemove",this.eyeInputService.bound_measureMouseDist);
     this.dualscreen.secondWindow.document.addEventListener("mousemove",this.eyeInputService.bound_measureMouseDist);
