@@ -52,11 +52,12 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   }
 
   public focusSecondWindow(){
-    this.secondWindow.focus();
+    //this.secondWindow.focus();
+    this.webgazerService.secondFakeFocussed = true;
   }
 
   public getActiveScreen() : "main" | "second"{ 
-    if(this.secondWindow.document.hasFocus()){
+    if(this.webgazerService.secondFakeFocussed){
       return "second";
     }
     else{
@@ -65,7 +66,8 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   }
 
   public focusMainWindow(){
-    this.mainWindow.focus();
+    //this.mainWindow.focus();
+    this.webgazerService.secondFakeFocussed = false;
   }
 
   public startWebgazer(webgazer : any){
@@ -73,8 +75,8 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
         if (data == null){
           return;
         }
-        let active = this.secondWindow.document.hasFocus(); 
-        if(!active) { //main screen active => don't track here
+        let active = this.secondWindow.document.hasFocus(); //for click component: not real focus, but fake focus used (to be constanly track mousemove)
+        if(!this.webgazerService.secondFakeFocussed && !active) { //main screen active => don't track here
           this.dot = this.secondWindow.document.getElementById("webgazerGazeDot"); 
           this.webgazerService.resumeWebgazer(webgazer, this.dot); //give second webgazer instance to first webgazer so it can resume second as soon as necessary
           webgazer.pause();

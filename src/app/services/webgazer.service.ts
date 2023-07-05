@@ -20,6 +20,7 @@ export class WebgazerService {
   private dot : HTMLElement | null = null;
   private secondWebgazer: any;
   private secondWebgazerDot: HTMLElement | undefined;
+  public secondFakeFocussed : boolean = false;
 
   public pauseWebgazer(){ 
     this.dot = document.getElementById("webgazerGazeDot");
@@ -50,7 +51,7 @@ export class WebgazerService {
           return;
         }
         let active = document.hasFocus();
-        if(!active && this.secondWebgazer){
+        if((!active || this.secondFakeFocussed) && this.secondWebgazer){
           this.secondWebgazer.resume();
           this.secondWebgazerDot!.style.display = "block";
           this.secondWebgazerDot!.style.opacity = "1";
