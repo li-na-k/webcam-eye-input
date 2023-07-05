@@ -84,27 +84,32 @@ export class EyeInputService implements OnDestroy {
     }
   } 
 
-  private moveArrowWithMouse(e : any, arrow : HTMLElement, sandbox : HTMLElement){
-    let x = parseInt(arrow!.style.left, 10) + e.movementX;
-    let y = parseInt(arrow!.style.top, 10) + e.movementY;
-    const sbRight = sandbox!.getBoundingClientRect().right;
-    const sbBottom = sandbox!.getBoundingClientRect().bottom;
-    const sbLeft = sandbox!.getBoundingClientRect().left;
-    const sbTop = sandbox!.getBoundingClientRect().top;
-    if (x > sbRight) {
-      x = sbRight
+  public moveArrowWithMouse(e : any, arrow : HTMLElement, limits : [number, number, number, number]
+){
+
+    var style = window.getComputedStyle(arrow);
+    var matrix = new WebKitCSSMatrix(style.transform);
+    var currentx = matrix.m41; 
+    var currenty = matrix.m42;
+    
+    let x = e.movementX + currentx;
+    let y = e.movementY + currenty;
+    
+
+    if (x > limits[1]) {
+      x = limits[1]
     }
-    if (x < sbLeft) {
-      x = sbLeft
+    else if (x < limits[3]) {
+      x = limits[3]
     }
-    if (y > sbBottom) {
-      y = sbBottom
+    if (y > limits[2]) {
+      y = limits[2]
     }
-    if (y < sbTop) {
-      y = sbTop
+    if (y < limits[0]) {
+      y = limits[0]
     }
-    arrow!.style.left = x + "px";
-    arrow!.style.top = y + "px";
+
+    arrow!.style.transform = "translate(" + x + "px, " + y + "px)"
   }
 
   public activateMix2Input(sandbox : HTMLElement | null, arrow : HTMLElement | null, timeout: number){
@@ -148,7 +153,11 @@ export class EyeInputService implements OnDestroy {
       this.mouseInput = true;
       this.taskEvaluationService.endEyeMouseInterval(); //end previous EYE interval
     }
-    this.moveArrowWithMouse(e, this.arrow!, this.sandbox!);
+    const sbRight = this.sandbox!.getBoundingClientRect().right; //TODO nicht jedes mal berechnen...
+    const sbBottom = this.sandbox!.getBoundingClientRect().bottom;
+    const sbLeft = this.sandbox!.getBoundingClientRect().left;
+    const sbTop = this.sandbox!.getBoundingClientRect().top;
+    this.moveArrowWithMouse(e, this.arrow!, [sbTop, sbRight, sbBottom, sbLeft]);
     this.timeOutAfterMouseInput = setTimeout(() => {
       this.mouseInput = false;
       this.taskEvaluationService.endEyeMouseInterval(); //end previous MOUSE interval, timeout after mouse input (500ms) counts as mouse input
