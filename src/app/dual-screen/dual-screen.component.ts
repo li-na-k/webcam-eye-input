@@ -94,13 +94,21 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
   public openSecondWindow() : Promise<Window>{
     return new Promise(resolve => {
-      this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=600,height=400,left=200,top=200');
+      if(this.immediateLoad){
+        this.secondWindow = window.open('', 'SECOND_SCREEN');
+      }
+      else{
+        this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 
+        'width=600,height=400,left=200,top=200'); //!! ab hier ists weg, aber nur wenn vorher was attached wurde, ansonsten wird openSecondWindow nämlich gar nicht aufgerufen!
+      }
+        //!aber wenn mans nicht neu öffnet ist secondWindow undefined
       setTimeout(() => {
         console.log("second window loaded", this.secondWindow)
         this.attachContent();
         this.attachStyles();
-        const webgazer = this.secondWindow.webgazer; 
-        this.startWebgazer(webgazer);
+        if(!this.immediateLoad){
+          this.startWebgazer(this.secondWindow.webgazer); //TODO: blöd weil es nicht lädt manchmal nicht lädt und weil calibrierung weg
+        }        
         this.secondWindow.opener.name = "parent";
         this.mainWindow = window.open('', 'parent');
         resolve(this.secondWindow);
@@ -109,9 +117,11 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   }
 
   private attachContent(){
+    const outletElement = this.secondWindow.document.getElementById("outletElement");
+    outletElement.innerText = "";
     this.secondWindow.document.title = 'Second Screen';
     this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
-    new DomPortalOutlet(this.secondWindow.document.body, undefined, this.applicationRef, this.injector)
+    new DomPortalOutlet(outletElement, undefined, this.applicationRef, this.injector)
       .attach(this.templatePortal);
   }
 
@@ -140,7 +150,9 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(){
     //default text when no content is displayed on second screen during the next component
-    this.secondWindow.document.getElementById("content").innerText = "Check the main screen for further instructions."
+    if(this.secondWindow.document){
+      this.secondWindow.document.getElementById("content").innerText = "Check the main screen for further instructions."
+    }
   }
 
 }
