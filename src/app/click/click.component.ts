@@ -64,10 +64,11 @@ export class ClickComponent extends BaseTasksComponent {
     }
   }
 
-  private startScreenChangeDetection(){
+  private async startScreenChangeDetection(){
     var timeOutAfterScreenChange = false;
     this.getScreenChangeAreas();
-    this.sandbox!.requestPointerLock(); //TODO: pointerlock check
+    await this.sandbox!.requestPointerLock();
+    this.mix2loaded = true;
     this.screenChangeDetection_interval = setInterval(() => {
       if(!timeOutAfterScreenChange){
         for(let i = 0; i < this.screenChangeAreas!.length; i++){

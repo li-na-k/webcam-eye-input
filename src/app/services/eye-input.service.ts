@@ -107,7 +107,7 @@ export class EyeInputService implements OnDestroy {
     arrow!.style.transform = "translate(" + x + "px, " + y + "px)"
   }
 
-  public activateMix2Input(sandbox : HTMLElement | null, arrow : HTMLElement | null, timeout: number){
+  public async activateMix2Input(sandbox : HTMLElement | null, arrow : HTMLElement | null, timeout: number){
     //lock original cursor, add fake arrow instead
     if(!sandbox){
       throw Error("Provided sandbox is null.")
@@ -124,7 +124,7 @@ export class EyeInputService implements OnDestroy {
     this.sandbox = sandbox; 
     this.arrow = arrow;
     this.timeout = timeout;
-    this.sandbox!.requestPointerLock(); 
+    await this.sandbox!.requestPointerLock(); 
     this.arrow!.style.visibility = 'visible';
     this.arrow!.style.left = "50%";
     this.arrow!.style.top = "50%";

@@ -120,15 +120,13 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       }
     }
   
-    protected startMix2Input(){
-      this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+    protected async startMix2Input(){
+      await this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
       document.addEventListener('mousedown', this.bound_changeOnClick);
       /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
       have been better, but it cannot be removed, which is necessary here (for other input methods)
       -> using Renderer2 might have been an option but this works, so keeeping it like this for the moment */
-      setTimeout(() =>
-        {this.mix2loaded = true;}
-      ,500) //no other option because pointer lock request does not return observable to check success 
+      this.mix2loaded = true;
     }
   
     public stopAllInputs(){
