@@ -84,18 +84,13 @@ export class EyeInputService implements OnDestroy {
     }
   } 
 
-  public moveArrowWithMouse(e : any, arrow : HTMLElement, limits : [number, number, number, number]
-){
-
+  public moveArrowWithMouse(e : any, arrow : HTMLElement, limits : [number, number, number, number]){
     var style = window.getComputedStyle(arrow);
     var matrix = new WebKitCSSMatrix(style.transform);
     var currentx = matrix.m41; 
     var currenty = matrix.m42;
-    
     let x = e.movementX + currentx;
     let y = e.movementY + currenty;
-    
-
     if (x > limits[1]) {
       x = limits[1]
     }

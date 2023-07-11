@@ -60,8 +60,9 @@ button:disabled{
 
 .arrow {
     position: fixed;
-    top: 400px;
-    left: 400px;
+    top: -10px;
+    left: -10px;
+    transform: translate(50vw, 50vh); 
     width: 20px;
     visibility: hidden; 
     pointer-events: none;

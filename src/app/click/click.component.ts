@@ -16,9 +16,13 @@ import { Sizes } from '../enums/sizes';
 export class ClickComponent extends BaseTasksComponent {
   @HostListener('body:mousemove', ['$event']) 
   onMouseMove(e : any) {
-    if(this.dualscreen.secondScreen_arrow && this.secondScreen_sandbox_limits){
-      this.eyeInputService.moveArrowWithMouse(e, this.dualscreen.secondScreen_arrow.nativeElement, this.secondScreen_sandbox_limits); 
+    if(this.dualscreen.getActiveScreen() == 2 && this.dualscreen.secondScreen_arrow && this.dualscreen.secondWindow){
+      this.eyeInputService.moveArrowWithMouse(e, this.dualscreen.secondScreen_arrow.nativeElement, [0, this.dualscreen.secondWindow.width, this.dualscreen.secondWindow.height, 0]);
     }
+    else if(this.arrow && this.dualscreen.mainWindow){
+      this.eyeInputService.moveArrowWithMouse(e, this.arrow, [0, this.dualscreen.mainWindow.width, this.dualscreen.mainWindow.height, 0]);
+    }
+    this.eyeInputService.bound_measureMouseDist; //Track mouse / eye distribution 
   }
 
   @ViewChild('dualscreen') dualscreen! : any;
@@ -34,19 +38,9 @@ export class ClickComponent extends BaseTasksComponent {
   protected error : boolean = false;
   private screenChangeAreas : Array<Element> | null = null;
   private screenChangeDetection_interval : any = null;
-  private secondScreen_sandbox_limits : undefined | [number, number, number, number];
 
   constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
    super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
-  }
-
-  async getSecondScreenLimits(){
-    this.secondScreen_sandbox_limits = [
-      this.dualscreen.secondScreen_sandbox.nativeElement.getBoundingClientRect().top,
-      this.dualscreen.secondScreen_sandbox.nativeElement.getBoundingClientRect().right,
-      this.dualscreen.secondScreen_sandbox.nativeElement.getBoundingClientRect().bottom,
-      this.dualscreen.secondScreen_sandbox.nativeElement.getBoundingClientRect().left
-    ];
   }
 
   async getclickAreas(){
@@ -58,14 +52,22 @@ export class ClickComponent extends BaseTasksComponent {
   async getScreenChangeAreas(){
     const screenChangeAreas_mainScreen = document.getElementsByClassName("screen-change-area")
     const screenChangeAreas_secondScreen = this.dualscreen.secondWindow.document.getElementsByClassName("screen-change-area");
-    this.screenChangeAreas = [].slice.call(screenChangeAreas_mainScreen).concat([].slice.call(screenChangeAreas_secondScreen)); 
+    this.screenChangeAreas = [].slice.call(screenChangeAreas_mainScreen).concat([].slice.call(screenChangeAreas_secondScreen));
+  }
+
+  private getScreenOfElement(el : any): number{
+    if(el.classList.contains("secondScreen")){
+      return 2;
+    }
+    else{
+      return 1;
+    }
   }
 
   private startScreenChangeDetection(){
     var timeOutAfterScreenChange = false;
     this.getScreenChangeAreas();
-    this.getSecondScreenLimits();
-
+    this.sandbox!.requestPointerLock(); //TODO: pointerlock check
     this.screenChangeDetection_interval = setInterval(() => {
       if(!timeOutAfterScreenChange){
         for(let i = 0; i < this.screenChangeAreas!.length; i++){
@@ -89,38 +91,18 @@ export class ClickComponent extends BaseTasksComponent {
     }, 300)
   }
 
-  private getScreenOfElement(el : any): "second" | "main"{
-    if(el.classList.contains("secondScreen")){
-      return "second";
-    }
-    else{
-      return "main";
-    }
-  }
-
   private changeScreen(screenChangeArea : HTMLElement){
     if(screenChangeArea.classList.contains("bottom")){ //from top to bottom (= second to main screen)
       this.dualscreen.focusMainWindow();
-      this.setOrangeBackground(false);
       this.taskEvaluationService.addScreenChange();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
+      this.arrow!.style.visibility = 'visible';
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
-      this.setOrangeBackground(true);
       this.taskEvaluationService.addScreenChange();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
-    }
-  }
-
-  private setOrangeBackground(secondWindow:boolean){
-    if(secondWindow){
-      this.dualscreen.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
-      this.dualscreen.mainWindow.document.body.style.backgroundColor = "#d0d0d0";
-    }
-    else{
-      this.dualscreen.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
-      this.dualscreen.secondWindow.document.body.style.backgroundColor = "#d0d0d0";
+      this.arrow!.style.visibility = 'hidden';
     }
   }
 
@@ -217,11 +199,12 @@ export class ClickComponent extends BaseTasksComponent {
   }
 
   protected startMix2Input(){
-    //Track mouse / eye distribution
-    window.document.addEventListener("mousemove",this.eyeInputService.bound_measureMouseDist);
-    this.dualscreen.secondWindow.document.addEventListener("mousemove",this.eyeInputService.bound_measureMouseDist);
-
     this.getclickAreas();
+
+    //Focus main window in the beginning, display arrow in the middle of the screen
+    this.dualscreen.focusMainWindow();
+    this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
+    this.arrow!.style.visibility = 'visible';
     this.startScreenChangeDetection();
     for (let i = 0; i < this.clickAreas!.length; i++){
       let clickArea = this.clickAreas![i] as HTMLElement;

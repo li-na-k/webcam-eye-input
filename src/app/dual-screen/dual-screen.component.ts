@@ -19,7 +19,8 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   @ViewChild('arrow') secondScreen_arrow!: ElementRef;
   @ViewChild('sandbox') secondScreen_sandbox!: ElementRef;
 
-  @Input() immediateLoad : boolean = false; //if false, component where dualScreen is used must call openSecondWindow()
+  @Input() initialOpening : boolean = true; //if true, component where dualScreen is used must call openSecondWindow() when it should be opened
+  //if false, content of the new component is automatically loaded into the already opened window
   
   public secondWindow : any;
   public mainWindow : any;
@@ -37,7 +38,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
 
   ngAfterViewInit(){
-    if(this.immediateLoad){
+    if(!this.initialOpening){
       this.openSecondWindow();
     }
   }
@@ -51,23 +52,27 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
     return this.secondWindow;
   }
 
-  public focusSecondWindow(){
-    //this.secondWindow.focus();
-    this.webgazerService.secondFakeFocussed = true;
-  }
-
-  public getActiveScreen() : "main" | "second"{ 
+  public getActiveScreen() : number { 
     if(this.webgazerService.secondFakeFocussed){
-      return "second";
+      return 2;
     }
     else{
-      return "main";
+      return 1;
     }
   }
 
+  //Fake Focus necessary because otherwise mouse tracking stops during Mix2 Input
   public focusMainWindow(){
     //this.mainWindow.focus();
     this.webgazerService.secondFakeFocussed = false;
+    this.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
+    this.secondWindow.document.body.style.backgroundColor = "#d0d0d0";
+  }
+  public focusSecondWindow(){
+    //this.secondWindow.focus();
+    this.webgazerService.secondFakeFocussed = true;
+    this.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
+    this.mainWindow.document.body.style.backgroundColor = "#d0d0d0";
   }
 
   public startWebgazer(webgazer : any){
@@ -94,22 +99,21 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
   public openSecondWindow() : Promise<Window>{
     return new Promise(resolve => {
-      if(this.immediateLoad){
+      if(!this.initialOpening){ //re-use old window + eye tracker
         this.secondWindow = window.open('', 'SECOND_SCREEN');
       }
-      else{
+      else{ //open new window
         this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 
-        'width=600,height=400,left=200,top=200'); //!! ab hier ists weg, aber nur wenn vorher was attached wurde, ansonsten wird openSecondWindow nämlich gar nicht aufgerufen!
+        'width=600,height=400,left=200,top=200');
       }
-        //!aber wenn mans nicht neu öffnet ist secondWindow undefined
       setTimeout(() => {
         console.log("second window loaded", this.secondWindow)
         this.attachContent();
         this.attachStyles();
-        if(!this.immediateLoad){
-          this.startWebgazer(this.secondWindow.webgazer); //TODO: blöd weil es nicht lädt manchmal nicht lädt und weil calibrierung weg
-        }        
-        this.secondWindow.opener.name = "parent";
+        if(this.initialOpening){
+          this.startWebgazer(this.secondWindow.webgazer);
+          this.secondWindow.opener.name = "parent";
+        }    
         this.mainWindow = window.open('', 'parent');
         resolve(this.secondWindow);
       }, 2000)

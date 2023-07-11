@@ -9,8 +9,9 @@
 
 .arrow {
     position: fixed;
-    top: 0px;
-    left: 0px;
+    top: -10px;
+    left: -10px;
+    transform: translate(50vw, 50vh);
     width: 20px;
     visibility: hidden; 
     pointer-events: none;
