@@ -66,7 +66,7 @@ export class EyeInputService implements OnDestroy {
     return (tb_inside && lr_inside)
   }
 
-  private moveArrowWithEyes(){
+  public moveArrowWithEyes(arrow : HTMLElement, onlyXDir : boolean = false){ //move to current eye pos
     let x = 0.0;
     let y = 0.0;
     this.currentEyePos$
@@ -75,16 +75,15 @@ export class EyeInputService implements OnDestroy {
       x = d.x;
       y = d.y;
     });
-    if(this.arrow){
-      this.arrow!.style.left = x + "px";
-      this.arrow!.style.top = y + "px"
+    if(onlyXDir){
+      arrow.style.transform = "translate(" + x + "px, 50vh)" 
     }
     else{
-      throw Error("Provided arrow is null.")
+      arrow.style.transform = "translate(" + x + "px, " + y + "px)"
     }
   } 
 
-  public moveArrowWithMouse(e : any, arrow : HTMLElement, limits : [number, number, number, number]){
+  public moveArrowWithMouse(e : any, arrow : HTMLElement, limits : [number, number, number, number]){ //move according to mouse movement
     var style = window.getComputedStyle(arrow);
     var matrix = new WebKitCSSMatrix(style.transform);
     var currentx = matrix.m41; 
@@ -132,7 +131,7 @@ export class EyeInputService implements OnDestroy {
     this.moveArrowInterval = setInterval(() => {
       if(!this.mouseInput){
         this.arrow!.classList.add("smoothTransition");
-        this.moveArrowWithEyes();
+        this.moveArrowWithEyes(this.arrow!);
       }
       else{
         this.arrow!.classList.remove("smoothTransition");

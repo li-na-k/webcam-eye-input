@@ -78,12 +78,14 @@ export class ClickComponent extends BaseTasksComponent {
   }
 
   private changeScreen(screenChangeArea : HTMLElement){
+    let arrow : any = null;
     if(screenChangeArea.classList.contains("bottom")){ //from top to bottom (= second to main screen)
       this.dualscreen.focusMainWindow();
       this.taskEvaluationService.addScreenChange();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
       this.arrow!.style.visibility = 'visible';
       this.activeScreenChangeArea = this.screenChangeAreas![0];
+      arrow = this.arrow!;
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
@@ -91,7 +93,9 @@ export class ClickComponent extends BaseTasksComponent {
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
       this.arrow!.style.visibility = 'hidden';
       this.activeScreenChangeArea = this.screenChangeAreas![1];
+      arrow = this.dualscreen.secondScreen_arrow.nativeElement;
     }
+        this.eyeInputService.moveArrowWithEyes(arrow, true);
   }
 
   protected startEyeInput(){
