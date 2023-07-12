@@ -7,6 +7,7 @@ import { WebgazerService } from '../services/webgazer.service';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
 import { Sizes } from '../enums/sizes';
+import { InputType } from '../enums/input-type';
 @Component({
   selector: 'app-click',
   providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],
@@ -195,22 +196,43 @@ export class ClickComponent extends BaseTasksComponent {
   private bound_changeOnClick = this.changeOnClick.bind(this);
   private changeOnClick(ev : any){
     let currentClickArea : HTMLElement | null = null;
-    currentClickArea = ev.target; 
+    let arrow = this.dualscreen.getActiveScreen()==2?this.dualscreen.secondScreen_arrow.nativeElement:this.arrow;
+    let style = window.getComputedStyle(arrow);
+    let matrix = new WebKitCSSMatrix(style.transform);
+    let x = matrix.m41; 
+    let y = matrix.m42;
+    if(this.selectedInputType == InputType.MIX2){
+      //only check click areas of active screen (first half of clickAreas array on main screen, second half on second screen
+      var halflength = Math.ceil(this.clickAreas!.length / 2);    
+      var activeClickAreas : Element[] = this.dualscreen.getActiveScreen() == 1?this.clickAreas!.slice(0,halflength):this.clickAreas!.slice(halflength, undefined)
+      console.log("active",activeClickAreas)
+      for (let i = 0; i < activeClickAreas!.length; i++){
+        let clickArea = activeClickAreas[i] as HTMLElement;
+        let inside = false;
+        inside = this.eyeInputService.isInside(clickArea, x,y);  
+        if(inside){
+          currentClickArea = clickArea;
+          break; //exit for loop as soon as clicked area found
+        }
+      }
+      if(currentClickArea == null || this.pointerLockStopped){ 
+        this.clicked = false;
+      }
+    }
+    if(this.selectedInputType == InputType.MOUSE){
+      currentClickArea = ev.target; 
+    }
     this.checkIfError(currentClickArea);
   }
 
   protected startMix2Input(){
     this.getclickAreas();
-
     //Focus main window in the beginning, display arrow in the middle of the screen
     this.dualscreen.focusMainWindow();
     this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
     this.arrow!.style.visibility = 'visible';
     this.startScreenChangeDetection();
-    for (let i = 0; i < this.clickAreas!.length; i++){
-      let clickArea = this.clickAreas![i] as HTMLElement;
-      clickArea.addEventListener('mousedown', this.bound_changeOnClick);
-    }
+    document.addEventListener('mousedown', this.bound_changeOnClick);
   }
 
   public stopAllInputs(){
