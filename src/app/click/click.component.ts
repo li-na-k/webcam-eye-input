@@ -38,6 +38,7 @@ export class ClickComponent extends BaseTasksComponent {
   protected  clicked : boolean = false;
   protected error : boolean = false;
   private screenChangeAreas : Array<Element> | null = null;
+  private activeScreenChangeArea : any;
   private screenChangeDetection_interval : any = null;
 
   constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
@@ -56,38 +57,21 @@ export class ClickComponent extends BaseTasksComponent {
     this.screenChangeAreas = [].slice.call(screenChangeAreas_mainScreen).concat([].slice.call(screenChangeAreas_secondScreen));
   }
 
-  private getScreenOfElement(el : any): number{
-    if(el.classList.contains("secondScreen")){
-      return 2;
-    }
-    else{
-      return 1;
-    }
-  }
-
   private async startScreenChangeDetection(){
     var timeOutAfterScreenChange = false;
     this.getScreenChangeAreas();
     await this.sandbox!.requestPointerLock();
     this.mix2loaded = true;
+    this.activeScreenChangeArea = this.screenChangeAreas![0];
     this.screenChangeDetection_interval = setInterval(() => {
       if(!timeOutAfterScreenChange){
-        for(let i = 0; i < this.screenChangeAreas!.length; i++){
-          let inside : boolean = false;
-          let el : HTMLElement = this.screenChangeAreas![i] as HTMLElement;
-          if(this.getScreenOfElement(el) != this.dualscreen.getActiveScreen()){ //check if right screen
-            inside = false;
-          }
-          else{
-            inside = this.eyeInputService.areEyesInsideElement(el!);
-          }
-          if (inside){
-            this.changeScreen(el)
-            timeOutAfterScreenChange = true;
-            setTimeout(() => {
-              timeOutAfterScreenChange = false;
-            }, 2000);
-          }
+        let inside = this.eyeInputService.areEyesInsideElement(this.activeScreenChangeArea);
+        if (inside){
+          this.changeScreen(this.activeScreenChangeArea)
+          timeOutAfterScreenChange = true;
+          setTimeout(() => {
+            timeOutAfterScreenChange = false;
+          }, 2000);
         }
       }
     }, 300)
@@ -99,12 +83,14 @@ export class ClickComponent extends BaseTasksComponent {
       this.taskEvaluationService.addScreenChange();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
       this.arrow!.style.visibility = 'visible';
+      this.activeScreenChangeArea = this.screenChangeAreas![0];
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
       this.taskEvaluationService.addScreenChange();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
       this.arrow!.style.visibility = 'hidden';
+      this.activeScreenChangeArea = this.screenChangeAreas![1];
     }
   }
 
@@ -156,8 +142,8 @@ export class ClickComponent extends BaseTasksComponent {
     }
   }
 
-
   protected checkIfError(clickArea : HTMLElement | null){
+      console.log("check if error click area", clickArea)
       let success = false;
       if(clickArea){ //if not clicked outside of click area
         this.clicked = true;
@@ -205,7 +191,6 @@ export class ClickComponent extends BaseTasksComponent {
       //only check click areas of active screen (first half of clickAreas array on main screen, second half on second screen
       var halflength = Math.ceil(this.clickAreas!.length / 2);    
       var activeClickAreas : Element[] = this.dualscreen.getActiveScreen() == 1?this.clickAreas!.slice(0,halflength):this.clickAreas!.slice(halflength, undefined)
-      console.log("active",activeClickAreas)
       for (let i = 0; i < activeClickAreas!.length; i++){
         let clickArea = activeClickAreas[i] as HTMLElement;
         let inside = false;
