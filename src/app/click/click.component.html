@@ -1,4 +1,4 @@
-<dual-screen #dualscreen [initialOpening]="false">
+<dual-screen #dualscreen [initialOpening]="false" [contentHeight]="'50%'">
     <div *ngIf="selectedInputType!=InputType.MOUSE" [ngClass]="['bottom screen-change-area', 'secondScreen']"></div>
     <div class="container" *ngIf="!clicked">
         <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']">

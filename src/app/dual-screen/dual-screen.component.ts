@@ -21,6 +21,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
   @Input() initialOpening : boolean = true; //if true, component where dualScreen is used must call openSecondWindow() when it should be opened
   //if false, content of the new component is automatically loaded into the already opened window
+  @Input() contentHeight : String = "100%"; 
   
   public secondWindow : any;
   public mainWindow : any;
