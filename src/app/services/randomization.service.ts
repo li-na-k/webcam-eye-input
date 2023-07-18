@@ -203,6 +203,7 @@ export class RandomizationService {
     this.shuffle(this.taskOrder);
     this.shuffle(this.sizeOrder); 
     this.shuffle(this.positionOrder);
+    this.shuffle(this.successTargetOnScreen1Order);
     this.selectedSize = this.sizeOrder[0]; //first size
   }
 
