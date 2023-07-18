@@ -11,11 +11,16 @@ export class TaskResult {
     duration : number = 0;
     errors: number = 0;
     aborted : boolean = false;
+    screenChanges : number[] = [];
+    targetOnMainScreen: boolean = true;
+
+
     eyeMouseDistribution? : number[]; //[eye interval duration, mouse interval duration, eye interval duration, mouse ....]
     mouseIntervalsDuration? : number;
     eyeIntervalsDuration? : number;
     intervalChanges? : number;
-    screenChanges : number[] = [];
+
+
 
     public setDuration() { this.duration = this.endTime - this.startTime };
 }

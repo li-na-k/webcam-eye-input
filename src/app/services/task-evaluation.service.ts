@@ -40,6 +40,7 @@ export class TaskEvaluationService {
   private taskRunning : boolean = false;
   private errorCount : number = 0;
   public selectedSize : Sizes = Sizes.S; //set by randomization Service
+  public targetOnMainScreen : boolean = false;
 
   startTask(){
     if(this.taskRunning){
@@ -54,6 +55,7 @@ export class TaskEvaluationService {
       result.inputType = this.selectedInputType;
       result.task = this.selectedTask;
       result.size = this.selectedSize;
+      result.targetOnMainScreen = this.targetOnMainScreen;
       if(this.selectedInputType == InputType.MIX2){
         result.eyeMouseDistribution = [];
       }

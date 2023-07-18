@@ -108,6 +108,7 @@ export class RandomizationService {
       this.taskEvalutationService.selectedSize = this.selectedSize;
       this.shuffle(this.positionOrder);
       this.successTargetOnScreen1 = this.successTargetOnScreen1Order[this.repsDone+1]; 
+      this.taskEvalutationService.targetOnMainScreen = this.successTargetOnScreen1;
       this.repsDone++;
       this.taskEvalutationService.startTask();
     }
