@@ -59,12 +59,17 @@ export class CalibrationComponent implements AfterViewInit{
     this.showCalibrationSecondScreen = true;
   }
 
+  protected disabledNext = false;
   private numberInstructions : number = 5;
   protected nextExplanation(){
     if(this.explanationNr >= (this.numberInstructions-1)){
       this.closePopup();
     }
     this.explanationNr = this.explanationNr+1; 
+    //default diable next button on slide where second window should be opened
+    if(this.explanationNr == 2){
+      this.disabledNext = true;
+    }
   }
 
   protected previousExplanation(){

@@ -33,7 +33,7 @@
         <div *ngIf="explanationNr==2">
             For this experiment, two browser windows are necessary.<br>
             Click the button below to open the second window.<br>
-            <div style="margin: 15px 0px 15px 0px"><button (click)="dualscreen.openSecondWindow();">Open second window</button></div>
+            <div style="margin: 15px 0px 15px 0px"><button (click)="dualscreen.openSecondWindow(); this.disabledNext = false;">Open second window</button></div>
             <div style="display: flex; margin: 25px 0px;">
                 <div style="text-align: left; margin-top: 15px;">
                     Then ... 
@@ -58,7 +58,8 @@
             <div style="margin-top: 15px;">To start the calibration, close this window with "OK".</div>
         </div>
         <div style="margin-top: 25px;">
-            <button *ngIf="explanationNr!=4" style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
+            <button *ngIf="explanationNr!=4" [disabled]="disabledNext" class="nextButton" title="Please click the 'Open second window' button first."
+                style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
                 Next <mat-icon style="margin-left: 5px;" fontIcon="arrow_forward"></mat-icon>
             </button>
             <button *ngIf="explanationNr==4" style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
