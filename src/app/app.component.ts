@@ -12,6 +12,7 @@ import { RandomizationService } from './services/randomization.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ComponentCanDeactivate } from './component-can-deactivate';
 import { selectInputType, selectTask } from './state/expConditions/expconditions.selector';
+import { SocketService } from './socket.service';
 
 @Component({
   selector: 'app-root',
@@ -56,13 +57,19 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     protected webgazerService : WebgazerService, 
     private cdRef: ChangeDetectorRef, 
     private taskEvaluationService : TaskEvaluationService,
-    protected randomizationService : RandomizationService){}
+    protected randomizationService : RandomizationService,
+    private webSocketService : SocketService){}
   
     ngAfterViewChecked(): void {
       this.cdRef.detectChanges();
     }
   
     ngOnInit(): void {
+    this.webSocketService.listenTo("connect").subscribe((data : any) => console.log(data));
+    this.webSocketService.startSendingGazeData();
+    this.webSocketService.listenTo("gazeData").subscribe((data : any) => {
+      console.log(data)
+    });
     this.webgazerService.startWebgazer();
     this.webgazerService.checkWebGazerLoaded();
     this.selectedInputType$
