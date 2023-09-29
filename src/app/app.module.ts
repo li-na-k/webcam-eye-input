@@ -27,6 +27,7 @@ import { CalibrationComponent } from './calibration/calibration.component';
 import { FinalPageComponent } from './final-page/final-page.component';
 import { TestInputMethodsComponent } from './test-input-methods/test-input-methods.component';
 import { DualScreenComponent } from './dual-screen/dual-screen.component';
+import { SurfaceTagsComponent } from './surface-tags/surface-tags.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { DualScreenComponent } from './dual-screen/dual-screen.component';
     CalibrationComponent,
     FinalPageComponent,
     TestInputMethodsComponent,
-    DualScreenComponent
+    DualScreenComponent,
+    SurfaceTagsComponent
   ],
   imports: [
     BrowserModule,

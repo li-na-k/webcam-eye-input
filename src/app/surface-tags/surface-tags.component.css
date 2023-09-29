@@ -1,0 +1,25 @@
+.april-tag{
+    position: absolute;
+    height: 50px;
+
+}
+
+#tag0{
+    top: 0px;
+    left: 0px;
+}
+
+#tag1{
+    top: 0px;
+    right: 0px;
+}
+
+#tag2{
+    bottom: 0px;
+    right: 0px;
+}
+
+#tag3{
+    bottom: 0px;
+    left: 0px;
+}

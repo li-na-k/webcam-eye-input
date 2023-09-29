@@ -1,8 +1,8 @@
 .content{
-    margin: 15px 20px;
+    margin: 15px 30px;
     background-color: white;
     height: calc(100% - 200px);
-    overflow-y: scroll;
+    overflow-y: hidden;
     border-radius: 15px;
     padding: 30px;
 }
@@ -109,9 +109,11 @@ input{
 }
 
 .footer{
-    padding: 0px 22px;
-    font-size: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    font-family: "Ribes-Black";
     position: fixed;
     top: auto;
-    bottom: -5px;
+    bottom: 5px;
 }
