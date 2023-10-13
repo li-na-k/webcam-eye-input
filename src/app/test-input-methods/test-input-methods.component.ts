@@ -25,7 +25,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     protected success = false;
 
     private originalFirstInputMethod : InputType = InputType.EYE;
-    private originalFirstTask : Tasks = Tasks.HOVER;
+    private originalFirstTask : Tasks = Tasks.SELECT;
 
     @Output() endTestEvent = new EventEmitter<void>();
   

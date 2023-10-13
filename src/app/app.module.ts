@@ -19,8 +19,6 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
 import { ClickComponent } from './click/click.component';
-import { HoverComponent } from './hover/hover.component';
-import { ScrollComponent } from './scroll/scroll.component';
 import { PopupPointerLockStopComponent } from './popup-pointer-lock-stop/popup-pointer-lock-stop.component';
 import { HeaderComponent } from './header/header.component';
 import { CalibrationComponent } from './calibration/calibration.component';
@@ -33,8 +31,6 @@ import { SurfaceTagsComponent } from './surface-tags/surface-tags.component';
   declarations: [
     AppComponent,
     ClickComponent,
-    HoverComponent,
-    ScrollComponent,
     PopupPointerLockStopComponent,
     HeaderComponent,
     CalibrationComponent,

@@ -26,7 +26,7 @@ export class RandomizationService {
 
   //order of tasks
   public inputOrder : InputType[] = [InputType.MIX2]; //!!InputType.MOUSE 
-  public taskOrder : Tasks[] = [Tasks.SELECT]; //to include selection or hover tasks, add e.g. "Tasks.HOVER" here
+  public taskOrder : Tasks[] = [Tasks.SELECT];
   public positionOrder : Positions[] = [Positions.POS1, Positions.POS2, Positions.POS3, Positions.POS4];
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
@@ -131,12 +131,6 @@ export class RandomizationService {
     if(this.input == InputType.EYE){
       this.inputMethodInstructions = "Move the red dot with your eye-gaze."
       switch(this.task){
-        case Tasks.HOVER:
-          this.taskInstructions = "Move the red dot over the button that says 'Hover over me!'."
-          break;
-        case Tasks.SCROLL:
-          this.taskInstructions = "Move the red dot to the screen borders (dotted area) to scroll in the respective direction. Scroll to the headline that says „Scroll here!“, then scroll to the top of the page again."
-          break;
         case Tasks.SELECT:
             this.taskInstructions = "Move the red dot over the button that says 'Select me!' for some seconds to select it."
             break;
@@ -148,12 +142,6 @@ export class RandomizationService {
     if(this.input == InputType.MIX1){
       this.inputMethodInstructions = "Move the red dot with your eye-gaze. To confirm the position press ENTER."
       switch(this.task){
-        case Tasks.HOVER:
-          this.taskInstructions = "Move the red dot over the button that says 'Hover over me!' and confirm with ENTER."
-          break;
-        case Tasks.SCROLL:
-          this.taskInstructions = "Move the red dot to the screen borders (dotted area) and <strong>keep ENTER pressed as long as you want to scroll</strong> in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
-          break;
         case Tasks.SELECT:
             this.taskInstructions = "Move the red dot over the button that says 'Select me!' and confirm with ENTER."
             break;
@@ -165,12 +153,6 @@ export class RandomizationService {
     if(this.input == InputType.MIX2){
       this.inputMethodInstructions = "Move the cursor with your eye-gaze. Move your mouse to override the eye input and thus do the finetuning of the cursor movement."
       switch(this.task){
-        case Tasks.HOVER:
-          this.taskInstructions = "Move the cursor over the button that says 'Hover over me!'."
-          break;
-        case Tasks.SCROLL:
-          this.taskInstructions = "Move the cursor to the screen borders (dotted area) to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
-          break;
         case Tasks.SELECT:
             this.taskInstructions = "Move the cursor over the button that says 'Select me!'. Click (with your mouse) to select the button."
             break;        
@@ -182,12 +164,6 @@ export class RandomizationService {
     if(this.input == InputType.MOUSE){
       this.inputMethodInstructions = "Use the mouse, like you normally would."
       switch(this.task){
-        case Tasks.HOVER:
-          this.taskInstructions = "Hover over the button that says 'Hover over me!'."
-          break;
-        case Tasks.SCROLL:
-          this.taskInstructions = "Scroll to the headline that says „Scroll here“. Then, scroll to the top of the page again."
-          break;
         case Tasks.SELECT:
             this.taskInstructions = "Click the button that says 'Select me!'."
             break;

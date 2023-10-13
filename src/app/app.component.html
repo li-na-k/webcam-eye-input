@@ -1,7 +1,7 @@
 <app-header></app-header>
 <app-surface-tags></app-surface-tags>
 
-<div *ngIf="!webgazerService.webgazerLoaded" class="FlexboxCentered"> 
+<!-- <div *ngIf="!webgazerService.webgazerLoaded" class="FlexboxCentered"> 
     <div class="popup-full-background"></div>
     <div class="Popup-blue">            
         <mat-spinner [diameter]="30" ></mat-spinner>
@@ -12,7 +12,7 @@
             If your browser asks for permission to use your camera, please click "Allow".
         </div>        
     </div>
-</div>
+</div> -->
 
 <div *ngIf="!randomizationService.showFinalPageComponent" class="button-header-container">
 
@@ -54,7 +54,7 @@
         
 
 <!-- content -->
-<div id="content" class="content" *ngIf="webgazerService.webgazerLoaded">
+<div id="content" class="content" >
 
     <app-calibration *ngIf="!calibrationDone && !randomizationService.everythingDone" 
         (calibrationDoneEvent)="updateCalibrationDone($event)"
@@ -70,8 +70,6 @@
     <div style="height: 100%;" *ngIf="!showTestMode && calibrationDone && !(randomizationService.everythingDone || randomizationService.showFinalPageComponent)"> 
         <div style="height: 100%;" id="experimentSandbox">            
             <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
-            <app-hover *ngIf="(selectedTask$ | async) == TaskType.HOVER"></app-hover>                
-            <app-scroll *ngIf="(selectedTask$ | async) == TaskType.SCROLL"></app-scroll>
         </div>
 
         <div *ngIf="showTaskPopup" style="display:flex;justify-content:center;">
