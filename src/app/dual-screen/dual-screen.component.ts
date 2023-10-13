@@ -123,7 +123,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
   private attachContent(){
     const outletElement = this.secondWindow.document.getElementById("outletElement");
-    outletElement.innerText = "";
+    outletElement?outletElement.innerText = "":console.log("no outlet element found.")
     this.secondWindow.document.title = 'Second Screen';
     this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
     new DomPortalOutlet(outletElement, undefined, this.applicationRef, this.injector)
@@ -131,13 +131,15 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   }
 
   private attachStyles(){
-    // Copy styles from parent window
-    document.querySelectorAll('style').forEach(htmlElement => {
-      this.secondWindow.document.head.appendChild(htmlElement.cloneNode(true));
-    });
-    // Copy stylesheet link from parent window
-    this.styleSheetElement = this.getStyleSheetElement();
-    this.secondWindow.document.head.appendChild(this.styleSheetElement);
+    if(this.secondWindow){
+      // Copy styles from parent window
+      document.querySelectorAll('style').forEach(htmlElement => {
+        this.secondWindow.document.head.appendChild(htmlElement.cloneNode(true));
+      });
+      // Copy stylesheet link from parent window
+      this.styleSheetElement = this.getStyleSheetElement();
+      this.secondWindow.document.head.appendChild(this.styleSheetElement);
+    }
   }
 
   //source: https://stackblitz.com/edit/portal-simple?file=src%2Fapp%2Fapp.component.ts
@@ -155,7 +157,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(){
     //default text when no content is displayed on second screen during the next component
-    if(this.secondWindow.document){
+    if(this.secondWindow){
       this.secondWindow.document.getElementById("content").innerText = "Check the main screen for further instructions."
     }
   }

@@ -13,6 +13,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { ComponentCanDeactivate } from './component-can-deactivate';
 import { selectInputType, selectTask } from './state/expConditions/expconditions.selector';
 import { SocketService } from './socket.service';
+import { changeXPos, changeYPos } from './state/eyetracking/eyetracking.action';
 
 @Component({
   selector: 'app-root',
@@ -65,12 +66,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     }
   
     ngOnInit(): void {
-    this.webSocketService.listenTo("connect").subscribe((data : any) => console.log(data));
     this.webSocketService.startSendingGazeData();
-    this.webSocketService.listenTo("gazeData").subscribe((data : any) => {
-      console.log(data)
-    });
-    this.webgazerService.startWebgazer();
     this.webgazerService.checkWebGazerLoaded();
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
@@ -113,6 +109,10 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
         this.calibrationDone = false;
       }
     }
+  }
+
+  ngOnDestroy() {
+    this.webSocketService.stopSendingGazeData();
   }
 
   confirmSelection(){

@@ -23,7 +23,7 @@ export class ClickComponent extends BaseTasksComponent {
     else if(this.arrow && this.dualscreen.mainWindow){
       this.eyeInputService.moveArrowWithMouse(e, this.arrow, [0, this.dualscreen.mainWindow.width, this.dualscreen.mainWindow.height, 0]);
     }
-    this.eyeInputService.bound_measureMouseDist; //Track mouse / eye distribution 
+    this.eyeInputService.bound_analyseMix2; //Track mouse / eye distribution 
   }
 
   @ViewChild('dualscreen') dualscreen! : any;
@@ -215,6 +215,7 @@ export class ClickComponent extends BaseTasksComponent {
   }
 
   protected startMix2Input(){
+    this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
     this.getclickAreas();
     //Focus main window in the beginning, display arrow in the middle of the screen
     this.dualscreen.focusMainWindow();

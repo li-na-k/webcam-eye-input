@@ -21,26 +21,28 @@ export class EyeInputService implements OnDestroy {
   private sandbox : HTMLElement | null = null;
   private timeout : number = 1000; //in this branch: after what time is mouseInput interval considered to have ended (for TaskResult)
 
-  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService) { }
+  private x = 0.0;
+  private y = 0.0;
+
+  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService) { 
+    this.currentEyePos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(d => {
+        this.x = d.x;
+        this.y = d.y;
+      });
+  }
 
   public areEyesInsideElement(el : HTMLElement) : boolean{
-    let x = 0.0;
-    let y = 0.0;
-    this.currentEyePos$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(d => {
-      x = d.x;
-      y = d.y;
-    });
-    return this.isInside(el, x, y);
+    return this.isInside(el, this.x, this.y);
   }
 
   public isInside(el : HTMLElement, x? : number, y?: number){
     let clientWidth = document.documentElement.clientWidth;
     let clientHeight = document.documentElement.clientHeight;
     let boundingBox = el.getBoundingClientRect();
-    let lr_inside = false;
-    let tb_inside = false;
+    let lr_inside : boolean = false;
+    let tb_inside : boolean = false;
     if(x){
       if(
       (boundingBox.left <= x || boundingBox.left <= 0) && 
@@ -67,14 +69,8 @@ export class EyeInputService implements OnDestroy {
   }
 
   public moveArrowWithEyes(arrow : HTMLElement, onlyXDir : boolean = false){ //move to current eye pos
-    let x = 0.0;
-    let y = 0.0;
-    this.currentEyePos$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(d => {
-      x = d.x;
-      y = d.y;
-    });
+    let x = this.x * window.innerWidth;
+    let y = (1-this.y) * window.innerHeight;
     if(onlyXDir){
       arrow.style.transform = "translate(" + x + "px, 50vh)" 
     }
@@ -102,7 +98,6 @@ export class EyeInputService implements OnDestroy {
     if (y < limits[0]) {
       y = limits[0]
     }
-
     arrow!.style.transform = "translate(" + x + "px, " + y + "px)"
   }
 
@@ -114,19 +109,14 @@ export class EyeInputService implements OnDestroy {
     if(!arrow){
       throw Error("Provided arrow is null.")
     }
-    //remove red dot
-    const dot = document.getElementById("webgazerGazeDot");
-    if(dot){
-      dot.style.visibility = "hidden";
-    }
     //assign method parameters to instance properties to be able to use them in moveArrowWithMouse()
     this.sandbox = sandbox; 
     this.arrow = arrow;
     this.timeout = timeout;
     await this.sandbox!.requestPointerLock(); 
     this.arrow!.style.visibility = 'visible';
-    this.arrow!.style.left = "50%";
-    this.arrow!.style.top = "50%";
+    this.arrow!.style.left = "0%";
+    this.arrow!.style.top = "0%";
     //eye input
     this.moveArrowInterval = setInterval(() => {
       if(!this.mouseInput){
@@ -137,7 +127,7 @@ export class EyeInputService implements OnDestroy {
         this.arrow!.classList.remove("smoothTransition");
       }
     window.document.addEventListener('mousemove', this.bound_mouseTakeover); 
-    }, 400);
+    }, 100);
   }
 
   private bound_mouseTakeover = this.mouseTakeover.bind(this);
@@ -158,8 +148,8 @@ export class EyeInputService implements OnDestroy {
     }, this.timeout)
   }
 
-  public bound_measureMouseDist = this.measureMouseDist.bind(this);
-  private measureMouseDist(){ //similar to mouseTakeover but only for measuring, no takeover of fake cursor 
+  public bound_analyseMix2 = this.analyseMix2.bind(this);
+  private analyseMix2(){ //like mouseTakeover but without takeover of fake cursor (only for analysing how eye/mouse usage was during Mix2)
     clearTimeout(this.timeOutAfterMouseInput);
     if(!this.mouseInput){ //until now it was eye input, now change to mouse input
       this.mouseInput = true;
@@ -173,11 +163,8 @@ export class EyeInputService implements OnDestroy {
   
   public stopMix2Input(sandbox : HTMLElement, arrow : HTMLElement){
     document.exitPointerLock();
-    const dot = document.getElementById("webgazerGazeDot");
-    if(dot){
-      dot.style.visibility = "";
-    }
     window.document.removeEventListener('mousemove', this.bound_mouseTakeover);
+    //replace fake cursor with real cursor again
     arrow.style.visibility = 'hidden';
     sandbox.style.cursor = '';
     clearTimeout(this.timeOutAfterMouseInput);
@@ -189,7 +176,4 @@ export class EyeInputService implements OnDestroy {
     this.destroy$.next(true);
     this.destroy$.complete();
   }
-
-
-
 }
