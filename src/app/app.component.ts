@@ -6,14 +6,12 @@ import { Tasks } from './enums/tasks';
 
 import { CalibrationComponent } from './calibration/calibration.component';
 import { BaseTasksComponent } from './base-tasks/base-tasks.component';
-import { WebgazerService } from 'src/app/services/webgazer.service';
 import { TaskEvaluationService } from './services/task-evaluation.service';
 import { RandomizationService } from './services/randomization.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ComponentCanDeactivate } from './component-can-deactivate';
 import { selectInputType, selectTask } from './state/expConditions/expconditions.selector';
 import { SocketService } from './socket.service';
-import { changeXPos, changeYPos } from './state/eyetracking/eyetracking.action';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +22,7 @@ import { changeXPos, changeYPos } from './state/eyetracking/eyetracking.action';
 export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewChecked{
   title = 'eye-input-webpage';
   @ViewChild(BaseTasksComponent) baseTaskComponent! : BaseTasksComponent;
-  @ViewChild(CalibrationComponent) calibrationCmp : CalibrationComponent = new CalibrationComponent(this.webgazerService);
+  //@ViewChild(CalibrationComponent) calibrationCmp : CalibrationComponent = new CalibrationComponent(this.webgazerService);
 
   // @HostListener allows us to also guard against browser refresh, close, etc.
   @HostListener('window:beforeunload')
@@ -54,8 +52,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   protected showTaskPopup : boolean = false; 
   protected showInputMethodPopup : boolean = true;
 
-  constructor(private store : Store<AppState>, 
-    protected webgazerService : WebgazerService, 
+  constructor(private store : Store<AppState>,
     private cdRef: ChangeDetectorRef, 
     private taskEvaluationService : TaskEvaluationService,
     protected randomizationService : RandomizationService,
@@ -67,7 +64,6 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   
     ngOnInit(): void {
     this.webSocketService.startSendingGazeData();
-    this.webgazerService.checkWebGazerLoaded();
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => {

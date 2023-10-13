@@ -6,7 +6,6 @@ import {
 import { changeXPos, changeYPos } from '../state/eyetracking/eyetracking.action';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
-import { WebgazerService } from '../services/webgazer.service';
 
 
 @Component({
@@ -34,9 +33,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
     private _viewContainerRef: ViewContainerRef,
     private injector: Injector,
     private applicationRef: ApplicationRef,
-    private store : Store<AppState>,
-    private webgazerService : WebgazerService){}
-
+    private store : Store<AppState>){}
 
   ngAfterViewInit(){
     if(!this.initialOpening){
@@ -54,7 +51,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   }
 
   public getActiveScreen() : number { 
-    if(this.webgazerService.secondFakeFocussed){
+    if(this.secondFakeFocussed){
       return 2;
     }
     else{
@@ -63,15 +60,16 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   }
 
   //Fake Focus necessary because otherwise mouse tracking stops during Mix2 Input
+  public secondFakeFocussed : boolean = false;
   public focusMainWindow(){
     //this.mainWindow.focus();
-    this.webgazerService.secondFakeFocussed = false;
+    this.secondFakeFocussed = false;
     this.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
     this.secondWindow.document.body.style.backgroundColor = "#d0d0d0";
   }
   public focusSecondWindow(){
     //this.secondWindow.focus();
-    this.webgazerService.secondFakeFocussed = true;
+    this.secondFakeFocussed = true;
     this.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
     this.mainWindow.document.body.style.backgroundColor = "#d0d0d0";
   }
@@ -82,9 +80,9 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
           return;
         }
         let active = this.secondWindow.document.hasFocus(); //for click component: not real focus, but fake focus used (to be constanly track mousemove)
-        if(!this.webgazerService.secondFakeFocussed && !active) { //main screen active => don't track here
+        if(!this.secondFakeFocussed && !active) { //main screen active => don't track here
           this.dot = this.secondWindow.document.getElementById("webgazerGazeDot"); 
-          this.webgazerService.resumeWebgazer(webgazer, this.dot); //give second webgazer instance to first webgazer so it can resume second as soon as necessary
+          //TODO this.webgazerService.resumeWebgazer(webgazer, this.dot); //give second webgazer instance to first webgazer so it can resume second as soon as necessary
           webgazer.pause();
           if(this.dot){
             this.dot!.style.display = "none";

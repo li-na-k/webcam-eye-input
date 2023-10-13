@@ -3,7 +3,6 @@ import { EyeInputService } from 'src/app/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
-import { WebgazerService } from '../services/webgazer.service';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
 import { Sizes } from '../enums/sizes';
@@ -41,8 +40,8 @@ export class ClickComponent extends BaseTasksComponent {
   private activeScreenChangeArea : any;
   private screenChangeDetection_interval : any = null;
 
-  constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
-   super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
+  constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
+   super(store, cdRef, taskEvaluationService, randomizationService)
   }
 
   async getclickAreas(){

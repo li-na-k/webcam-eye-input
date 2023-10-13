@@ -4,7 +4,6 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { InputType } from '../enums/input-type';
-import { WebgazerService } from '../services/webgazer.service';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
 import { Tasks } from '../enums/tasks';
@@ -29,8 +28,8 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
 
     @Output() endTestEvent = new EventEmitter<void>();
   
-    constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
-     super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
+    constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
+     super(store, cdRef, taskEvaluationService, randomizationService)
     }
 
     override ngOnInit(): void {

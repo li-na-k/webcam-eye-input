@@ -44,20 +44,6 @@ button:disabled{
     color: #666666;
 }
 
-
-#webgazerVideoContainer{
-    transform: scale(0.5);
-    right: 20px !important;
-    left: auto !important;
-    top: 10px !important;
-    transform-origin: top right;
-    z-index: 4;
-}
-
-#webgazerVideoFeed{
-    border-radius: 15px !important;
-}
-
 .arrow {
     position: fixed;
     top: -10px;

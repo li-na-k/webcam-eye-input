@@ -1,18 +1,17 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
-import { WebgazerService } from '../services/webgazer.service';
 
 @Component({
   selector: 'app-calibration',
   templateUrl: './calibration.component.html',
   styleUrls: ['./calibration.component.css']
 })
-export class CalibrationComponent implements AfterViewInit{
+export class CalibrationComponent{
   @ViewChild('dualscreen') dualscreen! : any;
 
   protected showCalibrationSecondScreen: boolean = false;
 
-  constructor(private webgazerService : WebgazerService) { }
+  constructor() { }
 
   @Output() calibrationDoneEvent = new EventEmitter<boolean>();
   //two-way data binding
@@ -26,10 +25,6 @@ export class CalibrationComponent implements AfterViewInit{
   protected clickGoal = 5;
   //explanation
   protected explanationNr : number = 0;
-
-  ngAfterViewInit(){
-    this.webgazerService.resumeWebgazer();
-  }
 
   protected changeButtonColor(buttonNr: number){
     if(this.buttonClicks[buttonNr] < this.clickGoal){

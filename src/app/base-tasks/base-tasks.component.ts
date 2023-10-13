@@ -2,14 +2,12 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { InputType } from '../enums/input-type';
-import { WebgazerService } from '../services/webgazer.service';
 import { AppState } from '../state/app.state';
 import { selectInputType, selectTask } from '../state/expConditions/expconditions.selector';
 import { Tasks } from '../enums/tasks';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
 
-declare var webgazer: any;
 @Component({
   selector: 'app-base-tasks',
   templateUrl: './base-tasks.component.html',
@@ -32,7 +30,6 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   constructor(protected store : Store<AppState>, 
     protected cdRef: ChangeDetectorRef, 
-    protected webgazerService : WebgazerService,
     protected taskEvaluationService : TaskEvaluationService, //will be used in derived classes
     protected randomizationService : RandomizationService) { }  
   
@@ -67,14 +64,14 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   public activateSelectedInputType(){
     console.log("activate selected input type: ", this.selectedTask + " " + this.selectedInputType);
-    this.webgazerService.resumeWebgazer();
+    //TODO this.webgazerService.resumeWebgazer();
     this.cdRef.detectChanges();
     this.stopAllInputs();
     if(this.selectedInputType == InputType.EYE){
       this.startEyeInput();
     }
     if(this.selectedInputType == InputType.MOUSE){
-      this.webgazerService.pauseWebgazer();
+      //TODO this.webgazerService.pauseWebgazer();
       this.startMouseInput()
     }
     if(this.selectedInputType == InputType.MIX1){
