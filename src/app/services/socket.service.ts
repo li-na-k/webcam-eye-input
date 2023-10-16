@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import io from 'socket.io-client';
-import { AppState } from './state/app.state';
-import { changeXPos, changeYPos } from './state/eyetracking/eyetracking.action';
+import { AppState } from '../state/app.state';
+import { changeXPos, changeYPos } from '../state/eyetracking/eyetracking.action';
 
 @Injectable({
   providedIn: 'root'

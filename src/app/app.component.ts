@@ -11,7 +11,7 @@ import { RandomizationService } from './services/randomization.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ComponentCanDeactivate } from './component-can-deactivate';
 import { selectInputType, selectTask } from './state/expConditions/expconditions.selector';
-import { SocketService } from './socket.service';
+import { SocketService } from './services/socket.service';
 
 @Component({
   selector: 'app-root',
