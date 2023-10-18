@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-surface-tags',
@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./surface-tags.component.css']
 })
 export class SurfaceTagsComponent {
-
+  @Input() secondScreen : boolean = false;
 }
