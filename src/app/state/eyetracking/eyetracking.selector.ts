@@ -9,3 +9,9 @@ export const selectCurrentEyePos = createSelector(
         return {x: state.x, y: state.y};
     }
 )
+
+export const selectCurrentScreen = createSelector(
+    selectEyetrackingState, (state: EyetrackingState) => {
+        return state.screen;
+    }
+)

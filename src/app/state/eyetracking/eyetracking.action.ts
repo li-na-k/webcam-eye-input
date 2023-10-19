@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { Action, createAction, props } from "@ngrx/store";
+import { createAction, props } from "@ngrx/store";
+import { Screens } from "src/app/enums/screens";
 
 
 export const changeXPos = createAction(
@@ -10,4 +10,9 @@ export const changeXPos = createAction(
 export const changeYPos = createAction(
     'CHANGE_Y',
     props<{newy:number}>()
+);
+
+export const changeScreen = createAction(
+    'CHANGE_SCREEN',
+    props<{newScreen:Screens}>()
 );
