@@ -98,7 +98,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
   public openSecondWindow() : Promise<Window>{
     return new Promise(resolve => {
-      if(!this.initialOpening){ //re-use old window + eye tracker
+      if(!this.initialOpening){ //re-use old window
         this.secondWindow = window.open('', 'SECOND_SCREEN');
       }
       else{ //open new window
@@ -110,7 +110,6 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
         this.attachContent();
         this.attachStyles();
         if(this.initialOpening){
-          this.startWebgazer(this.secondWindow.webgazer);
           this.secondWindow.opener.name = "parent";
         }    
         this.mainWindow = window.open('', 'parent');
