@@ -1,6 +1,7 @@
 .april-tag{
     position: absolute;
     height: 150px;
+    z-index: 1000;
 
 }
 
