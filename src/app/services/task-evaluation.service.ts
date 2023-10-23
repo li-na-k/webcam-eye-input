@@ -83,8 +83,10 @@ export class TaskEvaluationService {
   }
 
   addScreenChange(){
-    let result : TaskResult = this.results[this.results.length-1]; //current result object
-    result.screenChanges.push(Date.now()-result.startTime);
+    if(this.taskRunning){
+      let result : TaskResult = this.results[this.results.length-1]; //current result object
+      result.screenChanges.push(Date.now()-result.startTime);
+    }
   }
 
   endTask(aborted? : boolean){
