@@ -7,6 +7,9 @@ import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
 import { Sizes } from '../enums/sizes';
 import { InputType } from '../enums/input-type';
+import { Screens } from '../enums/screens';
+import { Observable, takeUntil } from 'rxjs';
+import { selectCurrentScreen } from '../state/eyetracking/eyetracking.selector';
 @Component({
   selector: 'app-click',
   providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],
@@ -36,8 +39,7 @@ export class ClickComponent extends BaseTasksComponent {
   private taskElementID : string = "click-task"; //area that shows success when clicked
   protected  clicked : boolean = false;
   protected error : boolean = false;
-  private screenChangeAreas : Array<Element> | null = null;
-  private activeScreenChangeArea : any;
+
   private screenChangeDetection_interval : any = null;
 
   constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
@@ -50,40 +52,25 @@ export class ClickComponent extends BaseTasksComponent {
     this.clickAreas = [].slice.call(clickAreas_mainScreen).concat([].slice.call(clickAreas_secondScreen)); 
   }
 
-  async getScreenChangeAreas(){
-    const screenChangeAreas_mainScreen = document.getElementsByClassName("screen-change-area")
-    const screenChangeAreas_secondScreen = this.dualscreen.secondWindow.document.getElementsByClassName("screen-change-area");
-    this.screenChangeAreas = [].slice.call(screenChangeAreas_mainScreen).concat([].slice.call(screenChangeAreas_secondScreen));
+  private currentScreen$ : Observable<any> = this.store.select(selectCurrentScreen);
+  private startScreenChangeDetection() {
+    console.log("screen detection started")
+    this.currentScreen$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(d => {
+        console.log("new Screen", d)
+        this.changeScreen(d)
+      })
   }
 
-  private async startScreenChangeDetection(){
-    var timeOutAfterScreenChange = false;
-    this.getScreenChangeAreas();
-    await this.sandbox!.requestPointerLock();
-    this.mix2loaded = true;
-    this.activeScreenChangeArea = this.screenChangeAreas![0];
-    this.screenChangeDetection_interval = setInterval(() => {
-      if(!timeOutAfterScreenChange){
-        let inside = this.eyeInputService.areEyesInsideElement(this.activeScreenChangeArea);
-        if (inside){
-          this.changeScreen(this.activeScreenChangeArea)
-          timeOutAfterScreenChange = true;
-          setTimeout(() => {
-            timeOutAfterScreenChange = false;
-          }, 1000);
-        }
-      }
-    }, 300)
-  }
 
-  private changeScreen(screenChangeArea : HTMLElement){
+  private changeScreen(toScreen : Screens){
     let arrow : any = null;
-    if(screenChangeArea.classList.contains("bottom")){ //from top to bottom (= second to main screen)
+    if(toScreen == Screens.MAINSCREEN){ //from top to bottom (= second to main screen)
       this.dualscreen.focusMainWindow();
       this.taskEvaluationService.addScreenChange();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
       this.arrow!.style.visibility = 'visible';
-      this.activeScreenChangeArea = this.screenChangeAreas![0];
       arrow = this.arrow!;
     }
     else{ //from bottom to top (= main to second screen)
@@ -91,10 +78,9 @@ export class ClickComponent extends BaseTasksComponent {
       this.taskEvaluationService.addScreenChange();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
       this.arrow!.style.visibility = 'hidden';
-      this.activeScreenChangeArea = this.screenChangeAreas![1];
       arrow = this.dualscreen.secondScreen_arrow.nativeElement;
     }
-        this.eyeInputService.moveArrowWithEyes(arrow, true);
+    this.eyeInputService.moveArrowWithEyes(arrow, true);
   }
 
   protected startEyeInput(){
@@ -217,9 +203,9 @@ export class ClickComponent extends BaseTasksComponent {
     this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
     this.getclickAreas();
     //Focus main window in the beginning, display arrow in the middle of the screen
-    this.dualscreen.focusMainWindow();
-    this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
+    
     this.arrow!.style.visibility = 'visible';
+    //start waiting for screen changes and clicks
     this.startScreenChangeDetection();
     document.addEventListener('mousedown', this.bound_changeOnClick);
   }
@@ -243,7 +229,6 @@ export class ClickComponent extends BaseTasksComponent {
     this.arrow!.style.visibility = 'hidden';
     this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
     document.exitPointerLock(); 
-    this.screenChangeDetection_interval?.clearInterval;
     this.dualscreen.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
     this.dualscreen.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
     document.removeEventListener('mousedown', this.bound_changeOnClick); 

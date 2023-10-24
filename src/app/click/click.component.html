@@ -1,5 +1,4 @@
 <dual-screen #dualscreen [initialOpening]="false" [contentHeight]="'50%'">
-    <div *ngIf="selectedInputType!=InputType.MOUSE" [ngClass]="['bottom screen-change-area', 'secondScreen']"></div>
     <div class="container" *ngIf="!clicked">
         <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']">
             <mat-card-title>Headline</mat-card-title>
@@ -22,11 +21,9 @@
         <div class="success" *ngIf="!error"> ✓ </div>
         <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
         <div style="text-align:center;">You will be redirected back to the task page in a moment...</div>
-    </div>
-    
+    </div>  
 </dual-screen>
 
-<div *ngIf="selectedInputType!=InputType.MOUSE" class="top screen-change-area"></div>
 <div class="container" *ngIf="!clicked">
     <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']">
         <mat-card-title>Lorem ipsum</mat-card-title>

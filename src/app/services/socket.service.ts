@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import io from 'socket.io-client';
 import { AppState } from '../state/app.state';
-import { changeXPos, changeYPos } from '../state/eyetracking/eyetracking.action';
+import { changeScreen, changeXPos, changeYPos } from '../state/eyetracking/eyetracking.action';
+import { selectCurrentScreen } from '../state/eyetracking/eyetracking.selector';
+import { Screens } from '../enums/screens';
 
 @Injectable({
   providedIn: 'root'
@@ -12,17 +14,33 @@ import { changeXPos, changeYPos } from '../state/eyetracking/eyetracking.action'
 export class SocketService {
 
   private socket : any;
+  private currentScreen$ : Observable<any> = this.store.select(selectCurrentScreen);
+  private destroy$ : Subject<boolean> = new Subject<boolean>();
+  private screen : Screens = Screens.MAINSCREEN;
 
   constructor(private store : Store<AppState>){
     this.socket = io('http://localhost:8080', {autoConnect: true, reconnection: true});
+    this.currentScreen$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(d => {
+        this.screen = d;
+    });
   }
 
   startSendingGazeData(){
+    console.log("start sending gaze data")
     this.socket.emit("startSendingGazeData");
     this.listenTo("gazeData").subscribe((data : any) => {
       //store current x and y pos
-      this.store.dispatch(changeXPos({newx: data.gaze_on_surfaces[0].norm_pos[0]})); //TODO warum mehrere gaze on surfaces und dann wieder keine?
-      this.store.dispatch(changeYPos({newy: data.gaze_on_surfaces[0].norm_pos[1]}));
+      if(data.gaze_on_surfaces[0]?.on_surf){ //gaze is on a surface
+        if(data.name != this.screen){ //has screen changed?
+          this.store.dispatch(changeScreen({newScreen: data.name}));
+        }
+        if(data.name == this.screen){ //update gaze data for current screen
+          this.store.dispatch(changeXPos({newx: data.gaze_on_surfaces[0].norm_pos[0]}));
+          this.store.dispatch(changeYPos({newy: data.gaze_on_surfaces[0].norm_pos[1]}));
+        }
+      }
     });
   }
 
