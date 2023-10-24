@@ -83,34 +83,7 @@ export class ClickComponent extends BaseTasksComponent {
     this.eyeInputService.moveArrowWithEyes(arrow, true);
   }
 
-  protected startEyeInput(){
-      this.clickAreas = [].slice.call(document.getElementsByClassName(this.className)) //necessary because different HTML elements for different sizes
-      for (let i = 0; i < this.clickAreas!.length; i++){
-        let clickArea = this.clickAreas![i] as HTMLElement;
-        let wentInsideAt : number|null = null; 
-        let inside : boolean = false;
-        this.intervals[i] = setInterval(() => {
-
-          if(clickArea){
-            inside = this.eyeInputService.areEyesInsideElement(clickArea);
-            if (inside == true){
-              if (!wentInsideAt) { //entered -> dwell time start
-                wentInsideAt = Date.now()
-                //visualize dwell time
-                clickArea.style.border = "5px solid #00000050";
-              }
-              else if (wentInsideAt + this.dwellTime < Date.now()) { //click
-                clickArea.style.border = "";
-                this.checkIfError(clickArea);
-              }
-            }
-            else{
-              wentInsideAt = null;
-              clickArea.style.border = "";
-            }
-          }
-        }, 100);
-      }
+  protected startEyeInput(){ //not needed for this experiment
   }
 
   protected startMix1Input(){
