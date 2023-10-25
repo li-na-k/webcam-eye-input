@@ -19,6 +19,10 @@ export class EyeInputService implements OnDestroy {
   private moveArrowInterval : any;
   private arrow : HTMLElement | null = null;
   private sandbox : HTMLElement | null = null;
+  private sbRight = 0; 
+  private sbBottom = 0;
+  private sbLeft = 0;
+  private sbTop = 0;
   private timeout : number = 1000; //in this branch: after what time is mouseInput interval considered to have ended (for TaskResult)
 
   private x = 0.0;
@@ -111,6 +115,10 @@ export class EyeInputService implements OnDestroy {
     }
     //assign method parameters to instance properties to be able to use them in moveArrowWithMouse()
     this.sandbox = sandbox; 
+    this.sbRight = this.sandbox!.getBoundingClientRect().right;
+    this.sbBottom = this.sandbox!.getBoundingClientRect().bottom;
+    this.sbLeft = this.sandbox!.getBoundingClientRect().left;
+    this.sbTop = this.sandbox!.getBoundingClientRect().top;
     this.arrow = arrow;
     this.timeout = timeout;
     await this.sandbox!.requestPointerLock(); 
@@ -137,11 +145,7 @@ export class EyeInputService implements OnDestroy {
       this.mouseInput = true;
       this.taskEvaluationService.endEyeMouseInterval(); //end previous EYE interval
     }
-    const sbRight = this.sandbox!.getBoundingClientRect().right; //TODO nicht jedes mal berechnen...
-    const sbBottom = this.sandbox!.getBoundingClientRect().bottom;
-    const sbLeft = this.sandbox!.getBoundingClientRect().left;
-    const sbTop = this.sandbox!.getBoundingClientRect().top;
-    this.moveArrowWithMouse(e, this.arrow!, [sbTop, sbRight, sbBottom, sbLeft]);
+    this.moveArrowWithMouse(e, this.arrow!, [this.sbTop, this.sbRight, this.sbBottom, this.sbLeft]);
     this.timeOutAfterMouseInput = setTimeout(() => {
       this.mouseInput = false;
       this.taskEvaluationService.endEyeMouseInterval(); //end previous MOUSE interval, timeout after mouse input (500ms) counts as mouse input
