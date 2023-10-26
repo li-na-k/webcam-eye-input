@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostListener, ViewChild } from '@angular/core';
 import { EyeInputService } from 'src/app/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
@@ -16,7 +16,7 @@ import { selectCurrentScreen } from '../state/eyetracking/eyetracking.selector';
   templateUrl: './click.component.html',
   styleUrls: ['./click.component.css']
 })
-export class ClickComponent extends BaseTasksComponent {
+export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
   @HostListener('body:mousemove', ['$event']) 
   onMouseMove(e : any) {
     if(this.dualscreen.getActiveScreen() == 2 && this.dualscreen.secondScreen_arrow && this.dualscreen.secondWindow){
@@ -46,6 +46,9 @@ export class ClickComponent extends BaseTasksComponent {
    super(store, cdRef, taskEvaluationService, randomizationService)
   }
 
+  ngAfterViewInit(){
+    this.getclickAreas();
+  }
   async getclickAreas(){
     const clickAreas_mainScreen = document.getElementsByClassName(this.className)
     const clickAreas_secondScreen = this.dualscreen.secondWindow.document.getElementsByClassName(this.className);
@@ -134,7 +137,6 @@ export class ClickComponent extends BaseTasksComponent {
   }
 
   protected startMouseInput(){
-    this.getclickAreas();
     for (let i = 0; i < this.clickAreas!.length; i++){
       let clickArea = this.clickAreas![i] as HTMLElement;
       clickArea.addEventListener('mousedown', this.bound_changeOnClick);
@@ -174,7 +176,6 @@ export class ClickComponent extends BaseTasksComponent {
 
   protected startMix2Input(){
     this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
-    this.getclickAreas();
     //Focus main window in the beginning, display arrow in the middle of the screen
     
     this.arrow!.style.visibility = 'visible';
