@@ -182,6 +182,7 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
     //start waiting for screen changes and clicks
     this.startScreenChangeDetection();
     document.addEventListener('mousedown', this.bound_changeOnClick);
+    this.mix2loaded = true;
   }
 
   public stopAllInputs(){

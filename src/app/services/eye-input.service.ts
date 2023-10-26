@@ -121,7 +121,9 @@ export class EyeInputService implements OnDestroy {
     this.sbTop = this.sandbox!.getBoundingClientRect().top;
     this.arrow = arrow;
     this.timeout = timeout;
-    await this.sandbox!.requestPointerLock(); 
+    if(document.pointerLockElement == null){ //if not already locked
+      await window.document.body.requestPointerLock();   
+    }
     this.arrow!.style.visibility = 'visible';
     this.arrow!.style.left = "0%";
     this.arrow!.style.top = "0%";
