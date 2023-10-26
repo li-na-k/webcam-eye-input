@@ -75,6 +75,7 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
       this.arrow!.style.visibility = 'visible';
       arrow = this.arrow!;
+      this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
@@ -82,6 +83,7 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
       this.arrow!.style.visibility = 'hidden';
       arrow = this.dualscreen.secondScreen_arrow.nativeElement;
+      this.eyeInputService.activateMix2Input(this.dualscreen.secondWindow.document.body, this.dualscreen.secondScreen_arrow.nativeElement, this.timeOutAfterMouseInput);
     }
     this.eyeInputService.moveArrowWithEyes(arrow, true);
   }
@@ -175,9 +177,7 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
   }
 
   protected startMix2Input(){
-    this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
-    //Focus main window in the beginning, display arrow in the middle of the screen
-    
+    this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput); //Start with main screen
     this.arrow!.style.visibility = 'visible';
     //start waiting for screen changes and clicks
     this.startScreenChangeDetection();
