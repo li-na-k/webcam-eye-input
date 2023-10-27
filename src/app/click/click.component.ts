@@ -17,7 +17,7 @@ import { SocketService } from '../services/socket.service';
   templateUrl: './click.component.html',
   styleUrls: ['./click.component.css']
 })
-export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
+export class ClickComponent extends BaseTasksComponent{
   @HostListener('body:mousemove', ['$event']) 
   onMouseMove(e : any) {
     if(this.dualscreen.getActiveScreen() == 2 && this.dualscreen.secondScreen_arrow && this.dualscreen.secondWindow){
@@ -53,13 +53,10 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
    super(store, cdRef, taskEvaluationService, randomizationService)
   }
 
-  ngAfterViewInit(){
-    this.getclickAreas();
-  }
   async getclickAreas(){
     const clickAreas_mainScreen = document.getElementsByClassName(this.className)
     const clickAreas_secondScreen = this.dualscreen.secondWindow.document.getElementsByClassName(this.className);
-    this.clickAreas = [].slice.call(clickAreas_mainScreen).concat([].slice.call(clickAreas_secondScreen)); 
+    this.clickAreas = Array.from(clickAreas_mainScreen).concat(Array.from(clickAreas_secondScreen)); 
   }
 
   private currentScreen$ : Observable<any> = this.store.select(selectCurrentScreen);
@@ -138,6 +135,7 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
 
   private bound_changeOnClick = this.changeOnClick.bind(this);
   private changeOnClick(ev : any){
+    this.getclickAreas(); //cannot be on afterViewInit because second window is not guaranteed to have loaded yet
     let currentClickArea : HTMLElement | null = null;
     let arrow = this.dualscreen.getActiveScreen()==2?this.dualscreen.secondScreen_arrow.nativeElement:this.arrow;
     let style = window.getComputedStyle(arrow);
