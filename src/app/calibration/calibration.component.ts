@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
+import { SocketService } from '../services/socket.service';
 
 @Component({
   selector: 'app-calibration',
@@ -11,7 +12,12 @@ export class CalibrationComponent{
 
   protected showCalibrationSecondScreen: boolean = false;
 
-  constructor() { }
+  constructor(protected socketService : SocketService) { 
+  }
+
+  startCalibration(){
+    this.socketService.startCalibration();
+  }
 
   @Output() calibrationDoneEvent = new EventEmitter<boolean>();
   //two-way data binding
@@ -59,9 +65,10 @@ export class CalibrationComponent{
   protected nextExplanation(){
     if(this.explanationNr >= (this.numberInstructions-1)){
       this.closePopup();
+      this.socketService.startCalibration();
     }
     this.explanationNr = this.explanationNr+1; 
-    //default diable next button on slide where second window should be opened
+    //default disable next button on slide where second window should be opened
     if(this.explanationNr == 2){
       this.disabledNext = true;
     }
