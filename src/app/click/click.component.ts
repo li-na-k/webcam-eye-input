@@ -91,22 +91,7 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
   protected startEyeInput(){ //not needed for this experiment
   }
 
-  protected startMix1Input(){
-    document.body.addEventListener('keydown', this.bound_Mix1Input); 
-  }
-
-  private bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
-  private Mix1Input(e : any){
-    if(e.keyCode == 13){
-      for (let i = 0; i < this.clickAreas!.length; i++){
-        let clickArea = this.clickAreas![i] as HTMLElement;
-        let inside : boolean = false;   
-        inside = this.eyeInputService.areEyesInsideElement(clickArea);
-        if (inside == true){ 
-          this.checkIfError(clickArea);
-        }
-      }
-    }
+  protected startMix1Input(){ //not needed for this experiment
   }
 
   protected checkIfError(clickArea : HTMLElement | null){
@@ -188,10 +173,6 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
   public stopAllInputs(){
     //end screen change detection
     clearInterval(this.screenChangeDetection_interval);
-    //end Eye Input
-    for(let i of this.intervals){clearInterval(i)};
-    //end Mix1 click event
-    document.body.removeEventListener('keydown', this.bound_Mix1Input); 
     //remove click event MOUSE input
     if(this.clickAreas){
       for (let i = 0; i < this.clickAreas!.length; i++){
