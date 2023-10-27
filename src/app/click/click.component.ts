@@ -10,6 +10,7 @@ import { InputType } from '../enums/input-type';
 import { Screens } from '../enums/screens';
 import { Observable, takeUntil } from 'rxjs';
 import { selectCurrentScreen } from '../state/eyetracking/eyetracking.selector';
+import { SocketService } from '../services/socket.service';
 @Component({
   selector: 'app-click',
   providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],
@@ -42,7 +43,13 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
 
   private screenChangeDetection_interval : any = null;
 
-  constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
+  constructor(
+    cdRef: ChangeDetectorRef, 
+    private eyeInputService : EyeInputService, 
+    store : Store<AppState>, 
+    taskEvaluationService : TaskEvaluationService, 
+    randomizationService : RandomizationService,
+    private webSocketService : SocketService) {
    super(store, cdRef, taskEvaluationService, randomizationService)
   }
 
@@ -61,7 +68,6 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
     this.currentScreen$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => {
-        console.log("new Screen", d)
         this.changeScreen(d)
       })
   }
@@ -162,6 +168,7 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
   }
 
   protected startMix2Input(){
+    this.webSocketService.startSendingGazeData();
     this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput); //Start with main screen
     this.arrow!.style.visibility = 'visible';
     //start waiting for screen changes and clicks
@@ -188,6 +195,7 @@ export class ClickComponent extends BaseTasksComponent implements AfterViewInit{
     this.dualscreen.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
     this.dualscreen.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
     document.removeEventListener('mousedown', this.bound_changeOnClick); 
+    this.webSocketService.stopSendingGazeData();
   }
 
   private backToTasksPage(success? : boolean){

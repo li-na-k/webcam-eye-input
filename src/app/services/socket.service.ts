@@ -48,6 +48,10 @@ export class SocketService {
     this.socket.emit("stopSendingGazeData");
   }
 
+  startCalibration(){
+    this.socket.emit("calibrate");
+  }
+
   private listenTo(event : string){
     return new Observable((subscriber) => {
       this.socket.on(event, (data : any) => {

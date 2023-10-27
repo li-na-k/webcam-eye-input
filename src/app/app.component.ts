@@ -3,15 +3,12 @@ import { Store } from '@ngrx/store';
 import { AppState } from './state/app.state';
 import { InputType } from './enums/input-type';
 import { Tasks } from './enums/tasks';
-
-import { CalibrationComponent } from './calibration/calibration.component';
 import { BaseTasksComponent } from './base-tasks/base-tasks.component';
 import { TaskEvaluationService } from './services/task-evaluation.service';
 import { RandomizationService } from './services/randomization.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ComponentCanDeactivate } from './component-can-deactivate';
 import { selectInputType, selectTask } from './state/expConditions/expconditions.selector';
-import { SocketService } from './services/socket.service';
 
 @Component({
   selector: 'app-root',
@@ -55,15 +52,13 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   constructor(private store : Store<AppState>,
     private cdRef: ChangeDetectorRef, 
     private taskEvaluationService : TaskEvaluationService,
-    protected randomizationService : RandomizationService,
-    private webSocketService : SocketService){}
+    protected randomizationService : RandomizationService){}
   
     ngAfterViewChecked(): void {
       this.cdRef.detectChanges();
     }
   
     ngOnInit(): void {
-    this.webSocketService.startSendingGazeData();
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => {
@@ -105,10 +100,6 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
         this.calibrationDone = false;
       }
     }
-  }
-
-  ngOnDestroy() {
-    this.webSocketService.stopSendingGazeData();
   }
 
   confirmSelection(){
