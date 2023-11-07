@@ -60,7 +60,6 @@
                     <img src="/assets/calibration_explanation.png" style="border-radius: 15px; width: 200px;" />
                 </div>
             </div>
-            <div style="margin-top: 15px;">To start the calibration, close this window with "OK".</div>
         </div>
         <div style="margin-top: 25px;">
             <button *ngIf="explanationNr!=3" [disabled]="disabledNext" class="nextButton" title="Please click the 'Open second window' button first."
@@ -68,7 +67,7 @@
                 Next <mat-icon style="margin-left: 5px;" fontIcon="arrow_forward"></mat-icon>
             </button>
             <button *ngIf="explanationNr==3" style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
-                OK <mat-icon style="margin-left: 5px;" fontIcon="done"></mat-icon>
+                Start calibration <mat-icon style="margin-left: 5px;" fontIcon="done"></mat-icon>
             </button>
             <button *ngIf="explanationNr!=0" style="display: flex; align-items: center; float: left;" type="button" (click)="previousExplanation();">
                 <mat-icon style="margin-right: 5px;" fontIcon="arrow_back"></mat-icon> Back
