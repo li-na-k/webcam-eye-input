@@ -19,7 +19,6 @@ import { selectInputType, selectTask } from './state/expConditions/expconditions
 export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewChecked{
   title = 'eye-input-webpage';
   @ViewChild(BaseTasksComponent) baseTaskComponent! : BaseTasksComponent;
-  //@ViewChild(CalibrationComponent) calibrationCmp : CalibrationComponent = new CalibrationComponent(this.webgazerService);
 
   // @HostListener allows us to also guard against browser refresh, close, etc.
   @HostListener('window:beforeunload')

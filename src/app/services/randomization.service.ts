@@ -85,13 +85,14 @@ export class RandomizationService {
 
   private nextTask() : void{
     this.randomizeNewTask()
-    this.repsDone = 0;
+    this.repsDone = 8;
     if(this.tasksDone < this.taskOrder.length){
       this.selectTask(this.taskOrder[this.tasksDone])
       this.tasksDone++;
       this.messageSubject.next('nextTask'); // emit event: popup with explanation + confirm button that activates input method should be displayed in app.component
     }
     else{
+      this.messageSubject.next('nextTask');
       this.showFinalPageComponent = true;
       this.nextInputMethod();
     }

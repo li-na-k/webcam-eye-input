@@ -31,10 +31,8 @@ export class ClickComponent extends BaseTasksComponent{
 
   @ViewChild('dualscreen') dualscreen! : any;
 
-  private readonly dwellTime = 1000;
   private className : string = "clickArea"
   private clickAreas : Array<Element> | null = null; //all target areas 
-  private intervals : any[] = [0,0,0,0]; //one for each click Area
   protected Sizes = Sizes;
 
   private taskElementID : string = "click-task"; //area that shows success when clicked
@@ -196,14 +194,12 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   private backToTasksPage(success? : boolean){
-    this.stopAllInputs();
     setTimeout(() =>  {
       this.clicked = false;
       this.error = false;
       if(success){
         this.randomizationService.nextRep(); 
       }
-      this.activateSelectedInputType();
     }, 4000)          
   }
 
