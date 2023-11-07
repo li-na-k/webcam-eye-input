@@ -37,7 +37,7 @@ export class RandomizationService {
   public selectedSize : Sizes =  this.sizeOrder[0];
 
   //order: target on screen 2 or 1?
-  public successTargetOnScreen1Order : boolean[] = [true, false, true, false, true, false, true, false, true, false]; //TODO: randomize??
+  public successTargetOnScreen1Order : boolean[] = [true, false, true, false, true, false, true, false, true, false];
   public successTargetOnScreen1 : boolean = this.successTargetOnScreen1Order[0];
 
   //final page after finishing inputs 

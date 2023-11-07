@@ -121,7 +121,20 @@ export class TaskEvaluationService {
   }
 
   exportResults(){
-    this.exportToCsv(this.results, "myresults", ["task", "inputType", "size", "duration", "errors", "aborted"]);
+    this.exportToCsv(this.results, "myresults", [
+      "task", 
+      "inputType",
+      "size", 
+      "duration", 
+      "errors", 
+      "aborted", 
+      "screenChanges", 
+      "targetOnMainScreen",
+      "eyeMouseDistribution",
+      "mouseIntervalsDuration",
+      "eyeIntervalsDuration",
+      "intervalChanges"
+    ]);
   }
 
   //source: https://dev.to/idrisrampurawala/exporting-data-to-excel-and-csv-in-angular-3643#export-to-csv 
