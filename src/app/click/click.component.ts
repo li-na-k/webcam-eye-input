@@ -8,7 +8,7 @@ import { RandomizationService } from '../services/randomization.service';
 import { Sizes } from '../enums/sizes';
 import { InputType } from '../enums/input-type';
 import { Screens } from '../enums/screens';
-import { Observable, takeUntil } from 'rxjs';
+import { Observable, distinctUntilChanged, takeUntil } from 'rxjs';
 import { selectCurrentScreen } from '../state/eyetracking/eyetracking.selector';
 import { SocketService } from '../services/socket.service';
 @Component({
@@ -63,7 +63,7 @@ export class ClickComponent extends BaseTasksComponent{
   private startScreenChangeDetection() {
     console.log("screen detection started")
     this.currentScreen$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe(d => {
         this.changeScreen(d)
       })
@@ -71,10 +71,10 @@ export class ClickComponent extends BaseTasksComponent{
 
 
   private changeScreen(toScreen : Screens){
+    this.taskEvaluationService.addScreenChange();
     let arrow : any = null;
     if(toScreen == Screens.MAINSCREEN){ //from top to bottom (= second to main screen)
       this.dualscreen.focusMainWindow();
-      this.taskEvaluationService.addScreenChange();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
       this.arrow!.style.visibility = 'visible';
       arrow = this.arrow!;
@@ -82,7 +82,6 @@ export class ClickComponent extends BaseTasksComponent{
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
-      this.taskEvaluationService.addScreenChange();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
       this.arrow!.style.visibility = 'hidden';
       arrow = this.dualscreen.secondScreen_arrow.nativeElement;

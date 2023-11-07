@@ -8,6 +8,7 @@ import { Tasks } from '../enums/tasks';
 import { AppState } from '../state/app.state';
 import { selectInputType, selectTask } from '../state/expConditions/expconditions.selector';
 import * as FileSaver from 'file-saver';
+import { Screens } from '../enums/screens';
 
 type NewType = Observable<Tasks>;
 
@@ -85,7 +86,11 @@ export class TaskEvaluationService {
   addScreenChange(){
     if(this.taskRunning){
       let result : TaskResult = this.results[this.results.length-1]; //current result object
-      result.screenChanges.push(Date.now()-result.startTime);
+      let lastChange : number = result.screenChanges.length==0?0:result.screenChanges[result.screenChanges.length-1]
+      let currentChange : number = Date.now()-result.startTime;
+      if(!(currentChange - lastChange < 50)){
+        result.screenChanges.push(currentChange);
+      }
     }
   }
 
@@ -143,7 +148,7 @@ export class TaskEvaluationService {
       console.error("No results data found.")
       return;
     }
-    const separator = ',';
+    const separator = ';';
     const keys : string[] = Object.keys(rows[0]).filter(k => {
       if (columns?.length) { //columns specified?
         return columns.includes(k);

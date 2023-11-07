@@ -47,11 +47,7 @@ export class RandomizationService {
   messageSubject = new Subject();
   
   constructor(private store : Store<AppState>, private taskEvalutationService : TaskEvaluationService) { 
-    this.randomize();
-    console.log(this.inputOrder);
-    console.log(this.taskOrder);
-    console.log(this.sizeOrder);
-    console.log(this.positionOrder);
+    this.randomizeExperiment();
 
     this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak possible
       .subscribe(d => {
@@ -88,7 +84,7 @@ export class RandomizationService {
   }
 
   private nextTask() : void{
-    this.shuffle(this.sizeOrder);
+    this.randomizeNewTask()
     this.repsDone = 0;
     if(this.tasksDone < this.taskOrder.length){
       this.selectTask(this.taskOrder[this.tasksDone])
@@ -174,13 +170,24 @@ export class RandomizationService {
     }
   }
 
-  private randomize() : void{
+  private randomizeExperiment() : void{
     this.shuffle(this.inputOrder);
     this.shuffle(this.taskOrder);
-    this.shuffle(this.sizeOrder); 
-    this.shuffle(this.positionOrder);
-    this.shuffle(this.successTargetOnScreen1Order);
-    this.selectedSize = this.sizeOrder[0]; //first size
+    console.log(this.inputOrder);
+    console.log(this.taskOrder);
   }
+
+  private randomizeNewTask(){
+    this.shuffle(this.sizeOrder); 
+    this.shuffle(this.successTargetOnScreen1Order);
+    console.log(this.sizeOrder);
+    console.log(this.successTargetOnScreen1Order);
+    this.selectedSize = this.sizeOrder[0]; //first size
+    this.successTargetOnScreen1 = this.successTargetOnScreen1Order[0]; //first screen
+    this.taskEvalutationService.selectedSize = this.selectedSize;
+    this.taskEvalutationService.targetOnMainScreen = this.successTargetOnScreen1;
+  }
+
+  //note: position shuffled on every rep
 
 }
