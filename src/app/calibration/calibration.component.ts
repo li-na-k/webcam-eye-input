@@ -61,7 +61,7 @@ export class CalibrationComponent{
   }
 
   protected disabledNext = false;
-  private numberInstructions : number = 4;
+  private numberInstructions : number = 3;
   protected nextExplanation(){
     if(this.explanationNr >= (this.numberInstructions-1)){
       this.closePopup();

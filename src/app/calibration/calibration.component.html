@@ -12,25 +12,6 @@
             <div style="margin-top: 15px;">Now click on "Next".</div>
         </div>
         <div *ngIf="explanationNr==1">
-            In the upper right corner you can see the recording of your webcam. 
-            <div style="display: flex; margin: 25px 0px;">
-                <div style="text-align: left; margin-top: 15px;">
-                    Please make sure ... 
-                    <ul>
-                        <li>that your face is very well illuminated.</li>
-                        <li>that your face is always inside the green square. Ideally, your face should fill the square completely.</li>
-                        <li>that the square always remains green. A red square indicates that your face position is wrong.</li>
-                    </ul>
-                </div>
-                <div>
-                    <img src="/assets/laptop_window_calibration.png" style="border-radius: 15px; width: 200px;" />
-                </div>
-            </div>
-            Find a comfortable position for the calibration that meets these criteria and maintain this position.
-            Keep your head still and try not to move it.
-            <div style="margin-top: 15px;">Now click on "Next".</div>
-        </div>
-        <div *ngIf="explanationNr==2">
             For this experiment, two browser windows are necessary.<br>
             Click the button below to open the second window.<br>
             <div style="margin: 15px 0px 15px 0px"><button (click)="dualscreen.openSecondWindow(); this.disabledNext = false;">Open second window</button></div>
@@ -38,8 +19,7 @@
                 <div style="text-align: left; margin-top: 15px;">
                     Then ... 
                     <ul>
-                        <li>Please allow the second window to use your webcam.</li>
-                        <li>Move it to your upper screen.</li>
+                        <li>Move the second window to your upper screen.</li>
                         <li>Expand the window to full size.</li>
                     </ul>
                 </div>
@@ -48,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="explanationNr==3">
+        <div *ngIf="explanationNr==2">
             <div style="display: flex; gap: 10px;">
                 <div style="text-align: left; margin-top: 15px;">
                     To ensure that the eye tracking is as accurate as possible, the system must first be calibrated. <br>
@@ -62,11 +42,11 @@
             </div>
         </div>
         <div style="margin-top: 25px;">
-            <button *ngIf="explanationNr!=3" [disabled]="disabledNext" class="nextButton" title="Please click the 'Open second window' button first."
+            <button *ngIf="explanationNr!=2" [disabled]="disabledNext" class="nextButton" title="Please click the 'Open second window' button first."
                 style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
                 Next <mat-icon style="margin-left: 5px;" fontIcon="arrow_forward"></mat-icon>
             </button>
-            <button *ngIf="explanationNr==3" style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
+            <button *ngIf="explanationNr==2" style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
                 Start calibration <mat-icon style="margin-left: 5px;" fontIcon="done"></mat-icon>
             </button>
             <button *ngIf="explanationNr!=0" style="display: flex; align-items: center; float: left;" type="button" (click)="previousExplanation();">
@@ -75,8 +55,6 @@
         </div>
     </div>
 </div>
-
-
 
 <div *ngIf="!showExplanation" style="text-align: center;">
     <h2 style="width: 100%;">Calibration done!</h2>
@@ -91,4 +69,8 @@
 </div>
 
 <dual-screen #dualscreen>
+    <div *ngIf="!showCalibrationSecondScreen">
+        Great! This is the second window. Do not close it before finsihing the experiment.
+        <div style="font-size: 350px; color: lightgray; line-height: 350px; text-align: center;">2</div>
+    </div>
 </dual-screen>
