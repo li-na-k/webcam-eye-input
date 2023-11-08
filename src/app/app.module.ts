@@ -26,6 +26,7 @@ import { FinalPageComponent } from './final-page/final-page.component';
 import { TestInputMethodsComponent } from './test-input-methods/test-input-methods.component';
 import { DualScreenComponent } from './dual-screen/dual-screen.component';
 import { SurfaceTagsComponent } from './surface-tags/surface-tags.component';
+import { InitialExplanationComponent } from './initial-explanation/initial-explanation.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { SurfaceTagsComponent } from './surface-tags/surface-tags.component';
     FinalPageComponent,
     TestInputMethodsComponent,
     DualScreenComponent,
-    SurfaceTagsComponent
+    SurfaceTagsComponent,
+    InitialExplanationComponent
   ],
   imports: [
     BrowserModule,

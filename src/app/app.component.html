@@ -60,6 +60,8 @@
         (calibrationDoneEvent)="updateCalibrationDone($event)"
         [(showExplanation)]="showCalibExplanation">
     </app-calibration>
+    <!-- initial explanation contains first calibration (for test mode) -->
+    <app-initial-explanation *ngIf="showInitialExplanation" (closeMe)="setShowInitialExplanation(false);"></app-initial-explanation>
 
     <app-test-input-methods (endTestEvent)="showTestMode = false;" *ngIf="calibrationDone && showTestMode && !(randomizationService.everythingDone || randomizationService.showFinalPageComponent)"></app-test-input-methods>
 
