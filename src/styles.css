@@ -44,6 +44,14 @@ button:disabled{
     color: #666666;
 }
 
+.linkstylebutton{
+    background-color: transparent;
+    color: black;
+    padding: 0px;
+    text-decoration: underline;
+    font-size: inherit;
+}
+
 .arrow {
     position: fixed;
     top: -10px;

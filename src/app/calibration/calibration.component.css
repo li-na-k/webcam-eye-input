@@ -34,11 +34,3 @@
 .nextButton:disabled{
     pointer-events: auto;
 }
-
-.linkstylebutton{
-    background-color: transparent;
-    color: black;
-    padding: 0px;
-    text-decoration: underline;
-    font-size: inherit;
-}
