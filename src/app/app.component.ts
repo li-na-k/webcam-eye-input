@@ -46,7 +46,6 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
 
   //task explanation
   protected showTaskPopup : boolean = false; 
-  protected showInputMethodPopup : boolean = true;
 
   constructor(private store : Store<AppState>,
     private cdRef: ChangeDetectorRef, 

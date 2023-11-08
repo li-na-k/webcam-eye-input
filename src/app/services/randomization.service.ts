@@ -125,28 +125,6 @@ export class RandomizationService {
   }
 
   private setInstruction() : void{
-    if(this.input == InputType.EYE){
-      this.inputMethodInstructions = "Move the red dot with your eye-gaze."
-      switch(this.task){
-        case Tasks.SELECT:
-            this.taskInstructions = "Move the red dot over the button that says 'Select me!' for some seconds to select it."
-            break;
-        case Tasks.TEST:
-            this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button below, move the dot over it for some seconds."
-            break;
-      }
-    }
-    if(this.input == InputType.MIX1){
-      this.inputMethodInstructions = "Move the red dot with your eye-gaze. To confirm the position press ENTER."
-      switch(this.task){
-        case Tasks.SELECT:
-            this.taskInstructions = "Move the red dot over the button that says 'Select me!' and confirm with ENTER."
-            break;
-        case Tasks.TEST:
-            this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button below, move the dot over it and confirm with ENTER."
-            break;
-      }
-    }
     if(this.input == InputType.MIX2){
       this.inputMethodInstructions = "Move the cursor with your eye-gaze. Move your mouse to override the eye input and thus do the finetuning of the cursor movement."
       switch(this.task){
