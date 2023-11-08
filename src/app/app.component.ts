@@ -103,7 +103,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     }
   }
 
-  confirmSelection(){
+  startExperiment(){
     this.baseTaskComponent.activateSelectedInputType();
     this.taskEvaluationService.startTask();
   }

@@ -1,4 +1,3 @@
-
     <div class="explanation ex1">
         <mat-icon class="arrow-explanation material-symbols-rounded">straight</mat-icon>
         Here you can see which task you are supposed to solve and which input method you are currently using.
@@ -15,8 +14,6 @@
      
         <div style="display: inline-flex;">
             <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Mouse-chip" class="chip" (click)="selectInputType(Input.MOUSE); this.blur($event)">Mouse</button>
-            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye-chip" class="chip" (click)="selectInputType(Input.EYE); this.blur($event)">Eye</button>
-            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye + ENTER-chip" class="chip" (click)="selectInputType(Input.MIX1); this.blur($event)">Eye + ENTER</button>
             <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye + Mouse-chip" class="chip" (click)="selectInputType(Input.MIX2); this.blur($event)">Eye + Mouse</button>
             <span style="padding: 0px 10px 0px 10px; font-size: 20px;"> | </span>
             <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye + Mouse-chip" class="chip" (click)="endTestMode()">Exit test mode and start experiment</button>

@@ -14,9 +14,11 @@
     </div>
 </div> -->
 
+<!-- header -->
 <div *ngIf="!randomizationService.showFinalPageComponent" class="button-header-container">
 
     <div *ngIf="calibrationDone" 
+    <!-- progress + skip -->
         style="background-color: white; border-radius: 15px; padding: 10px 15px; 
         display: flex; justify-content: space-between; align-items:center; width: 300px;">
         <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.sizeOrder; index as i">
@@ -70,10 +72,11 @@
     <img id="arrow" class="arrow" src="assets/arrow.png" />
 
     <div style="height: 100%;" *ngIf="!showTestMode && calibrationDone && !(randomizationService.everythingDone || randomizationService.showFinalPageComponent)"> 
+        <!-- click task -->
         <div style="height: 100%;" id="experimentSandbox">            
             <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
         </div>
-
+        <!-- explanation pop up -->
         <div *ngIf="showTaskPopup" style="display:flex;justify-content:center;">
             <div class="popup-background"></div>
                 <div class="Popup">
@@ -96,7 +99,7 @@
                     <div style="margin-bottom: 20px;">
                         <strong style="font-size: 25px; vertical-align: top;">> </strong>{{randomizationService.taskInstructions}}
                     </div>
-                    <button (click)="showTaskPopup=false; confirmSelection(); this.blur($event)">Start task</button>
+                    <button (click)="showTaskPopup=false; startExperiment(); this.blur($event)">Start task</button>
                     <div *ngIf="selectedInputType != InputType.MIX2" style="width: 200px; font-size: 12px; line-height:15px; margin: auto; margin-top: 15px;">If you cannot complete a task, click the skip button at the top.</div>
                     <div *ngIf="selectedInputType == InputType.MIX2" style="width: 200px; font-size: 12px; line-height:15px; margin: auto; margin-top: 15px;">If you cannot complete a task, press esc and then click the skip button.</div>           
                 </div>

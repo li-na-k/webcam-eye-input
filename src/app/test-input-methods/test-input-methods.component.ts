@@ -15,9 +15,7 @@ import { Tasks } from '../enums/tasks';
 })
 export class TestInputMethodsComponent extends BaseTasksComponent implements OnInit, OnDestroy, AfterViewInit {
   
-    private readonly dwellTime = 1000;
     private clickArea : HTMLElement | null = null; //all areas
-    private interval : any = 0; //one for each click Area
     protected Input = InputType;
   
     private taskElementID : string = "click-task"; //area that shows success when clicked
@@ -47,49 +45,6 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       //mouse as first input method
       this.selectInputType(InputType.MOUSE);
     }
-    
-    protected startEyeInput(){
-          let wentInsideAt : number|null = null; 
-          let inside : boolean = false;
-          this.interval = setInterval(() => {
-  
-            if(this.clickArea){
-              inside = this.eyeInputService.areEyesInsideElement(this.clickArea);
-              if (inside == true){
-                if (!wentInsideAt) { //entered -> dwell time start
-                  wentInsideAt = Date.now()
-                  //visualize dwell time
-                  this.clickArea.style.border = "5px solid #00000050";
-                }
-                else if (wentInsideAt + this.dwellTime < Date.now()) { //click
-                  this.clickArea.style.border = "";
-                  this.addSuccess();
-                  wentInsideAt = Date.now();
-                }
-              }
-              else{
-                wentInsideAt = null;
-                this.clickArea.style.border = "";
-              }
-            }
-          }, 100);
-    }
-  
-    protected startMix1Input(){
-      document.body.addEventListener('keydown', this.bound_Mix1Input); 
-    }
-  
-    private bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
-    private Mix1Input(e : any){
-      if(e.keyCode == 13){
-          let inside : boolean = false;   
-          inside = this.eyeInputService.areEyesInsideElement(this.clickArea!);
-          if (inside == true){ 
-            this.addSuccess();
-          }
-      }
-    }
-  
 
     public addSuccess(){
       this.taskEvaluationService.playAudio();
@@ -100,7 +55,6 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
         this.success = false;
       },2000);
     }
-  
   
     protected startMouseInput(){
       this.clickArea!.addEventListener('mousedown', this.bound_changeOnClick);
@@ -129,10 +83,6 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     }
   
     public stopAllInputs(){
-      //end Eye Input
-      clearInterval(this.interval);
-      //end Mix1 click event
-      document.body.removeEventListener('keydown', this.bound_Mix1Input); 
       //remove click event MOUSE input
       if(this.clickArea){
        this.clickArea.removeEventListener('mousedown', this.bound_changeOnClick)
@@ -173,6 +123,13 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       this.randomizationService.selectInputType(this.originalFirstInputMethod); 
       this.activateSelectedInputType(); 
     }
-  
+
+    protected override startMix1Input(): void {
+      //not needed
+    }
+
+    protected startEyeInput(){ 
+      //not needed
+    }
   }
   

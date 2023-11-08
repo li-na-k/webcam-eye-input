@@ -64,14 +64,12 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   public activateSelectedInputType(){
     console.log("activate selected input type: ", this.selectedTask + " " + this.selectedInputType);
-    //TODO this.webgazerService.resumeWebgazer();
     this.cdRef.detectChanges();
     this.stopAllInputs();
     if(this.selectedInputType == InputType.EYE){
       this.startEyeInput();
     }
     if(this.selectedInputType == InputType.MOUSE){
-      //TODO this.webgazerService.pauseWebgazer();
       this.startMouseInput()
     }
     if(this.selectedInputType == InputType.MIX1){
