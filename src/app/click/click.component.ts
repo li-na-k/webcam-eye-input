@@ -124,6 +124,7 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   protected startMouseInput(){
+    this.getclickAreas();
     for (let i = 0; i < this.clickAreas!.length; i++){
       let clickArea = this.clickAreas![i] as HTMLElement;
       clickArea.addEventListener('mousedown', this.bound_changeOnClick);
@@ -131,8 +132,8 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   private bound_changeOnClick = this.changeOnClick.bind(this);
-  private changeOnClick(ev : any){
-    this.getclickAreas(); //cannot be on afterViewInit because second window is not guaranteed to have loaded yet
+  private async changeOnClick(ev : any){
+    await this.getclickAreas(); //cannot be on afterViewInit because second window is not guaranteed to have loaded yet
     let currentClickArea : HTMLElement | null = null;
     let arrow = this.dualscreen.getActiveScreen()==2?this.dualscreen.secondScreen_arrow.nativeElement:this.arrow;
     let style = window.getComputedStyle(arrow);
@@ -185,7 +186,9 @@ export class ClickComponent extends BaseTasksComponent{
     //MIX2
     this.mix2loaded = false;
     this.arrow!.style.visibility = 'hidden';
-    this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
+    if(this.dualscreen.secondScreen_arrow){
+      this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
+    }
     document.exitPointerLock(); 
     this.dualscreen.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
     this.dualscreen.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
@@ -200,7 +203,10 @@ export class ClickComponent extends BaseTasksComponent{
       if(success){
         this.randomizationService.nextRep(); 
       }
-    }, 4000)          
+      if(this.selectedInputType == InputType.MOUSE){ //to add eventListeners to new clickAreas
+        this.activateSelectedInputType();
+      }
+    }, 4000)   
   }
 
 }
