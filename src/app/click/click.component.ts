@@ -36,7 +36,6 @@ export class ClickComponent extends BaseTasksComponent{
   protected Sizes = Sizes;
 
   private taskElementID : string = "click-task"; //area that shows success when clicked
-  protected  clicked : boolean = false;
   protected error : boolean = false;
 
   private screenChangeDetection_interval : any = null;
@@ -98,7 +97,6 @@ export class ClickComponent extends BaseTasksComponent{
       console.log("check if error click area", clickArea)
       let success = false;
       if(clickArea){ //if not clicked outside of click area
-        this.clicked = true;
         //Check if right area clicked
         if(clickArea?.id != this.taskElementID && clickArea.parentElement?.id != this.taskElementID){
           this.error = true;
@@ -109,9 +107,6 @@ export class ClickComponent extends BaseTasksComponent{
           success = true;
         }
         this.backToTasksPage(success) //timeout starts
-      }
-      else{
-        this.clicked = false;
       }
   }
 
@@ -152,9 +147,6 @@ export class ClickComponent extends BaseTasksComponent{
           currentClickArea = clickArea;
           break; //exit for loop as soon as clicked area found
         }
-      }
-      if(currentClickArea == null || this.pointerLockStopped){ 
-        this.clicked = false;
       }
     }
     if(this.selectedInputType == InputType.MOUSE){
@@ -197,16 +189,13 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   private backToTasksPage(success? : boolean){
-    setTimeout(() =>  {
-      this.clicked = false;
       this.error = false;
       if(success){
         this.randomizationService.nextRep(); 
       }
       if(this.selectedInputType == InputType.MOUSE){ //to add eventListeners to new clickAreas
         this.activateSelectedInputType();
-      }
-    }, 4000)   
+      } 
   }
 
 }

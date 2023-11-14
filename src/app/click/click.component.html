@@ -1,5 +1,5 @@
 <dual-screen #dualscreen [initialOpening]="false" [contentHeight]="'50%'">
-    <div class="container" *ngIf="!clicked">
+    <div class="container">
         <!-- <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']">
             <mat-card-title>Headline</mat-card-title>
         </mat-card> -->
@@ -17,14 +17,9 @@
             <mat-card-title>Do not Select me!</mat-card-title>
         </mat-card> -->
     </div>
-    <div *ngIf="clicked">
-        <div class="success" *ngIf="!error"> ✓ </div>
-        <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
-        <div style="text-align:center;">You will be redirected back to the task page in a moment...</div>
-    </div>  
 </dual-screen>
 
-<div class="container" *ngIf="!clicked">
+<div class="container">
     <!-- <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']">
         <mat-card-title>Lorem ipsum</mat-card-title>
     </mat-card> -->
@@ -50,12 +45,6 @@
     <!-- <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3], 'clickArea']">
         <mat-card-title>Lorem Ipsum</mat-card-title>
     </mat-card> -->
-</div>
-   
-<div *ngIf="clicked">
-    <div class="success" *ngIf="!error"> ✓ </div>
-    <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
-    <div style="text-align:center;">You will be redirected back to the task page in a moment...</div>
 </div>
 
 <app-popup-pointer-lock-stop *ngIf="pointerLockStopped" (addSuccess)="addSuccess(true)" (startMix2)="activateSelectedInputType()"></app-popup-pointer-lock-stop>
