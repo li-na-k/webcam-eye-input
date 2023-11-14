@@ -23,7 +23,8 @@
 }
 
 mat-card{
-    border: 2px solid var(--blue);
+    background-color: var(--apricot);
+    color: #fff;
     margin: 5px;
     border-radius: 15px;
     padding: 20px;
