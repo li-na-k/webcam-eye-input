@@ -36,8 +36,8 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   protected InputType = InputType;
   protected TaskType = Tasks;
 
-  //calibration status
-  protected calibrationDone : boolean = false;
+  protected showRecalibration : boolean = false; //set false when re-calibration needed
+
   //calibration explanation popup
   protected showInitialExplanation : boolean = true;
   protected setShowInitialExplanation(value : boolean){
@@ -84,23 +84,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
 
   ngAfterViewInit(){
     this.randomizationService.nextInputMethod();
-    this.calibrationDone = false; //not using this.setCalibrationDone(false) here because in the beginning a calibration is needed (for test mode) even if first input is mouse
     this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true
-  }
-
-  protected updateCalibrationDone(done : boolean){ 
-    if(done){ //calibration should NOT be shown next task
-      this.calibrationDone = true;
-      this.showCalibExplanation = false; //as soon as (first) calibration is done: explanation will not be shown second time
-    }
-    else{ //SHOW calibration next task
-      if(this.selectedInputType == InputType.MOUSE){ 
-        this.calibrationDone = true; //no calibration needed if mouse input
-      }
-      else{
-        this.calibrationDone = false;
-      }
-    }
   }
 
   startExperiment(){

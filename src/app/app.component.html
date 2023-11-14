@@ -1,24 +1,10 @@
 <app-header></app-header>
 <app-surface-tags></app-surface-tags>
 
-<!-- <div *ngIf="!webgazerService.webgazerLoaded" class="FlexboxCentered"> 
-    <div class="popup-full-background"></div>
-    <div class="Popup-blue">            
-        <mat-spinner [diameter]="30" ></mat-spinner>
-        <div>
-            Please wait. Everything is being prepared...
-        </div>            
-        <div style="padding-top: 30px; font-weight: bold;">
-            If your browser asks for permission to use your camera, please click "Allow".
-        </div>        
-    </div>
-</div> -->
-
 <!-- header -->
 <div *ngIf="!randomizationService.showFinalPageComponent" class="button-header-container">
-
-    <div *ngIf="calibrationDone" 
     <!-- progress + skip -->
+    <div *ngIf="!showRecalibration" 
         style="background-color: white; border-radius: 15px; padding: 10px 15px; 
         display: flex; justify-content: space-between; align-items:center; width: 300px;">
         <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.sizeOrder; index as i">
@@ -29,20 +15,7 @@
         <button [disabled]="showTestMode" *ngIf="selectedInputType != InputType.MIX2" style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">Skip</button>
     </div>
 
-    <button class="button-header" style="margin: 0px 10px;" type="button" *ngIf="!calibrationDone"
-        (click)="updateCalibrationDone(true); this.blur($event)">Skip calibration
-    </button>
-    
-    <span *ngIf="!calibrationDone" style="background-color: white; padding: 10px 15px; border-radius: 15px; height: 70px; text-align: center;">
-        <div>
-            Click each point until all are completely green.
-        </div>
-        <button class="button-header" mat-icon-button style="margin: 10px 10px;" type="button" (click)="showCalibExplanation = true; this.blur($event);">
-            <mat-icon>question_mark</mat-icon>
-        </button>
-    </span>
-
-    <span class="white-box" *ngIf="calibrationDone" >
+    <span class="white-box" *ngIf="!showRecalibration" >
         <div>
             <span style="font-weight: bold;">{{selectedTask$ | async}}</span>
             with 
@@ -58,20 +31,19 @@
 <!-- content -->
 <div id="content" class="content" >
 
-    <app-calibration *ngIf="!calibrationDone && !randomizationService.everythingDone" 
-        (calibrationDoneEvent)="updateCalibrationDone($event)"
-        [(showExplanation)]="showCalibExplanation">
-    </app-calibration>
     <!-- initial explanation contains first calibration (for test mode) -->
     <app-initial-explanation *ngIf="showInitialExplanation" (closeMe)="setShowInitialExplanation(false);"></app-initial-explanation>
 
-    <app-test-input-methods (endTestEvent)="showTestMode = false;" *ngIf="calibrationDone && showTestMode && !(randomizationService.everythingDone || randomizationService.showFinalPageComponent)"></app-test-input-methods>
+    <!-- re-calibration for mix2 -->
+    <app-calibration *ngIf="showRecalibration && !randomizationService.everythingDone"></app-calibration>
 
-    <app-final-page (calibrationDoneEvent)="updateCalibrationDone($event)" *ngIf="randomizationService.everythingDone || randomizationService.showFinalPageComponent"></app-final-page>
+    <app-test-input-methods (endTestEvent)="showTestMode=false;" *ngIf="!showRecalibration && showTestMode && !(randomizationService.everythingDone || randomizationService.showFinalPageComponent)"></app-test-input-methods>
+
+    <app-final-page *ngIf="randomizationService.everythingDone || randomizationService.showFinalPageComponent"></app-final-page>
     
     <img id="arrow" class="arrow" src="assets/arrow.png" />
 
-    <div style="height: 100%;" *ngIf="!showTestMode && calibrationDone && !(randomizationService.everythingDone || randomizationService.showFinalPageComponent)"> 
+    <div style="height: 100%;" *ngIf="!showInitialExplanation && !showTestMode && !showRecalibration && !(randomizationService.everythingDone || randomizationService.showFinalPageComponent)"> 
         <!-- click task -->
         <div style="height: 100%;" id="experimentSandbox">            
             <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>

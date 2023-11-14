@@ -1,76 +1,36 @@
-<!-- explanation popup -->
-<div *ngIf="showExplanation" class="FlexboxCentered">
-    <div class="popup-background">
-    </div>
-    <div class="Popup" style="width: 60%;">
+<div class="popup-background"></div>
+<div *ngIf="!calibrationDone">
+    <div class="Popup">
         <div class="popup-header">
-            <button class="Popup-close" (click)="closePopup()">×</button>
+            Re-Calibration necessary!
         </div>
-        <div *ngIf="explanationNr==0">
-            Before you start, please click through this short guide and read it carefully. 
-            If you want to review the instructions later, click on the question mark icon ( <mat-icon style="vertical-align: middle;">help_outline</mat-icon> ).
-            <div style="margin-top: 15px;">Now click on "Next".</div>
-        </div>
-        <div *ngIf="explanationNr==1">
-            For this experiment, two browser windows are necessary.<br>
-            Click the button below to open the second window.<br>
-            <div style="margin: 15px 0px 15px 0px"><button (click)="dualscreen.openSecondWindow(); this.disabledNext = false;">Open second window</button></div>
-            <div style="display: flex; justify-content: space-around; margin: 25px 0px;">
-                <div style="text-align: left; margin-top: 15px;">
-                    Then ... 
-                    <ul>
-                        <li>Move the second window to your upper screen.</li>
-                        <li>Expand the window to full size.</li>
-                    </ul>
-                </div>
-                <div>
-                    <img src="/assets/second_screen_explanation.png" style="border-radius: 15px; width: 200px;" />
-                </div>
+        <div style="margin-bottom: 45px;">
+            <div style="margin-bottom: 10px;">
+                Please click the button below:
             </div>
-        </div>
-        <div *ngIf="explanationNr==2">
-            <div style="display: flex; gap: 10px;">
-                <div style="text-align: left; margin-top: 15px;">
-                    To ensure that the eye tracking is as accurate as possible, the system must first be calibrated. <br>
-                    <div style="margin-top: 20px;">
-                        When the calibration starts, follow the marker on the screen with your eyes and try to keep your head stationary.
-                    </div>
-                </div>
-                <div>
-                    <img src="/assets/calibration_explanation.png" style="border-radius: 15px; width: 200px;" />
-                </div>
-            </div>
-        </div>
-        <div style="margin-top: 25px;">
-            <button *ngIf="explanationNr!=2" [disabled]="disabledNext" class="nextButton" title="Please click the 'Open second window' button first."
-                style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
-                Next <mat-icon style="margin-left: 5px;" fontIcon="arrow_forward"></mat-icon>
-            </button>
-            <button *ngIf="explanationNr==2" style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();"> 
-                Start calibration <mat-icon style="margin-left: 5px;" fontIcon="done"></mat-icon>
-            </button>
-            <button *ngIf="explanationNr!=0" style="display: flex; align-items: center; float: left;" type="button" (click)="previousExplanation();">
-                <mat-icon style="margin-right: 5px;" fontIcon="arrow_back"></mat-icon> Back
-            </button>
+            <button (click)="socketService.startCalibration(); calibrationDone=true;">Start Re-Calibration</button>
         </div>
     </div>
 </div>
 
-<div *ngIf="!showExplanation" style="text-align: center;">
-    <h2 style="width: 100%;">Calibration done!</h2>
-    <div style="margin-bottom: 10px;">
-        Please click the button below to start the experiment:
-    </div>
-    <button (click)="this.calibrationDoneEvent.emit(true);">Start Experiment</button>
-    <div style="margin-top: 20px; font-size: 12px;">
-        If the calibration did not start automatically or you want to re-calibrate click here:
-        <button style="margin-top: 45px;" class="linkstylebutton" (click)="socketService.startCalibration();">start calibration manually</button>
+
+<div *ngIf="calibrationDone">
+    <div class="Popup">
+        <div class="popup-header">
+            Re-calibration was successful!
+        </div>
+        <div style="margin-bottom: 10px;">
+            Please click the button below to start the experiment:
+        </div>
+        <button (click)="this.calibrationDoneEvent.emit(true);">Start Experiment</button>
+    
+        <div style="margin-top: 20px; font-size: 12px;">
+            If the calibration did not start automatically or you want to re-calibrate click here:
+            <button style="margin-top: 45px;" class="linkstylebutton" (click)="socketService.startCalibration();">start calibration manually</button>
+        </div>
     </div>
 </div>
 
-<dual-screen #dualscreen>
-    <div *ngIf="!showCalibrationSecondScreen">
-        Great! This is the second window. Do not close it before finsihing the experiment.
-        <div style="font-size: 350px; color: lightgray; line-height: 350px; text-align: center;">2</div>
-    </div>
-</dual-screen>
+
+
+
