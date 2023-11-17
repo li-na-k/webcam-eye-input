@@ -17,8 +17,7 @@ export class EyeInputService implements OnDestroy {
   private mouseInput : boolean = false;
   private timeOutAfterMouseInput : any;
   private moveArrowInterval : any;
-  private arrow : HTMLElement | null = null;
-  private sandbox : HTMLElement | null = null;
+  private arrow : HTMLElement | null = null; //currently active fake cursor
   private sbRight = 0; 
   private sbBottom = 0;
   private sbLeft = 0;
@@ -72,15 +71,10 @@ export class EyeInputService implements OnDestroy {
     return (tb_inside && lr_inside)
   }
 
-  public moveArrowWithEyes(arrow : HTMLElement, onlyXDir : boolean = false){ //move to current eye pos
+  public moveArrowWithEyes(arrow : HTMLElement, window : Window){ //move to current eye pos
     let x = this.x * window.innerWidth;
     let y = (1-this.y) * window.innerHeight;
-    if(onlyXDir){
-      arrow.style.transform = "translate(" + x + "px, 50vh)" 
-    }
-    else{
-      arrow.style.transform = "translate(" + x + "px, " + y + "px)"
-    }
+    arrow.style.transform = "translate(" + x + "px, " + y + "px)"
   } 
 
   public moveArrowWithMouse(e : any, arrow : HTMLElement, limits : [number, number, number, number]){ //move according to mouse movement
@@ -105,20 +99,20 @@ export class EyeInputService implements OnDestroy {
     arrow!.style.transform = "translate(" + x + "px, " + y + "px)"
   }
 
-  public async activateMix2Input(sandbox : HTMLElement | null, arrow : HTMLElement | null, timeout: number){
+  public async activateMix2Input(window: Window, arrow : HTMLElement | null, timeout: number){
+    this.stopMix2Input();
     //lock original cursor, add fake arrow instead
-    if(!sandbox){
-      throw Error("Provided sandbox is null.")
+    if(!window){
+      throw Error("Provided window is null.")
     }
     if(!arrow){
       throw Error("Provided arrow is null.")
     }
     //assign method parameters to instance properties to be able to use them in moveArrowWithMouse()
-    this.sandbox = sandbox; 
-    this.sbRight = this.sandbox!.getBoundingClientRect().right;
-    this.sbBottom = this.sandbox!.getBoundingClientRect().bottom;
-    this.sbLeft = this.sandbox!.getBoundingClientRect().left;
-    this.sbTop = this.sandbox!.getBoundingClientRect().top;
+    this.sbRight = window.document.body.getBoundingClientRect().right;
+    this.sbBottom =  window.document.body.getBoundingClientRect().bottom;
+    this.sbLeft =  window.document.body.getBoundingClientRect().left;
+    this.sbTop =  window.document.body.getBoundingClientRect().top;
     this.arrow = arrow;
     this.timeout = timeout;
     if(document.pointerLockElement == null){ //if not already locked
@@ -131,7 +125,7 @@ export class EyeInputService implements OnDestroy {
     this.moveArrowInterval = setInterval(() => {
       if(!this.mouseInput){
         this.arrow!.classList.add("smoothTransition");
-        this.moveArrowWithEyes(this.arrow!);
+        this.moveArrowWithEyes(this.arrow!, window);
       }
       else{
         this.arrow!.classList.remove("smoothTransition");

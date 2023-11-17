@@ -40,8 +40,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
 
     ngAfterViewInit(){
       this.clickArea = document.getElementById(this.taskElementID)
-      this.sandbox = document.getElementById("experimentSandbox");
-      this.arrow = document.getElementById("arrow");
+      this.mainScreen_arrow = document.getElementById("arrow");
       //mouse as first input method
       this.selectInputType(InputType.MOUSE);
     }
@@ -63,7 +62,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     private bound_changeOnClick = this.changeOnClick.bind(this);
     private changeOnClick(){
       if(this.selectedInputType == InputType.MIX2){
-          let inside = this.eyeInputService.isInside(this.clickArea!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
+          let inside = this.eyeInputService.isInside(this.clickArea!, parseInt(this.mainScreen_arrow!.style.left, 10), parseInt(this.mainScreen_arrow!.style.top, 10));
           if(inside){
             this.addSuccess();
           }
@@ -74,7 +73,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     }
   
     protected async startMix2Input(){
-      await this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+      await this.eyeInputService.activateMix2Input(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
       document.addEventListener('mousedown', this.bound_changeOnClick);
       /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
       have been better, but it cannot be removed, which is necessary here (for other input methods)
@@ -89,8 +88,8 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       }
       //MIX2
       this.mix2loaded = false;
-      if(this.arrow){
-        this.eyeInputService.stopMix2Input(this.sandbox!, this.arrow!);
+      if(this.mainScreen_arrow){
+        this.eyeInputService.stopMix2Input();
       }
       document.removeEventListener('mousedown', this.bound_changeOnClick); 
       //view port resets

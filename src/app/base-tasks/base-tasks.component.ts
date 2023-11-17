@@ -20,8 +20,7 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   protected selectedInputType : InputType = InputType.EYE; 
   protected destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
   protected moveArrowinterval : any;
-  protected arrow : HTMLElement | null = document.getElementById("arrow");
-  protected sandbox : HTMLElement | null = document.getElementById("experimentSandbox");
+  protected mainScreen_arrow : HTMLElement | null = document.getElementById("arrow");
 
   protected timeOutAfterMouseInput : number = 500;
 

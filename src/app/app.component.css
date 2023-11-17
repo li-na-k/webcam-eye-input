@@ -24,10 +24,6 @@ mat-spinner{
     font-weight: bold;
 }
 
-#experimentSandbox{
-    z-index: 0;
-}
-
 .button-header{
     color: black;
     background-color: transparent;

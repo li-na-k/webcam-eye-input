@@ -20,11 +20,11 @@ import { SocketService } from '../services/socket.service';
 export class ClickComponent extends BaseTasksComponent{
   @HostListener('body:mousemove', ['$event']) 
   onMouseMove(e : any) {
-    if(this.dualscreen.getActiveScreen() == 2 && this.dualscreen.secondScreen_arrow && this.dualscreen.secondWindow){
+    if(this.dualscreen.getActiveScreen() == 2 && this.dualscreen.secondScreen_mainScreen_arrow && this.dualscreen.secondWindow){
       this.eyeInputService.moveArrowWithMouse(e, this.dualscreen.secondScreen_arrow.nativeElement, [0, this.dualscreen.secondWindow.width, this.dualscreen.secondWindow.height, 0]);
     }
-    else if(this.arrow && this.dualscreen.mainWindow){
-      this.eyeInputService.moveArrowWithMouse(e, this.arrow, [0, this.dualscreen.mainWindow.width, this.dualscreen.mainWindow.height, 0]);
+    else if(this.mainScreen_arrow && this.dualscreen.mainWindow){
+      this.eyeInputService.moveArrowWithMouse(e, this.mainScreen_arrow, [0, this.dualscreen.mainWindow.width, this.dualscreen.mainWindow.height, 0]);
     }
     this.eyeInputService.bound_analyseMix2; //Track mouse / eye distribution 
   }
@@ -130,7 +130,7 @@ export class ClickComponent extends BaseTasksComponent{
   private async changeOnClick(ev : any){
     await this.getclickAreas(); //cannot be on afterViewInit because second window is not guaranteed to have loaded yet
     let currentClickArea : HTMLElement | null = null;
-    let arrow = this.dualscreen.getActiveScreen()==2?this.dualscreen.secondScreen_arrow.nativeElement:this.arrow;
+    let arrow = this.dualscreen.getActiveScreen()==2?this.dualscreen.secondScreen_arrow.nativeElement:this.mainScreen_arrow;
     let style = window.getComputedStyle(arrow);
     let matrix = new WebKitCSSMatrix(style.transform);
     let x = matrix.m41; 

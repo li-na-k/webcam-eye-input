@@ -20,7 +20,6 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
 
   protected selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   protected selectedInputType : InputType = InputType.EYE; 
-  protected sandbox : HTMLElement | null = document.getElementById("experimentSandbox"); 
   protected arrow : HTMLElement | null = document.getElementById("arrow"); 
   private destroy$ : Subject<boolean> = new Subject<boolean>(); 
   protected showPopup = true;

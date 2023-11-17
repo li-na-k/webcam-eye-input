@@ -45,7 +45,7 @@
 
     <div style="height: 100%;" *ngIf="!showInitialExplanation && !showTestMode && !showRecalibration && !(randomizationService.everythingDone || randomizationService.showFinalPageComponent)"> 
         <!-- click task -->
-        <div style="height: 100%;" id="experimentSandbox">            
+        <div style="height: 100%;">            
             <app-click *ngIf="(selectedTask$ | async) == TaskType.SELECT"></app-click>
         </div>
         <!-- explanation pop up -->

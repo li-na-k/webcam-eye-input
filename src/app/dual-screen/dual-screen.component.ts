@@ -16,8 +16,6 @@ import { AppState } from '../state/app.state';
 export class DualScreenComponent implements AfterViewInit, OnDestroy {
   @ViewChild('templatePortalContent') templatePortalContent!: TemplateRef<unknown>;
   @ViewChild('arrow') secondScreen_arrow!: ElementRef;
-  @ViewChild('sandbox') secondScreen_sandbox!: ElementRef;
-
   @Input() initialOpening : boolean = true; //if true, component where dualScreen is used must call openSecondWindow() when it should be opened
   //if false, content of the new component is automatically loaded into the already opened window
   @Input() contentHeight : String = "100%"; 
