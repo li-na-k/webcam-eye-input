@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil} from 'rxjs';
 import { EyeInputService } from 'src/app/services/eye-input.service';
@@ -44,8 +44,7 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   }
 
   ngAfterViewInit(): void {
-    this.eyeInputService.stopMix2Input(this.sandbox!, this.arrow!);
-    this.eyeInputService.stopMix2Input(window.document.body, this.arrow!); 
+    this.eyeInputService.stopMix2Input();
   }
 
   ngOnDestroy(){

@@ -116,7 +116,7 @@ export class EyeInputService implements OnDestroy {
     this.arrow = arrow;
     this.timeout = timeout;
     if(document.pointerLockElement == null){ //if not already locked
-      await window.document.body.requestPointerLock();   
+      await document.body.requestPointerLock();   
     }
     this.arrow!.style.visibility = 'visible';
     this.arrow!.style.left = "0%";
@@ -161,14 +161,18 @@ export class EyeInputService implements OnDestroy {
     }, this.timeout)
   }
   
-  public stopMix2Input(sandbox : HTMLElement, arrow : HTMLElement){
-    document.exitPointerLock();
-    window.document.removeEventListener('mousemove', this.bound_mouseTakeover);
-    //replace fake cursor with real cursor again
-    arrow.style.visibility = 'hidden';
-    sandbox.style.cursor = '';
+  public stopMix2Input(){ //stops last instances of stopMix2Input
     clearTimeout(this.timeOutAfterMouseInput);
     clearInterval(this.moveArrowInterval);
+    if(document.pointerLockElement){
+      document.exitPointerLock();
+    }
+    document.removeEventListener('mousemove', this.bound_mouseTakeover);
+    //replace fake cursor with real cursor again
+    if(this.arrow){
+      this.arrow.style.visibility = 'hidden';
+    }
+    document.body.style.cursor = '';
     this.mouseInput = false;
   }
 

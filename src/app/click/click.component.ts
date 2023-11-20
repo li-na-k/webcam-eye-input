@@ -177,13 +177,9 @@ export class ClickComponent extends BaseTasksComponent{
     }
     //MIX2
     this.mix2loaded = false;
-    this.arrow!.style.visibility = 'hidden';
-    if(this.dualscreen.secondScreen_arrow){
-      this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
-    }
-    document.exitPointerLock(); 
     this.dualscreen.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
     this.dualscreen.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
+    this.eyeInputService.stopMix2Input();
     document.removeEventListener('mousedown', this.bound_changeOnClick); 
     this.webSocketService.stopSendingGazeData();
   }
