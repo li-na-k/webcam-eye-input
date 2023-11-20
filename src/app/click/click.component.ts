@@ -68,23 +68,21 @@ export class ClickComponent extends BaseTasksComponent{
 
 
   private changeScreen(toScreen : Screens){
-    this.taskEvaluationService.addScreenChange();
-    let arrow : any = null;
     if(toScreen == Screens.MAINSCREEN){ //from top to bottom (= second to main screen)
+      this.eyeInputService.moveArrowWithEyes(this.mainScreen_arrow!, window);
       this.dualscreen.focusMainWindow();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
-      this.arrow!.style.visibility = 'visible';
-      arrow = this.arrow!;
-      this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput);
+      this.mainScreen_arrow!.style.visibility = 'visible';
+      this.eyeInputService.activateMix2Input(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
     }
     else{ //from bottom to top (= main to second screen)
+      this.eyeInputService.moveArrowWithEyes(this.dualscreen.secondScreen_arrow.nativeElement, this.dualscreen.secondWindow);
       this.dualscreen.focusSecondWindow();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
-      this.arrow!.style.visibility = 'hidden';
-      arrow = this.dualscreen.secondScreen_arrow.nativeElement;
-      this.eyeInputService.activateMix2Input(this.dualscreen.secondWindow.document.body, this.dualscreen.secondScreen_arrow.nativeElement, this.timeOutAfterMouseInput);
+      this.mainScreen_arrow!.style.visibility = 'hidden';
+      this.eyeInputService.activateMix2Input(this.dualscreen.secondWindow, this.dualscreen.secondScreen_arrow.nativeElement, this.timeOutAfterMouseInput);
     }
-    this.eyeInputService.moveArrowWithEyes(arrow, true);
+    this.taskEvaluationService.addScreenChange();
   }
 
   protected startEyeInput(){ //not needed for this experiment
@@ -157,8 +155,8 @@ export class ClickComponent extends BaseTasksComponent{
 
   protected startMix2Input(){
     this.webSocketService.startSendingGazeData();
-    this.eyeInputService.activateMix2Input(window.document.body, this.arrow, this.timeOutAfterMouseInput); //Start with main screen
-    this.arrow!.style.visibility = 'visible';
+    this.eyeInputService.activateMix2Input(window, this.mainScreen_arrow, this.timeOutAfterMouseInput); //Start with main screen
+    this.mainScreen_arrow!.style.visibility = 'visible';
     //start waiting for screen changes and clicks
     this.startScreenChangeDetection();
     document.addEventListener('mousedown', this.bound_changeOnClick);

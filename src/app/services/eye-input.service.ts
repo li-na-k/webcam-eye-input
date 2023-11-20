@@ -130,7 +130,7 @@ export class EyeInputService implements OnDestroy {
       else{
         this.arrow!.classList.remove("smoothTransition");
       }
-    window.document.addEventListener('mousemove', this.bound_mouseTakeover); 
+    document.addEventListener('mousemove', this.bound_mouseTakeover); 
     }, 15); //monitor refresh 60 hz -> 16.6 ms (60 hertz world camera as well), higher frame rate cannot be detected by human eye anyways
   }
 
