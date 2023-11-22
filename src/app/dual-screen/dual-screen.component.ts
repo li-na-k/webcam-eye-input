@@ -1,4 +1,4 @@
-import { AfterViewInit, ApplicationRef, Component, Injector, OnDestroy, TemplateRef, ViewChild, ViewContainerRef, Input, ElementRef } from '@angular/core';
+import { AfterViewInit, ApplicationRef, Component, Injector, OnDestroy, TemplateRef, ViewChild, ViewContainerRef, Input, ElementRef, NgZone, EventEmitter, Output } from '@angular/core';
 import {
   TemplatePortal,
   DomPortalOutlet,
@@ -41,7 +41,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   }
 
   public closeSecondWindow(){
-    this.secondWindow.close()
+    this.secondWindow?.close()
   }
 
   //get second window without re-opening it
@@ -64,12 +64,12 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
     //this.mainWindow.focus();
     this.secondFakeFocussed = false;
     this.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
-    this.secondWindow.document.body.style.backgroundColor = "#d0d0d0";
+    this.secondWindow?this.secondWindow.document.body.style.backgroundColor = "#d0d0d0":null;
   }
   public focusSecondWindow(){
     //this.secondWindow.focus();
     this.secondFakeFocussed = true;
-    this.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
+    this.secondWindow?this.secondWindow.document.body.style.backgroundColor = "var(--apricot)":null;
     this.mainWindow.document.body.style.backgroundColor = "#d0d0d0";
   }
 
@@ -78,9 +78,9 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
         if (data == null){
           return;
         }
-        let active = this.secondWindow.document.hasFocus(); //for click component: not real focus, but fake focus used (to be constanly track mousemove)
+        let active : boolean = this.secondWindow?this.secondWindow.document.hasFocus():false; //for click component: not real focus, but fake focus used (to be constanly track mousemove)
         if(!this.secondFakeFocussed && !active) { //main screen active => don't track here
-          this.dot = this.secondWindow.document.getElementById("webgazerGazeDot"); 
+          this.dot = this.secondWindow?.document.getElementById("webgazerGazeDot"); 
           //TODO this.webgazerService.resumeWebgazer(webgazer, this.dot); //give second webgazer instance to first webgazer so it can resume second as soon as necessary
           webgazer.pause();
           if(this.dot){
@@ -98,17 +98,16 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   public openSecondWindow() : Promise<Window>{
     return new Promise(resolve => {
       if(!this.initialOpening){ //re-use old window
-        this.secondWindow = window.open('', 'SECOND_SCREEN');
+        this.secondWindow = window.open('', 'SECOND_SCREEN') ?? undefined;
       }
       else{ //open new window
-        this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 
-        'width=1300,height=700,left=50,top=50');
+        this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=1300,height=700,left=50,top=50') ?? undefined;
       }
       setTimeout(() => {
         console.log("second window loaded", this.secondWindow)
         this.attachContent();
         this.attachStyles();
-        if(this.initialOpening){
+        if(this.initialOpening && this.secondWindow){
           this.secondWindow.opener.name = "parent";
         }    
         this.mainWindow = window.open('', 'parent');
@@ -120,19 +119,27 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   }
 
   private attachContent(){
-    const outletElement = this.secondWindow.document.getElementById("outletElement");
-    outletElement?outletElement.innerText = "":console.log("no outlet element found.")
-    this.secondWindow.document.title = 'Second Screen';
-    this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
-    new DomPortalOutlet(outletElement, undefined, this.applicationRef, this.injector)
-      .attach(this.templatePortal);
+    if(this.secondWindow){
+      const outletElement = this.secondWindow.document.getElementById("outletElement");
+      this.secondWindow.document.title = 'Second Screen';
+      this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
+      if(outletElement){
+        outletElement.innerText = "";
+        new DomPortalOutlet(outletElement, undefined, this.applicationRef, this.injector)
+          .attach(this.templatePortal);
+      }
+      else{
+        console.error("no outlet element found.");
+      }
+    }
+    
   }
 
   private attachStyles(){
     if(this.secondWindow){
       // Copy styles from parent window
       document.querySelectorAll('style').forEach(htmlElement => {
-        this.secondWindow.document.head.appendChild(htmlElement.cloneNode(true));
+        this.secondWindow?.document.head.appendChild(htmlElement.cloneNode(true));
       });
       // Copy stylesheet link from parent window
       this.styleSheetElement = this.getStyleSheetElement();
@@ -155,8 +162,8 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(){
     //default text when no content is displayed on second screen during the next component
-    if(this.secondWindow){
-      this.secondWindow.document.getElementById("content").innerText = "Check the main screen for further instructions."
+    if(this.secondWindow?.document.getElementById("content")){
+      this.secondWindow.document.getElementById("content")!.innerText = "Check the main screen for further instructions."
     }
   }
 
