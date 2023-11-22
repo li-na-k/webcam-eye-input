@@ -15,6 +15,8 @@ import { RandomizationService } from '../services/randomization.service';
 })
 export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
+  public abstract secondWindowLoaded : boolean;
+
   readonly InputType = InputType;
   protected selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   protected selectedInputType : InputType = InputType.EYE; 

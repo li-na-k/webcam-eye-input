@@ -71,7 +71,17 @@
                     <div style="margin-bottom: 20px;">
                         <strong style="font-size: 25px; vertical-align: top;">> </strong>{{randomizationService.taskInstructions}}
                     </div>
-                    <button (click)="showTaskPopup=false; startExperiment(); this.blur($event)">Start task</button>
+                    <button
+                        (click)="showTaskPopup=false; startExperiment(); this.blur($event)"
+                        [disabled] = "!baseTaskComponent || !baseTaskComponent.secondWindowLoaded">
+                        <div style="display:flex;align-items:center;">
+                            <mat-icon *ngIf="!baseTaskComponent || !baseTaskComponent.secondWindowLoaded">
+                                <mat-spinner diameter="20">
+                            </mat-spinner>
+                            </mat-icon>
+                            <span style="padding: 5px 5px"> Start task</span>
+                        </div>
+                    </button>
                     <div *ngIf="selectedInputType != InputType.MIX2" style="width: 200px; font-size: 12px; line-height:15px; margin: auto; margin-top: 15px;">If you cannot complete a task, click the skip button at the top.</div>
                     <div *ngIf="selectedInputType == InputType.MIX2" style="width: 200px; font-size: 12px; line-height:15px; margin: auto; margin-top: 15px;">If you cannot complete a task, press esc and then click the skip button.</div>           
                 </div>

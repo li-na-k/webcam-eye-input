@@ -15,6 +15,7 @@ import { Tasks } from '../enums/tasks';
 })
 export class TestInputMethodsComponent extends BaseTasksComponent implements OnInit, OnDestroy, AfterViewInit {
   
+    public override secondWindowLoaded: boolean = false;
     private clickArea : HTMLElement | null = null; //all areas
     protected Input = InputType;
   

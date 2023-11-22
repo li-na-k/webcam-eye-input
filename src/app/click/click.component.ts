@@ -30,6 +30,7 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   @ViewChild('dualscreen') dualscreen! : any;
+  public override secondWindowLoaded: boolean = false;
 
   private className : string = "clickArea"
   private clickAreas : Array<Element> | null = null; //all target areas 

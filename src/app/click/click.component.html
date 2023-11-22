@@ -1,4 +1,4 @@
-<dual-screen #dualscreen [initialOpening]="false" [contentHeight]="'50%'">
+<dual-screen #dualscreen (secondWindowLoaded)="secondWindowLoaded=true" [initialOpening]="false" [contentHeight]="'50%'">
     <div class="container">
         <!-- <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']">
             <mat-card-title>Headline</mat-card-title>

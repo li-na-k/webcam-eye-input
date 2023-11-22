@@ -19,10 +19,9 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   @Input() initialOpening : boolean = true; //if true, component where dualScreen is used must call openSecondWindow() when it should be opened
   //if false, content of the new component is automatically loaded into the already opened window
   @Input() contentHeight : String = "100%"; 
-  
-  public secondWindow : any;
-  public mainWindow : any;
-  
+  @Output() public secondWindowLoaded = new EventEmitter();
+  public secondWindow : Window | undefined;
+  private mainWindow : any;
   private templatePortal!: TemplatePortal<any>;
   private styleSheetElement: any;
   private dot: any;
@@ -35,7 +34,9 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(){
     if(!this.initialOpening){
-      this.openSecondWindow();
+      this.openSecondWindow().then(() => 
+        this.secondWindowLoaded.emit(true)
+      );
     }
   }
 
@@ -111,7 +112,9 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
           this.secondWindow.opener.name = "parent";
         }    
         this.mainWindow = window.open('', 'parent');
-        resolve(this.secondWindow);
+        if(this.secondWindow){
+          resolve(this.secondWindow);
+        }
       }, 2000)
     })     
   }
