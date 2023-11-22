@@ -6,6 +6,7 @@ import { AppState } from '../state/app.state';
 import { changeScreen, changeXPos, changeYPos } from '../state/eyetracking/eyetracking.action';
 import { selectCurrentScreen } from '../state/eyetracking/eyetracking.selector';
 import { Screens } from '../enums/screens';
+import { TaskEvaluationService } from './task-evaluation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,14 +33,10 @@ export class SocketService {
     this.socket.emit("startSendingGazeData");
     this.listenTo("gazeData").subscribe((data : any) => {
       //store current x and y pos
-      if(data.gaze_on_surfaces[0]?.on_surf){ //gaze is on a surface
-        if(data.name != this.screen){ //has screen changed?
-          this.store.dispatch(changeScreen({newScreen: data.name}));
-        }
-        if(data.name == this.screen){ //update gaze data for current screen
-          this.store.dispatch(changeXPos({newx: data.gaze_on_surfaces[0].norm_pos[0]}));
-          this.store.dispatch(changeYPos({newy: data.gaze_on_surfaces[0].norm_pos[1]}));
-        }
+      if(data.gaze_on_surfaces[0]?.on_surf){ //gaze is on this screen 
+        this.store.dispatch(changeScreen({newScreen: data.name}));
+        this.store.dispatch(changeXPos({newx: data.gaze_on_surfaces[0].norm_pos[0]})); //TODO why several?
+        this.store.dispatch(changeYPos({newy: data.gaze_on_surfaces[0].norm_pos[1]}));
       }
     });
   }
