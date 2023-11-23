@@ -37,6 +37,7 @@ export class ClickComponent extends BaseTasksComponent{
   protected Sizes = Sizes;
 
   private taskElementID : string = "click-task"; //area that shows success when clicked
+  private taskElement : Element | null = null;
   protected error : boolean = false;
 
   private screenChangeDetection_interval : any = null;
@@ -54,7 +55,15 @@ export class ClickComponent extends BaseTasksComponent{
   async getclickAreas(){
     const clickAreas_mainScreen = document.getElementsByClassName(this.className)
     const clickAreas_secondScreen = this.dualscreen.secondWindow.document.getElementsByClassName(this.className);
-    this.clickAreas = Array.from(clickAreas_mainScreen).concat(Array.from(clickAreas_secondScreen)); 
+    this.clickAreas = Array.from(clickAreas_mainScreen).concat(Array.from(clickAreas_secondScreen));
+    //find target area / task element
+    for (var i=0, n=this.clickAreas.length; i < n; ++i){
+      let clickArea = this.clickAreas[i];
+      if(clickArea?.id == this.taskElementID){
+        this.taskElement = clickArea;
+        break;
+      }
+    }
   }
 
   private currentScreen$ : Observable<any> = this.store.select(selectCurrentScreen);
@@ -110,6 +119,7 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   public addSuccess(aborted?: boolean){
+    this.taskEvaluationService.calculateTargetDistance(this.taskElement as HTMLElement,this.taskEvaluationService.targetOnMainScreen?window:this.dualscreen.secondWindow)
     this.error = false; 
     this.taskEvaluationService.endTask(aborted); 
     if(aborted){

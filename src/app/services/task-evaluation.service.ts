@@ -8,7 +8,7 @@ import { Tasks } from '../enums/tasks';
 import { AppState } from '../state/app.state';
 import { selectInputType, selectTask } from '../state/expConditions/expconditions.selector';
 import * as FileSaver from 'file-saver';
-import { Screens } from '../enums/screens';
+import { Positions } from '../enums/positions';
 
 type NewType = Observable<Tasks>;
 
@@ -41,7 +41,8 @@ export class TaskEvaluationService {
   private taskRunning : boolean = false;
   private errorCount : number = 0;
   public selectedSize : Sizes = Sizes.S; //set by randomization Service
-  public targetOnMainScreen : boolean = false;
+  public targetOnMainScreen : boolean = false; //set by randomization Service
+  public pos : Positions = Positions.POS1; //set by randomization Service
 
   startTask(){
     if(this.taskRunning){
@@ -57,6 +58,7 @@ export class TaskEvaluationService {
       result.task = this.selectedTask;
       result.size = this.selectedSize;
       result.targetOnMainScreen = this.targetOnMainScreen;
+      result.pos = this.pos;
       result.eyeMouseDistribution = [];
     }
   }
@@ -123,6 +125,27 @@ export class TaskEvaluationService {
     audio.play();
   }
 
+  prevDistToScreen = [0,0];
+  calculateTargetDistance(target : HTMLElement, window : Window){ //!! only works when target is alternating between a left and a right screen, gap between screens not considered
+    console.log("previous", this.prevDistToScreen)
+    if(this.taskRunning){
+      let result : TaskResult = this.results[this.results.length-1]; //current result object#
+      let XdistToBorder = 0;
+      if(result.targetOnMainScreen){ //left screen
+        XdistToBorder = Math.round(window.innerWidth) - Math.round(target.getBoundingClientRect().right);
+      }
+      else{ //right screen
+        XdistToBorder = Math.round(target.getBoundingClientRect().left);
+      }
+      let top = Math.round(target.getBoundingClientRect().top);  
+      result.distancePrevTarget = [
+        XdistToBorder + this.prevDistToScreen[0],
+        this.prevDistToScreen[1] - top //neg value = below prev
+      ]
+      this.prevDistToScreen = [XdistToBorder, top];
+    }
+  }
+
   exportResults(){
     this.exportToCsv(this.results, "myresults", [
       "task", 
@@ -133,6 +156,8 @@ export class TaskEvaluationService {
       "aborted", 
       "screenChanges", 
       "targetOnMainScreen",
+      "pos",
+      "distancePrevTarget",
       "eyeMouseDistribution",
       "mouseIntervalsDuration",
       "eyeIntervalsDuration",
