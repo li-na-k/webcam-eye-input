@@ -13,8 +13,7 @@ export class TaskResult {
     aborted : boolean = false;
     screenChanges : number[] = [];
     targetOnMainScreen: boolean = true;
-
-
+    
     eyeMouseDistribution? : number[]; //[eye interval duration, mouse interval duration, eye interval duration, mouse ....]
     mouseIntervalsDuration? : number;
     eyeIntervalsDuration? : number;

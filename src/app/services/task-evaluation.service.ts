@@ -57,9 +57,7 @@ export class TaskEvaluationService {
       result.task = this.selectedTask;
       result.size = this.selectedSize;
       result.targetOnMainScreen = this.targetOnMainScreen;
-      if(this.selectedInputType == InputType.MIX2){
-        result.eyeMouseDistribution = [];
-      }
+      result.eyeMouseDistribution = [];
     }
   }
 
