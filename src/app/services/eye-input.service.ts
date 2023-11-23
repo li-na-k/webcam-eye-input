@@ -122,6 +122,7 @@ export class EyeInputService implements OnDestroy {
     this.arrow!.style.left = "0%";
     this.arrow!.style.top = "0%";
     //eye input
+    clearInterval(this.moveArrowInterval);
     this.moveArrowInterval = setInterval(() => {
       if(!this.mouseInput){
         this.arrow!.classList.add("smoothTransition");

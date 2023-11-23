@@ -66,7 +66,6 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   public activateSelectedInputType(){
     console.log("activate selected input type: ", this.selectedTask + " " + this.selectedInputType);
     this.cdRef.detectChanges();
-    this.stopAllInputs();
     if(this.selectedInputType == InputType.EYE){
       this.startEyeInput();
     }
