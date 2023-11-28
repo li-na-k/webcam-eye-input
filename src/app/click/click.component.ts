@@ -78,16 +78,19 @@ export class ClickComponent extends BaseTasksComponent{
 
 
   private changeScreen(toScreen : Screens){
-    if(toScreen == Screens.MAINSCREEN){ //from top to bottom (= second to main screen)
-      this.eyeInputService.moveArrowWithEyes(this.mainScreen_arrow!, window);
+    //jump
+    this.mainScreen_arrow!.classList.remove("smoothTransition"); //jump
+    this.dualscreen.secondScreen_arrow.nativeElement.classList.remove("smoothTransition"); //jump
+    if(toScreen == Screens.MAINSCREEN){ //from top to bottom (= second to main screen) 
       this.dualscreen.focusMainWindow();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
+      this.eyeInputService.moveArrowWithEyes(this.mainScreen_arrow!, window);
       this.mainScreen_arrow!.style.visibility = 'visible';
       this.eyeInputService.activateMix2Input(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
     }
     else{ //from bottom to top (= main to second screen)
-      this.eyeInputService.moveArrowWithEyes(this.dualscreen.secondScreen_arrow.nativeElement, this.dualscreen.secondWindow);
       this.dualscreen.focusSecondWindow();
+      this.eyeInputService.moveArrowWithEyes(this.dualscreen.secondScreen_arrow.nativeElement, this.dualscreen.secondWindow);
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
       this.mainScreen_arrow!.style.visibility = 'hidden';
       this.eyeInputService.activateMix2Input(this.dualscreen.secondWindow, this.dualscreen.secondScreen_arrow.nativeElement, this.timeOutAfterMouseInput);
