@@ -14,7 +14,8 @@ export class TaskResult {
     screenChanges : number[] = [];
     targetOnMainScreen: boolean = true;
     pos : Positions = Positions.POS1;
-    distancePrevTarget : [number, number] = [0,0]; //x, y
+    XdistancePrevTarget : number = 0;
+    YdistancePrevTarget : number = 0;
 
     eyeMouseDistribution? : number[]; //[eye interval duration, mouse interval duration, eye interval duration, mouse ....]
     mouseIntervalsDuration? : number;

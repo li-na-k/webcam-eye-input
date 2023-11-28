@@ -138,10 +138,8 @@ export class TaskEvaluationService {
         XdistToBorder = Math.round(target.getBoundingClientRect().left);
       }
       let top = Math.round(target.getBoundingClientRect().top);  
-      result.distancePrevTarget = [
-        XdistToBorder + this.prevDistToScreen[0],
-        this.prevDistToScreen[1] - top //neg value = below prev
-      ]
+      result.XdistancePrevTarget = XdistToBorder + this.prevDistToScreen[0];
+      result.YdistancePrevTarget = this.prevDistToScreen[1] - top //neg value = below prev
       this.prevDistToScreen = [XdistToBorder, top];
     }
   }
@@ -157,7 +155,8 @@ export class TaskEvaluationService {
       "screenChanges", 
       "targetOnMainScreen",
       "pos",
-      "distancePrevTarget",
+      "XdistancePrevTarget",
+      "YdistancePrevTarget",
       "eyeMouseDistribution",
       "mouseIntervalsDuration",
       "eyeIntervalsDuration",
