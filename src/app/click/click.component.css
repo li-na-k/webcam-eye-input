@@ -39,7 +39,7 @@ mat-card-title{
 }
 
 .clickArea{
-    position: absolute;
+    /* position: absolute; */
 }
 
 /* width & height values are 0.5 of size large*/
@@ -55,24 +55,13 @@ mat-card-title{
 }
 
 .pos1{
-    top: 0px;
-    left: 0px;
+    float: left;
 }
 
 .pos2{
-    bottom: 0px;
-    left: 0px;
+    float: right;
 }
 
-.pos3{
-    bottom: 0px;
-    right: 0px;
-}
-
-.pos4{
-    top: 0px;
-    right: 0px;
-}
 
 .screen-change-area{
     border: dotted 2px darkgrey;

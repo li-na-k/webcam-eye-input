@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostListener, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { EyeInputService } from 'src/app/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
@@ -11,6 +11,7 @@ import { Screens } from '../enums/screens';
 import { Observable, distinctUntilChanged, takeUntil } from 'rxjs';
 import { selectCurrentScreen } from '../state/eyetracking/eyetracking.selector';
 import { SocketService } from '../services/socket.service';
+import { MatCardTitlePipe } from '../mat-card-title.pipe';
 @Component({
   selector: 'app-click',
   providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],

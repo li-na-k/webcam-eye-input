@@ -27,6 +27,7 @@ import { TestInputMethodsComponent } from './test-input-methods/test-input-metho
 import { DualScreenComponent } from './dual-screen/dual-screen.component';
 import { SurfaceTagsComponent } from './surface-tags/surface-tags.component';
 import { InitialExplanationComponent } from './initial-explanation/initial-explanation.component';
+import { MatCardTitlePipe } from './mat-card-title.pipe';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { InitialExplanationComponent } from './initial-explanation/initial-expla
     TestInputMethodsComponent,
     DualScreenComponent,
     SurfaceTagsComponent,
-    InitialExplanationComponent
+    InitialExplanationComponent,
+    MatCardTitlePipe
   ],
   imports: [
     BrowserModule,

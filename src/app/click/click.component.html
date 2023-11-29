@@ -1,50 +1,29 @@
 <dual-screen #dualscreen (secondWindowLoaded)="secondWindowLoaded=true" [initialOpening]="false" [contentHeight]="'50%'">
     <div class="container">
-        <!-- <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']">
-            <mat-card-title>Headline</mat-card-title>
-        </mat-card> -->
-        <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea']" id="click-task"> 
-            <mat-card-title>Select me!</mat-card-title>
+        <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[0], 'clickArea']" id="click-task"> 
+            <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: 2}} TARGET</mat-card-title>
         </mat-card>
         <!-- show following in case right click target is not on second screen -->
-        <!-- <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea']"> 
-            <mat-card-title>Lorem ipsum</mat-card-title>
+        <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[0], 'clickArea']"> 
+            <mat-card-title>{{randomizationService.positionOrder[0]| matCardTitle: 2}}</mat-card-title>
         </mat-card>
-        <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2], 'clickArea']">
-            <mat-card-title>Hello!</mat-card-title>
+        <mat-card [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[1], 'clickArea']">
+            <mat-card-title>{{randomizationService.positionOrder[1] | matCardTitle: 2}}</mat-card-title>
         </mat-card>
-        <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3], 'clickArea']">
-            <mat-card-title>Do not Select me!</mat-card-title>
-        </mat-card> -->
     </div>
 </dual-screen>
 
 <div class="container">
-    <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[0], 'clickArea']" id="click-task"> 
-        <mat-card-title>Select me!</mat-card-title>
+    <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[0], 'clickArea']" id="click-task"> 
+        <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: 1}} TARGET </mat-card-title>
     </mat-card>
-    <!-- <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea']">
-        <mat-card-title>Lorem ipsum</mat-card-title>
-    </mat-card> -->
     <!-- show following in case right click target is not on main screen -->
-    <!-- <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[1], 'clickArea']"> 
-        <mat-card-title>Lorem ipsum</mat-card-title>
+    <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[0], 'clickArea']"> 
+        <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: 1}}</mat-card-title>
     </mat-card>
-
-    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2], 'clickArea']">
-        <mat-card-title>Hello!</mat-card-title>
+    <mat-card [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[1], 'clickArea']">
+        <mat-card-title>{{randomizationService.positionOrder[1] | matCardTitle: 1}}</mat-card-title>
     </mat-card>
-    <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3], 'clickArea']">
-        <mat-card-title>Headling</mat-card-title>
-    </mat-card> -->
-   
-    <!-- <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[2], 'clickArea']">
-        <mat-card-title>I am a Headline</mat-card-title>
-    </mat-card> -->
-
-    <!-- <mat-card [ngClass]="[randomizationService.selectedSize, randomizationService.positionOrder[3], 'clickArea']">
-        <mat-card-title>Lorem Ipsum</mat-card-title>
-    </mat-card> -->
 </div>
 
 <app-popup-pointer-lock-stop *ngIf="pointerLockStopped" (addSuccess)="addSuccess(true)" (startMix2)="activateSelectedInputType()"></app-popup-pointer-lock-stop>

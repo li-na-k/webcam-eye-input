@@ -1,6 +1,6 @@
 export enum Positions{
-    POS1 = "pos1",
-    POS2 = "pos2",
-    POS3 = "pos3",
-    POS4 = "pos4"
+    POS1 = "1",
+    POS2 = "2",
+    POS3 = "3",
+    POS4 = "4"
 }
