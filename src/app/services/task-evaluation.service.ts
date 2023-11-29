@@ -17,8 +17,8 @@ type NewType = Observable<Tasks>;
 })
 export class TaskEvaluationService {
 
-  private selectedTask : Tasks | null = null; 
-  private selectedInputType : InputType | null = null; 
+  private selectedTask : Tasks | null = null;
+  private selectedInputType : InputType | null = null;
   private selectedTask$ : NewType = this.store.select(selectTask);
   private selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   private destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
@@ -80,7 +80,7 @@ export class TaskEvaluationService {
         let duration : number = Date.now() - (result.startTime + prevIntervalsDur)
         result.eyeMouseDistribution?.push(duration);
       }
-    } 
+    }
   }
 
   addScreenChange(){
@@ -126,33 +126,49 @@ export class TaskEvaluationService {
   }
 
   prevDistToScreen = [0,0];
-  calculateTargetDistance(target : HTMLElement, window : Window){ //!! only works when target is alternating between a left and a right screen, gap between screens not considered
+  calculateTargetDistance(target : HTMLElement, window : Window){ //!! needs to be adapted depending whether top-bottom or left-right setup, only works when target is alternating between screens, gap between screens not considered
     console.log("previous", this.prevDistToScreen)
     if(this.taskRunning){
       let result : TaskResult = this.results[this.results.length-1]; //current result object#
-      let XdistToBorder = 0;
+      //!! with main screen on the left
+      /* let XdistToBorder = 0;
       if(result.targetOnMainScreen){ //left screen
         XdistToBorder = Math.round(window.innerWidth) - Math.round(target.getBoundingClientRect().right);
       }
       else{ //right screen
         XdistToBorder = Math.round(target.getBoundingClientRect().left);
       }
-      let top = Math.round(target.getBoundingClientRect().top);  
+      let verticalDist = Math.round(target.getBoundingClientRect().top);
       result.XdistancePrevTarget = XdistToBorder + this.prevDistToScreen[0];
-      result.YdistancePrevTarget = this.prevDistToScreen[1] - top //neg value = below prev
-      this.prevDistToScreen = [XdistToBorder, top];
+      result.YdistancePrevTarget = this.prevDistToScreen[1] - verticalDist //neg value = below prev*/
+      
+
+      //!! with main screen below other
+      let YdistToBorder = 0;
+      if(result.targetOnMainScreen){ //bottom screen
+        YdistToBorder = Math.round(window.innerHeight) - Math.round(target.getBoundingClientRect().top);
+      }
+      else{ //top screen
+        YdistToBorder = Math.round(target.getBoundingClientRect().bottom);
+      }
+      
+      let horizontalDist = Math.round(target.getBoundingClientRect().right);
+      result.YdistancePrevTarget = YdistToBorder + this.prevDistToScreen[0];
+      result.XdistancePrevTarget = this.prevDistToScreen[1] - horizontalDist //neg value = below prev*/
+      this.prevDistToScreen = [horizontalDist, YdistToBorder];
+
     }
   }
 
   exportResults(){
     this.exportToCsv(this.results, "myresults", [
-      "task", 
+      "task",
       "inputType",
-      "size", 
-      "duration", 
-      "errors", 
-      "aborted", 
-      "screenChanges", 
+      "size",
+      "duration",
+      "errors",
+      "aborted",
+      "screenChanges",
       "targetOnMainScreen",
       "pos",
       "XdistancePrevTarget",
@@ -164,7 +180,7 @@ export class TaskEvaluationService {
     ]);
   }
 
-  //source: https://dev.to/idrisrampurawala/exporting-data-to-excel-and-csv-in-angular-3643#export-to-csv 
+  //source: https://dev.to/idrisrampurawala/exporting-data-to-excel-and-csv-in-angular-3643#export-to-csv
   public exportToCsv(rows: TaskResult[], fileName: string, columns?: string[]): string | void {
     if (!rows || !rows.length) {
       console.error("No results data found.")
@@ -188,7 +204,7 @@ export class TaskEvaluationService {
           return cell;
         }).join(separator);
       }).join('\n');
-    this.saveAsFile(csvContent, "experimentResults" + ".csv", "csv"); 
+    this.saveAsFile(csvContent, "experimentResults" + ".csv", "csv");
   }
 
   private saveAsFile(buffer: any, fileName: string, fileType: string): void {
