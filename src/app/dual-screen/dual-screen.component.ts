@@ -73,28 +73,6 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
     this.mainWindow.document.body.style.backgroundColor = "#d0d0d0";
   }
 
-  public startWebgazer(webgazer : any){
-    webgazer.setGazeListener((data : any) => {
-        if (data == null){
-          return;
-        }
-        let active : boolean = this.secondWindow?this.secondWindow.document.hasFocus():false; //for click component: not real focus, but fake focus used (to be constanly track mousemove)
-        if(!this.secondFakeFocussed && !active) { //main screen active => don't track here
-          this.dot = this.secondWindow?.document.getElementById("webgazerGazeDot"); 
-          //TODO this.webgazerService.resumeWebgazer(webgazer, this.dot); //give second webgazer instance to first webgazer so it can resume second as soon as necessary
-          webgazer.pause();
-          if(this.dot){
-            this.dot!.style.display = "none";
-            this.dot!.style.opacity = "0";
-          }
-          return;
-        }
-        //store current x and y pos
-        this.store.dispatch(changeXPos({newx: data.x}));
-        this.store.dispatch(changeYPos({newy: data.y}));
-    }).begin()
-  }
-
   public openSecondWindow() : Promise<Window>{
     return new Promise(resolve => {
       if(!this.initialOpening){ //re-use old window
