@@ -39,7 +39,9 @@ mat-card-title{
 }
 
 .clickArea{
-    /* position: absolute; */
+    font-size: 40px;
+    line-height: 40px;
+    font-weight: bold;
 }
 
 /* width & height values are 0.5 of size large*/
