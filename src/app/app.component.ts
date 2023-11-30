@@ -89,8 +89,11 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
 
   startExperiment(){
     this.baseTaskComponent.activateSelectedInputType();
-    this.taskEvaluationService.startTask();
+    this.randomizationService.playNumberAudio(this.randomizationService.positionOrder[0], !this.randomizationService.successTargetOnScreen1).then(() => {
+      this.taskEvaluationService.startTask();
+    });
   }
+
 
   blur($event : any){
     $event.target.blur();

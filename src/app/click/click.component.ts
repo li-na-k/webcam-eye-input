@@ -12,6 +12,7 @@ import { Observable, distinctUntilChanged, takeUntil } from 'rxjs';
 import { selectCurrentScreen } from '../state/eyetracking/eyetracking.selector';
 import { SocketService } from '../services/socket.service';
 import { MatCardTitlePipe } from '../mat-card-title.pipe';
+import { Positions } from '../enums/positions';
 @Component({
   selector: 'app-click',
   providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],
@@ -39,6 +40,7 @@ export class ClickComponent extends BaseTasksComponent{
 
   private taskElementID : string = "click-task"; //area that shows success when clicked
   private taskElement : Element | null = null;
+  protected  clicked : boolean = false;
   protected error : boolean = false;
 
   private screenChangeDetection_interval : any = null;
@@ -109,6 +111,7 @@ export class ClickComponent extends BaseTasksComponent{
       console.log("check if error click area", clickArea)
       let success = false;
       if(clickArea){ //if not clicked outside of click area
+        this.clicked = true;
         //Check if right area clicked
         if(clickArea?.id != this.taskElementID && clickArea.parentElement?.id != this.taskElementID){
           this.error = true;
@@ -119,6 +122,9 @@ export class ClickComponent extends BaseTasksComponent{
           success = true;
         }
         this.backToTasksPage(success) //timeout starts
+      }
+      else{
+        this.clicked = false;
       }
   }
 
@@ -198,13 +204,22 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   private backToTasksPage(success? : boolean){
-      this.error = false;
-      if(success){
-        this.randomizationService.nextRep(); 
-      }
-      if(this.selectedInputType == InputType.MOUSE){ //to add eventListeners to new clickAreas
+    setTimeout(() => { // wait for success sound to finish before triggering number sound in nextRep
+    if(success){
+      this.randomizationService.nextRep();
+    }
+    else{
+      this.randomizationService.playNumberAudio(this.randomizationService.positionOrder[0], !this.randomizationService.successTargetOnScreen1);
+    }
+    setTimeout(() => {
+      this.clicked = false;
+      if(this.selectedInputType == InputType.MOUSE){ //to add eventListeners to new clickAreas 
         this.activateSelectedInputType();
-      } 
+      }
+      this.error = false;
+      }, 1000) // wait until number sound has played before showing next task, but task is started as soon as sound is played
+    }, 1000)
+    
   }
 
 }

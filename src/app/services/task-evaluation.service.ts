@@ -102,7 +102,7 @@ export class TaskEvaluationService {
       result.errors = this.errorCount;
       this.endEyeMouseInterval(); //end last MOUSE interval (during Mix2 only)
       this.taskRunning = false;
-      this.playAudio();
+      this.playAudio("assets/success.mp3");
       if(aborted){
         result.aborted = aborted;
       }
@@ -118,11 +118,11 @@ export class TaskEvaluationService {
     }
   }
 
-  public playAudio(){
+  public playAudio(src : string) : Promise<void>{
     let audio = new Audio();
-    audio.src = "assets/success.mp3"; /* source: http://freesoundeffect.net/sound/correct-answer-bling-1-sound-effect */
+    audio.src = src; /* source: http://freesoundeffect.net/sound/correct-answer-bling-1-sound-effect */
     audio.load();
-    audio.play();
+    return audio.play();
   }
 
   prevDistToScreen = [0,0];

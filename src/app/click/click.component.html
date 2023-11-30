@@ -1,5 +1,5 @@
 <dual-screen #dualscreen (secondWindowLoaded)="secondWindowLoaded=true" [initialOpening]="false" [contentHeight]="'50%'">
-    <div class="container">
+    <div class="container" *ngIf="!clicked">
         <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[0], 'clickArea']" id="click-task"> 
             <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: 2}} TARGET</mat-card-title>
         </mat-card>
@@ -11,9 +11,14 @@
             <mat-card-title>{{randomizationService.positionOrder[1] | matCardTitle: 2}}</mat-card-title>
         </mat-card>
     </div>
+    <div *ngIf="clicked">
+        <div class="success" *ngIf="!error"> ✓ </div>
+        <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
+        <div style="text-align:center;">You will be redirected back to the task page in a moment...</div>
+    </div>  
 </dual-screen>
 
-<div class="container">
+<div class="container" *ngIf="!clicked">
     <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[0], 'clickArea']" id="click-task"> 
         <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: 1}} TARGET </mat-card-title>
     </mat-card>
@@ -25,5 +30,10 @@
         <mat-card-title>{{randomizationService.positionOrder[1] | matCardTitle: 1}}</mat-card-title>
     </mat-card>
 </div>
+<div *ngIf="clicked">
+    <div class="success" *ngIf="!error"> ✓ </div>
+    <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
+    <div style="text-align:center;">You will be redirected back to the task page in a moment...</div>
+</div>  
 
 <app-popup-pointer-lock-stop *ngIf="pointerLockStopped" (addSuccess)="addSuccess(true)" (startMix2)="activateSelectedInputType()"></app-popup-pointer-lock-stop>

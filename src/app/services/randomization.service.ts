@@ -46,7 +46,7 @@ export class RandomizationService {
 
   messageSubject = new Subject();
   
-  constructor(private store : Store<AppState>, private taskEvalutationService : TaskEvaluationService) { 
+  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService) { 
     this.randomizeExperiment();
 
     this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak possible
@@ -102,13 +102,15 @@ export class RandomizationService {
     //endTask(); must be called separatly!
     if(this.repsDone + 1 < this.sizeOrder.length){
       this.selectedSize = this.sizeOrder[this.repsDone+1];
-      this.taskEvalutationService.selectedSize = this.selectedSize;
+      this.taskEvaluationService.selectedSize = this.selectedSize;
       this.shuffle(this.positionOrder);
       this.successTargetOnScreen1 = this.successTargetOnScreen1Order[this.repsDone+1]; 
-      this.taskEvalutationService.targetOnMainScreen = this.successTargetOnScreen1;
-      this.taskEvalutationService.pos = this.positionOrder[0];
-      this.repsDone++;
-      this.taskEvalutationService.startTask();
+      this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
+      this.taskEvaluationService.pos = this.positionOrder[0];
+      this.playNumberAudio(this.positionOrder[0], !this.successTargetOnScreen1).then(() => {
+        this.repsDone++;
+        this.taskEvaluationService.startTask();
+      })
     }
     else{ 
       this.nextTask();
@@ -150,6 +152,18 @@ export class RandomizationService {
     }
   }
 
+  public playNumberAudio(number : Positions, screenTwo : boolean = false) : Promise<void>{
+    let numberString : string = "1";
+    if(screenTwo){
+      numberString = String(Number(number) + 2)
+    }
+    else{
+      numberString = number;
+    }
+    let src = "assets/number-" + numberString + ".mp3";
+    return this.taskEvaluationService.playAudio(src); 
+  }
+
   private randomizeExperiment() : void{
     this.shuffle(this.inputOrder);
     this.shuffle(this.taskOrder);
@@ -164,8 +178,8 @@ export class RandomizationService {
     console.log(this.successTargetOnScreen1Order);
     this.selectedSize = this.sizeOrder[0]; //first size
     this.successTargetOnScreen1 = this.successTargetOnScreen1Order[0]; //first screen
-    this.taskEvalutationService.selectedSize = this.selectedSize;
-    this.taskEvalutationService.targetOnMainScreen = this.successTargetOnScreen1;
+    this.taskEvaluationService.selectedSize = this.selectedSize;
+    this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
   }
 
   //note: position shuffled on every rep

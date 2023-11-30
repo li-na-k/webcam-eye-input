@@ -47,7 +47,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     }
 
     public addSuccess(){
-      this.taskEvaluationService.playAudio();
+      this.taskEvaluationService.playAudio("assets/success.mp3");
       this.clickArea?.classList.add("success");
       this.success = true;
       setTimeout(() => {
