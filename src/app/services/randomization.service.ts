@@ -25,19 +25,19 @@ export class RandomizationService {
   private selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
   //order of tasks
-  public inputOrder : InputType[] = [InputType.MIX2]; //!!InputType.MOUSE 
+  public inputOrder : InputType[] = [InputType.MIX2, InputType.MOUSE];
   public taskOrder : Tasks[] = [Tasks.SELECT];
-  public positionOrder : Positions[] = [Positions.POS1, Positions.POS2, Positions.POS3, Positions.POS4];
+  public positionOrder : Positions[] = [Positions.POS1, Positions.POS2];
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
 
   // each task: 3 different sizes, two reps each
-  public sizeOrder = [Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L];
+  public sizeOrder = [Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L];
   public repsDone : number = 0;
   public selectedSize : Sizes =  this.sizeOrder[0];
 
   //order: target on screen 2 or 1?
-  public successTargetOnScreen1Order : boolean[] = [true, false, true, false, true, false, true, false, true, false];
+  public successTargetOnScreen1Order : boolean[] = [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false];
   public successTargetOnScreen1 : boolean = this.successTargetOnScreen1Order[0];
 
   //final page after finishing inputs 

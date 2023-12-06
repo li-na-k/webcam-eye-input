@@ -1,18 +1,18 @@
 <app-header></app-header>
-<app-surface-tags></app-surface-tags>
+<app-surface-tags *ngIf="selectedInputType == InputType.MIX2"></app-surface-tags>
 
 <!-- header -->
 <div *ngIf="!randomizationService.showFinalPageComponent" class="button-header-container">
     <!-- progress + skip -->
     <div *ngIf="!showRecalibration" 
         style="background-color: white; border-radius: 15px; padding: 10px 15px; 
-        display: flex; justify-content: space-between; align-items:center; width: 300px;">
+        display: flex; justify-content: flex-start; align-items:center; width: 600px; flex-wrap: wrap;">
         <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.sizeOrder; index as i">
             <span *ngIf="i + 1 <= randomizationService.repsDone">●</span>
             <span *ngIf="i + 1 > randomizationService.repsDone">○</span>
         </span>
-        <div style="font-size: 12px; line-height: 15px; padding-left: 15px;" *ngIf="selectedInputType == InputType.MIX2">To skip press esc.</div>
-        <button [disabled]="showTestMode" *ngIf="selectedInputType != InputType.MIX2" style="margin: 0px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">Skip</button>
+        <div style="font-size: 12px; line-height: 15px; padding: 5px;" *ngIf="selectedInputType == InputType.MIX2">To skip press esc.</div>
+        <button [disabled]="showTestMode" *ngIf="selectedInputType != InputType.MIX2" style="margin: 8px 5px;" (click)="baseTaskComponent.addSuccess(true); this.blur($event)">Skip</button>
     </div>
 
     <span class="white-box" *ngIf="!showRecalibration" >
