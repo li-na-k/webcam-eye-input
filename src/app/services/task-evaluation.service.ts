@@ -131,44 +131,26 @@ export class TaskEvaluationService {
     })
   }
 
-  prevDistToScreen : [number, number]= [0,0];
+  prevDistanceToBorder : [number, number] = [0,0]; //distance from left screen border, distance to right screen border
   prevScreen : Screens = Screens.MAINSCREEN;
-  calculateTargetDistance(target : HTMLElement, window : Window){ //!! needs to be adapted depending whether top-bottom or left-right setup
-    console.log("previous", this.prevDistToScreen)
-    if(this.taskRunning){
-      let result : TaskResult = this.results[this.results.length-1]; //current result object#
-      //!! with main screen below other (only works when target is alternating between screens)
-      // let YdistToBorder = 0;
-      // if(result.targetOnMainScreen){ //bottom screen
-      //   YdistToBorder = Math.round(window.innerHeight) - Math.round(target.getBoundingClientRect().top);
-      // }
-      // else{ //top screen
-      //   YdistToBorder = Math.round(target.getBoundingClientRect().bottom);
-      // }
-      
-      // let XdistToBorder = Math.round(target.getBoundingClientRect().right);
-      // result.YdistancePrevTarget = YdistToBorder + this.prevDistToScreen[0];
-      // result.XdistancePrevTarget = this.prevDistToScreen[1] - XdistToBorder //neg value = below prev*/
-
-      //!! with main screen on the left
-      let XdistToBorder = 0;
-      let targetXCenter = Math.round(target.getBoundingClientRect().right - target.getBoundingClientRect().left); //left Border to center
-      if(result.targetOnMainScreen){ //left screen -> dist to right boarder
-        XdistToBorder = Math.round(window.innerWidth) - targetXCenter;
+  calculateTargetDistance(target : HTMLElement, window : Window){
+    if(this.taskRunning){ //!! not working if task skipped because dom might not have loaded yet
+      let result : TaskResult = this.results[this.results.length-1]; //current result object
+      let targetCenterFromLeft = Math.round(target.getBoundingClientRect().left + 0.5*(target.getBoundingClientRect().right - target.getBoundingClientRect().left)); //left Border to center of target
+      let targetCenterToRight = (Math.round(window.innerWidth) - targetCenterFromLeft);
+      if(result.targetOnMainScreen == (this.prevScreen == Screens.MAINSCREEN)){ //screen does not change
+        result.XdistancePrevTarget = Math.abs(this.prevDistanceToBorder[0] - targetCenterFromLeft);
+        console.log("same screen:", this.prevDistanceToBorder[0] + "-" + targetCenterFromLeft + "=" + result.XdistancePrevTarget)
       }
-      else{ //right screen -> dist to left boarder
-        XdistToBorder = targetXCenter;
+      else{ //screen changes
+        if(result.targetOnMainScreen){ //before right screen, now left
+          result.XdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToRight;
+        }
+        else{ //before left screen, now right
+          result.XdistancePrevTarget = this.prevDistanceToBorder[1] + targetCenterFromLeft;
+        }
       }
-      let YDistToBorder = Math.round(target.getBoundingClientRect().top);
-      if(result.targetOnMainScreen == (this.prevScreen == Screens.MAINSCREEN)){ //check if screen changes
-        result.XdistancePrevTarget = this.prevDistToScreen[0] - XdistToBorder; // neg value = left to prev
-      }
-      else{
-        result.XdistancePrevTarget = XdistToBorder + this.prevDistToScreen[0];
-      }
-      result.YdistancePrevTarget = this.prevDistToScreen[1] - YDistToBorder; //neg value = below prev
-      
-      this.prevDistToScreen = [XdistToBorder, YDistToBorder]; //depending on which screen: xDistToBorder is either dist to left or dist to right
+      this.prevDistanceToBorder = [targetCenterFromLeft, targetCenterToRight];
       this.prevScreen = result.targetOnMainScreen?Screens.MAINSCREEN:Screens.SECONDSCREEN;
     }
   }
