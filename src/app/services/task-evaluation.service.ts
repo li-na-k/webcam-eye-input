@@ -119,11 +119,16 @@ export class TaskEvaluationService {
     }
   }
 
-  public playAudio(src : string) : Promise<void>{
-    let audio = new Audio();
-    audio.src = src; /* source: http://freesoundeffect.net/sound/correct-answer-bling-1-sound-effect */
-    audio.load();
-    return audio.play();
+  public playAudio(src : string) : Promise<Event>{
+    return new Promise(function(resolve, reject){
+      let audio = new Audio();
+      audio.preload = "auto";
+      audio.src = src; /* source: http://freesoundeffect.net/sound/correct-answer-bling-1-sound-effect */
+      audio.load();
+      audio.play();
+      audio.onerror = reject;
+      audio.onended = resolve; 
+    })
   }
 
   prevDistToScreen : [number, number]= [0,0];

@@ -217,7 +217,7 @@ export class ClickComponent extends BaseTasksComponent{
         this.activateSelectedInputType();
       }
       this.error = false;
-      }, 1000) // wait until number sound has played before showing next task, but task is started as soon as sound is played
+      }, 1000) // wait until number sound has played before showing next task (task is started as soon as sound is finished)
     }, 1000)
     
   }

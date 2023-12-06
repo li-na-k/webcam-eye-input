@@ -152,7 +152,7 @@ export class RandomizationService {
     }
   }
 
-  public playNumberAudio(number : Positions, screenTwo : boolean = false) : Promise<void>{
+  public playNumberAudio(number : Positions, screenTwo : boolean = false) : Promise<Event>{
     let numberString : string = "1";
     if(screenTwo){
       numberString = String(Number(number) + 2)
