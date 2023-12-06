@@ -16,7 +16,7 @@
                 <div style="text-align: left; margin-top: 15px;">
                     Then ...
                     <ul>
-                        <li>Move the second window to your upper screen.</li>
+                        <li>Move the second window to your right screen.</li>
                         <li>Expand the window to full size.</li>
                     </ul>
                 </div>
@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="currentInstruction==1">
+        <!-- <div *ngIf="currentInstruction==1">
             <div style="display: flex; gap: 10px;">
                 <div style="text-align: left; margin-top: 15px;">
                     To ensure that the eye tracking is as accurate as possible, the system must first be calibrated.
@@ -47,7 +47,7 @@
                 <button style="margin-top: 45px;" class="linkstylebutton"
                     (click)="socketService.startCalibration();">start calibration manually</button>
             </div>
-        </div>
+        </div> -->
         <!-- buttons -->
         <div style="margin-top: 25px;">
             <button *ngIf="currentInstruction!=(numberInstructions-1) && currentInstruction!=1"

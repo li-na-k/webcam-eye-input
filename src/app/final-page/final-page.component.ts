@@ -19,7 +19,7 @@ export class FinalPageComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.questionnaireCountdownDone = true;
-    }, 20000)
+    }, 0)
   }
 
   confirmNextInput(){

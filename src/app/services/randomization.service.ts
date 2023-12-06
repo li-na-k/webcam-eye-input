@@ -85,7 +85,7 @@ export class RandomizationService {
 
   private nextTask() : void{
     this.randomizeNewTask()
-    this.repsDone = 8;
+    this.repsDone = 38;
     if(this.tasksDone < this.taskOrder.length){
       this.selectTask(this.taskOrder[this.tasksDone])
       this.tasksDone++;

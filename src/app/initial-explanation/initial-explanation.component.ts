@@ -14,7 +14,7 @@ export class InitialExplanationComponent {
     @Output() closeMe = new EventEmitter<boolean>();
 
     protected currentInstruction : number = 0;
-    protected numberInstructions : number = 3;
+    protected numberInstructions : number = 1;
     protected disabledNext = true; //default disable next button on first slide where second window should be opened
   
     protected nextExplanation(){
