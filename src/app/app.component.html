@@ -63,13 +63,16 @@
                         width: 40px;
                         height: 40px;">change_circle</mat-icon>
                         Your Input Method now:
-                        <span style="font-weight: bold; color: var(--apricot);">{{selectedInputType}}</span>
+                        <span style="font-weight: bold; color: var(--blue);">{{selectedInputType}}</span>
                     </div>
                     <div style="margin-bottom: 45px;">
                         {{randomizationService.inputMethodInstructions}}
                     </div>
-                    <div style="margin-bottom: 20px;">
+                    <!-- <div style="margin-bottom: 20px;">
                         <strong style="font-size: 25px; vertical-align: top;">> </strong>{{randomizationService.taskInstructions}}
+                    </div> -->
+                    <div *ngIf="selectedInputType == InputType.MIX2" style="margin-bottom: 20px; padding: 5px; color: var(--apricot); border: 3px solid var(--apricot); border-radius: 5px;">
+                        ⚠ Calibration necessary! Ask the instructor for help.
                     </div>
                     <button
                         (click)="showTaskPopup=false; startExperiment(); this.blur($event)"
