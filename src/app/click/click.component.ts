@@ -155,11 +155,11 @@ export class ClickComponent extends BaseTasksComponent{
     let x = matrix.m41; 
     let y = matrix.m42;
     if(this.selectedInputType == InputType.MIX2){
-      // //only check click areas of active screen (first half of clickAreas array on main screen, second half on second screen
-      // var halflength = Math.ceil(this.clickAreas!.length / 2);    
-      // var activeClickAreas : Element[] = this.dualscreen.getActiveScreen() == 1?this.clickAreas!.slice(0,halflength):this.clickAreas!.slice(halflength, undefined)
-      for (let i = 0; i < this.clickAreas!.length; i++){
-        let clickArea = this.clickAreas![i] as HTMLElement;
+      //only check click areas of active screen (first half of clickAreas array on main screen, second half on second screen
+      var halflength = Math.ceil(this.clickAreas!.length / 2);    
+      var activeClickAreas : Element[] = this.dualscreen.getActiveScreen() == 1?this.clickAreas!.slice(0,halflength):this.clickAreas!.slice(halflength, undefined)
+      for (let i = 0; i < activeClickAreas!.length; i++){
+        let clickArea = activeClickAreas![i] as HTMLElement;
         let inside = false;
         inside = this.eyeInputService.isInside(clickArea, x,y);  
         if(inside){
