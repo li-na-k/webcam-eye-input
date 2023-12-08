@@ -44,11 +44,6 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
     this.secondWindow?.close()
   }
 
-  //get second window without re-opening it
-  public getSecondWindow(){
-    return this.secondWindow;
-  }
-
   public getActiveScreen() : number { 
     if(this.secondFakeFocussed){
       return 2;

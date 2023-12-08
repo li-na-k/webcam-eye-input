@@ -22,7 +22,7 @@ import { Positions } from '../enums/positions';
 export class ClickComponent extends BaseTasksComponent{
   @HostListener('body:mousemove', ['$event']) 
   onMouseMove(e : any) {
-    if(this.dualscreen.getActiveScreen() == 2 && this.dualscreen.secondScreen_mainScreen_arrow && this.dualscreen.secondWindow){
+    if(this.dualscreen.getActiveScreen() == 2 && this.dualscreen.secondScreen_arrow && this.dualscreen.secondWindow){
       this.eyeInputService.moveArrowWithMouse(e, this.dualscreen.secondScreen_arrow.nativeElement, [0, this.dualscreen.secondWindow.width, this.dualscreen.secondWindow.height, 0]);
     }
     else if(this.mainScreen_arrow && this.dualscreen.mainWindow){
@@ -69,6 +69,7 @@ export class ClickComponent extends BaseTasksComponent{
     }
   }
 
+  private currentScreen : Screens = Screens.MAINSCREEN;
   private currentScreen$ : Observable<any> = this.store.select(selectCurrentScreen);
   private startScreenChangeDetection() {
     console.log("screen detection started")
@@ -76,6 +77,7 @@ export class ClickComponent extends BaseTasksComponent{
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe(d => {
         this.changeScreen(d)
+        this.currentScreen = d;
       })
   }
 
@@ -203,7 +205,26 @@ export class ClickComponent extends BaseTasksComponent{
     this.webSocketService.stopSendingGazeData();
   }
 
+  private setCurrentCursorVisibility(visible : boolean){
+    if(this.selectedInputType == InputType.MOUSE){
+      let style = (!visible)?'none':'';
+      document.body.style.cursor = style
+      this.dualscreen.secondWindow.document.body.style.cursor = style;
+    }
+    else{
+      let style = (!visible)?'hidden':'visible';
+      if(this.currentScreen == Screens.MAINSCREEN){
+        this.mainScreen_arrow!.style.visibility = style
+      }
+      else{
+        this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = style
+      }
+    }
+  }
+
+
   private backToTasksPage(success? : boolean){
+    this.setCurrentCursorVisibility(false);
     setTimeout(() => { // wait for success sound to finish before triggering number sound in nextRep
     if(success){
       this.randomizationService.nextRep();
@@ -217,7 +238,8 @@ export class ClickComponent extends BaseTasksComponent{
         this.activateSelectedInputType();
       }
       this.error = false;
-      }, 1000) // wait until number sound has played before showing next task (task is started as soon as sound is finished)
+      this.setCurrentCursorVisibility(true);
+      }, 2000) // wait until number sound has played before showing next task (task is started as soon as sound is finished)
     }, 1000)
     
   }
