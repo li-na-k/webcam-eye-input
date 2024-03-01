@@ -131,5 +131,9 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     protected startEyeInput(){ 
       //not needed
     }
+
+    public showInterTrialPage(show : boolean) : void {
+      this.success = show
+    }
   }
   

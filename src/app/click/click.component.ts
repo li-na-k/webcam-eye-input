@@ -176,6 +176,10 @@ export class ClickComponent extends BaseTasksComponent{
     this.checkIfError(currentClickArea);
   }
 
+  public showInterTrialPage(show : boolean){
+    this.clicked = show
+  }
+
   protected startMix2Input(){
     this.webSocketService.startSendingGazeData();
     this.eyeInputService.activateMix2Input(window, this.mainScreen_arrow, this.timeOutAfterMouseInput); //Start with main screen
@@ -229,7 +233,7 @@ export class ClickComponent extends BaseTasksComponent{
     if(success){
       this.randomizationService.nextRep();
     }
-    else{
+    else{ //repeat number audio
       this.randomizationService.playNumberAudio(this.randomizationService.positionOrder[0], !this.randomizationService.successTargetOnScreen1);
     }
     setTimeout(() => {

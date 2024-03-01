@@ -14,7 +14,6 @@
     <div *ngIf="clicked">
         <div class="success" *ngIf="!error"> ✓ </div>
         <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
-        <div style="text-align:center;">You will be redirected back to the task page in a moment...</div>
     </div>  
 </dual-screen>
 
@@ -33,7 +32,6 @@
 <div *ngIf="clicked">
     <div class="success" *ngIf="!error"> ✓ </div>
     <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
-    <div style="text-align:center;">You will be redirected back to the task page in a moment...</div>
 </div>  
 
 <app-popup-pointer-lock-stop *ngIf="pointerLockStopped" (addSuccess)="addSuccess(true)" (startMix2)="activateSelectedInputType()"></app-popup-pointer-lock-stop>

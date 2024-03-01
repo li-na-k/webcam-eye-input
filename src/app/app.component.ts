@@ -88,10 +88,16 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   }
 
   startExperiment(){
-    this.baseTaskComponent.activateSelectedInputType();
+    this.baseTaskComponent.showInterTrialPage(true);
     this.randomizationService.playNumberAudio(this.randomizationService.positionOrder[0], !this.randomizationService.successTargetOnScreen1).then(() => {
       this.taskEvaluationService.startTask();
     });
+    setTimeout(() => {
+      this.baseTaskComponent.showInterTrialPage(false)
+      this.baseTaskComponent.activateSelectedInputType();
+      }, 2000)
+    
+
   }
 
 
