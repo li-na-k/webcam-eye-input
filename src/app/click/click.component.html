@@ -1,14 +1,14 @@
 <dual-screen #dualscreen (secondWindowLoaded)="secondWindowLoaded=true" [initialOpening]="false" [contentHeight]="'50%'">
-    <div class="container" *ngIf="!clicked">
+    <div class="flex-container" *ngIf="!clicked">
         <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[0], 'clickArea']" id="click-task"> 
-            <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: 2}}</mat-card-title>
+            <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: false}}</mat-card-title>
         </mat-card>
-        <!-- show following in case right click target is not on second screen -->
+        <!-- show following in case correct click target is not on second screen -->
         <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[0], 'clickArea']"> 
-            <mat-card-title>{{randomizationService.positionOrder[0]| matCardTitle: 2}}</mat-card-title>
+            <mat-card-title>{{randomizationService.positionOrder[0]| matCardTitle: false}}</mat-card-title>
         </mat-card>
         <mat-card [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[1], 'clickArea']">
-            <mat-card-title>{{randomizationService.positionOrder[1] | matCardTitle: 2}}</mat-card-title>
+            <mat-card-title>{{randomizationService.positionOrder[1] | matCardTitle: false}}</mat-card-title>
         </mat-card>
     </div>
     <div *ngIf="clicked">
@@ -17,16 +17,16 @@
     </div>  
 </dual-screen>
 
-<div class="container" *ngIf="!clicked">
+<div class="flex-container" *ngIf="!clicked">
     <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[0], 'clickArea']" id="click-task"> 
-        <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: 1}}</mat-card-title>
+        <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: true}}</mat-card-title>
     </mat-card>
-    <!-- show following in case right click target is not on main screen -->
+    <!-- show following in case correct click target is not on main screen -->
     <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[0], 'clickArea']"> 
-        <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: 1}}</mat-card-title>
+        <mat-card-title>{{randomizationService.positionOrder[0] | matCardTitle: true}}</mat-card-title>
     </mat-card>
     <mat-card [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.positionOrder[1], 'clickArea']">
-        <mat-card-title>{{randomizationService.positionOrder[1] | matCardTitle: 1}}</mat-card-title>
+        <mat-card-title>{{randomizationService.positionOrder[1] | matCardTitle: true}}</mat-card-title>
     </mat-card>
 </div>
 <div *ngIf="clicked">

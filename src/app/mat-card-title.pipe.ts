@@ -6,8 +6,8 @@ import { Positions } from './enums/positions';
 })
 export class MatCardTitlePipe implements PipeTransform {
 
-  transform(pos: Positions, screen = 1): string {
-    if(screen == 1){
+  transform(pos: Positions, mainScreen = true): string {
+    if(!mainScreen){
       return pos;
     }
     else{

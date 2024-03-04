@@ -131,7 +131,9 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   public addSuccess(aborted?: boolean){
-    this.taskEvaluationService.calculateTargetDistance(this.taskElement as HTMLElement,this.taskEvaluationService.targetOnMainScreen?window:this.dualscreen.secondWindow)
+    if(!aborted){
+      this.taskEvaluationService.calculateTargetDistance(this.taskElement as HTMLElement,this.taskEvaluationService.targetOnMainScreen?window:this.dualscreen.secondWindow)
+    }
     this.error = false; 
     this.taskEvaluationService.endTask(aborted); 
     if(aborted){
@@ -234,7 +236,7 @@ export class ClickComponent extends BaseTasksComponent{
       this.randomizationService.nextRep();
     }
     else{ //repeat number audio
-      this.randomizationService.playNumberAudio(this.randomizationService.positionOrder[0], !this.randomizationService.successTargetOnScreen1);
+      this.randomizationService.playNumberAudio(this.randomizationService.positionOrder[0], this.randomizationService.successTargetOnScreen1);
     }
     setTimeout(() => {
       this.clicked = false;

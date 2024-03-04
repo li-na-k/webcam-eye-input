@@ -56,13 +56,23 @@ mat-card-title{
     height: 180px;
 }
 
+/* 
+legacy code: for aligning items in rows - use container instead of flex-container for this
 .pos1{
     float: left;
 }
 
 .pos2{
     float: right;
+} */
+
+.pos1{
+   order: 0 
 }
+
+.pos2{
+    order: 1 
+ }
 
 
 .screen-change-area{
@@ -86,7 +96,3 @@ mat-card-title{
     width: 100%;
 }
 }
-
-/* ::ng-deep dual-screen .content{
-    height: 50%;
-} */

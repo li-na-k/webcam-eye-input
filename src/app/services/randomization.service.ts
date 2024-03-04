@@ -107,7 +107,7 @@ export class RandomizationService {
       this.successTargetOnScreen1 = this.successTargetOnScreen1Order[this.repsDone+1]; 
       this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
       this.taskEvaluationService.pos = this.positionOrder[0];
-      this.playNumberAudio(this.positionOrder[0], !this.successTargetOnScreen1).then(() => {
+      this.playNumberAudio(this.positionOrder[0], this.successTargetOnScreen1).then(() => {
         this.repsDone++;
         this.taskEvaluationService.startTask();
       })
@@ -152,9 +152,9 @@ export class RandomizationService {
     }
   }
 
-  public playNumberAudio(number : Positions, screenTwo : boolean = false) : Promise<Event>{
+  public playNumberAudio(number : Positions, mainScreen : boolean) : Promise<Event>{
     let numberString : string = "1";
-    if(screenTwo){
+    if(mainScreen){
       numberString = String(Number(number) + 2)
     }
     else{

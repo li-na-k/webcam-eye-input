@@ -59,7 +59,8 @@ export class TaskEvaluationService {
       result.task = this.selectedTask;
       result.size = this.selectedSize;
       result.targetOnMainScreen = this.targetOnMainScreen;
-      result.pos = this.pos;
+      result.positionOnScreen = this.pos;
+      result.setPosNumber()
       result.eyeMouseDistribution = [];
     }
   }
@@ -100,6 +101,7 @@ export class TaskEvaluationService {
       let result : TaskResult = this.results[this.results.length-1]
       result.endTime = Date.now();
       result.setDuration();
+      result.setPosNumber();
       result.errors = this.errorCount;
       this.endEyeMouseInterval(); //end last MOUSE interval (during Mix2 only)
       this.taskRunning = false;
@@ -131,26 +133,26 @@ export class TaskEvaluationService {
     })
   }
 
-  prevDistanceToBorder : [number, number] = [0,0]; //distance from left screen border, distance to right screen border
+  prevDistanceToBorder : [number, number] = [0,0]; //distance from top screen border, distance to bottom screen border
   prevScreen : Screens = Screens.MAINSCREEN;
   calculateTargetDistance(target : HTMLElement, window : Window){
     if(this.taskRunning){ //!! not working if task skipped because dom might not have loaded yet
       let result : TaskResult = this.results[this.results.length-1]; //current result object
-      let targetCenterFromLeft = Math.round(target.getBoundingClientRect().left + 0.5*(target.getBoundingClientRect().right - target.getBoundingClientRect().left)); //left Border to center of target
-      let targetCenterToRight = (Math.round(window.innerWidth) - targetCenterFromLeft);
+      let targetCenterFromTop = Math.round(target.getBoundingClientRect().top + 0.5*(target.getBoundingClientRect().bottom - target.getBoundingClientRect().top)); //left Border to center of target
+      let targetCenterToBottom = (Math.round(window.innerWidth) - targetCenterFromTop);
       if(result.targetOnMainScreen == (this.prevScreen == Screens.MAINSCREEN)){ //screen does not change
-        result.XdistancePrevTarget = Math.abs(this.prevDistanceToBorder[0] - targetCenterFromLeft);
-        console.log("same screen:", this.prevDistanceToBorder[0] + "-" + targetCenterFromLeft + "=" + result.XdistancePrevTarget)
+        result.YdistancePrevTarget = Math.abs(this.prevDistanceToBorder[0] - targetCenterFromTop);
+        console.log("same screen:", this.prevDistanceToBorder[0] + "-" + targetCenterFromTop + "=" + result.YdistancePrevTarget)
       }
       else{ //screen changes
-        if(result.targetOnMainScreen){ //before right screen, now left
-          result.XdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToRight;
+        if(result.targetOnMainScreen){ //before bottom screen, now left
+          result.YdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToBottom;
         }
-        else{ //before left screen, now right
-          result.XdistancePrevTarget = this.prevDistanceToBorder[1] + targetCenterFromLeft;
+        else{ //before left screen, now bottom
+          result.YdistancePrevTarget = this.prevDistanceToBorder[1] + targetCenterFromTop;
         }
       }
-      this.prevDistanceToBorder = [targetCenterFromLeft, targetCenterToRight];
+      this.prevDistanceToBorder = [targetCenterFromTop, targetCenterToBottom];
       this.prevScreen = result.targetOnMainScreen?Screens.MAINSCREEN:Screens.SECONDSCREEN;
     }
   }
@@ -161,11 +163,13 @@ export class TaskEvaluationService {
       "inputType",
       "size",
       "duration",
+      "durationPerPixel",
       "errors",
       "aborted",
       "screenChanges",
       "targetOnMainScreen",
-      "pos",
+      "positionOnScreen",
+      "posNumber",
       "XdistancePrevTarget",
       "YdistancePrevTarget",
       "eyeMouseDistribution",
