@@ -31,7 +31,7 @@ export class RandomizationService {
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
 
-  // each task: 3 different sizes, two reps each
+  // each input method: 2 different sizes, each 20 repetitions (position is random!)
   public sizeOrder = [Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L];
   public repsDone : number = 0;
   public selectedSize : Sizes =  this.sizeOrder[0];
