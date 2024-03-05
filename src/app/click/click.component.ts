@@ -245,7 +245,7 @@ export class ClickComponent extends BaseTasksComponent{
       }
       this.error = false;
       this.setCurrentCursorVisibility(true);
-      }, 2000) // wait until number sound has played before showing next task (task is started as soon as sound is finished)
+      }, 1000) // wait until number sound has played before showing next task (task is started as soon as sound is finished)
     }, 1000)
     
   }

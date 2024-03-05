@@ -95,7 +95,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     setTimeout(() => {
       this.baseTaskComponent.showInterTrialPage(false)
       this.baseTaskComponent.activateSelectedInputType();
-      }, 2000)
+      }, 1000)
     
 
   }

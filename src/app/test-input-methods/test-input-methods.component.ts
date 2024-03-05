@@ -53,7 +53,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       setTimeout(() => {
         this.clickArea?.classList.remove("success");
         this.success = false;
-      },2000);
+      },1000);
     }
   
     protected startMouseInput(){
