@@ -176,10 +176,16 @@ export class RandomizationService {
     this.shuffle(this.successTargetOnScreen1Order);
     console.log(this.sizeOrder);
     console.log(this.successTargetOnScreen1Order);
+    this.addFirstDummyRep() //this will be filtered during analysis (added to have equal distance calculations during all countet reps + because sometimes problems during first rep)
     this.selectedSize = this.sizeOrder[0]; //first size
     this.successTargetOnScreen1 = this.successTargetOnScreen1Order[0]; //first screen
     this.taskEvaluationService.selectedSize = this.selectedSize;
     this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
+  }
+
+  private addFirstDummyRep(){
+    this.sizeOrder.unshift(Sizes.S)
+    this.successTargetOnScreen1Order.unshift(false)
   }
 
   //note: position shuffled on every rep
