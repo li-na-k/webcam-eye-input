@@ -165,7 +165,7 @@ export class RandomizationService {
   }
 
   private randomizeExperiment() : void{
-    this.shuffle(this.inputOrder);
+    //this.shuffle(this.inputOrder);
     this.shuffle(this.taskOrder);
     console.log(this.inputOrder);
     console.log(this.taskOrder);
