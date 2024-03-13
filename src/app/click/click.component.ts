@@ -40,7 +40,7 @@ export class ClickComponent extends BaseTasksComponent{
 
   private taskElementID : string = "click-task"; //area that shows success when clicked
   private taskElement : Element | null = null;
-  protected  clicked : boolean = false;
+  protected clicked : boolean = false;
   protected error : boolean = false;
 
   private screenChangeDetection_interval : any = null;
@@ -111,9 +111,7 @@ export class ClickComponent extends BaseTasksComponent{
 
   protected checkIfError(clickArea : HTMLElement | null){
       console.log("check if error click area", clickArea)
-      let success = false;
       if(clickArea){ //if not clicked outside of click area
-        this.clicked = true;
         //Check if right area clicked
         if(clickArea?.id != this.taskElementID && clickArea.parentElement?.id != this.taskElementID){
           this.error = true;
@@ -121,12 +119,7 @@ export class ClickComponent extends BaseTasksComponent{
         }
         else{ 
           this.addSuccess();
-          success = true;
         }
-        this.backToTasksPage(success) //timeout starts
-      }
-      else{
-        this.clicked = false;
       }
   }
 
@@ -135,10 +128,11 @@ export class ClickComponent extends BaseTasksComponent{
       this.taskEvaluationService.calculateTargetDistance(this.taskElement as HTMLElement,this.taskEvaluationService.targetOnMainScreen?window:this.dualscreen.secondWindow)
     }
     this.error = false; 
-    this.taskEvaluationService.endTask(aborted); 
-    if(aborted){
-      this.randomizationService.nextRep();
-    }
+    this.taskEvaluationService.endTask(aborted);
+    this.showInterTrialPage(true); 
+    this.randomizationService.nextRep().then(()=>{
+      this.showInterTrialPage(false);
+    });
   }
 
   protected startMouseInput(){
@@ -180,6 +174,13 @@ export class ClickComponent extends BaseTasksComponent{
 
   public showInterTrialPage(show : boolean){
     this.clicked = show
+    this.setCurrentCursorVisibility(!show);
+    if(!show){
+      if(this.selectedInputType == InputType.MOUSE){ //to add eventListeners to new clickAreas 
+        this.activateSelectedInputType();
+      }
+      this.error = false;
+    }
   }
 
   protected startMix2Input(){
@@ -226,29 +227,6 @@ export class ClickComponent extends BaseTasksComponent{
         this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = style
       }
     }
-  }
-
-
-  private backToTasksPage(success? : boolean){
-    this.setCurrentCursorVisibility(false);
-    setTimeout(() => { // wait for success sound to finish before triggering number sound in nextRep
-    if(success){
-      this.randomizationService.nextRep();
-    }
-    else{ //repeat number audio
-      this.randomizationService.playNumberAudio(this.randomizationService.positionOrder[0], this.randomizationService.successTargetOnScreen1);
-    }
-    setTimeout(() => {
-      this.clicked = false;
-      if(this.selectedInputType == InputType.MOUSE){ //to add eventListeners to new clickAreas 
-        this.activateSelectedInputType();
-      }
-      this.error = false;
-      this.setCurrentCursorVisibility(true);
-      }, 1000) // wait until number sound has played (or longer) before showing next task 
-        // 1000 ms = task is started as soon as sound is finished
-    }, 1000)
-    
   }
 
 }

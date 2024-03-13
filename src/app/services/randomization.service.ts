@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { InputType } from '../enums/input-type';
 import { Positions } from '../enums/positions';
 import { Sizes } from '../enums/sizes';
@@ -9,6 +9,8 @@ import { AppState } from '../state/app.state';
 import { changeInputType, changeTask } from '../state/expConditions/expconditions.action';
 import { selectTask, selectInputType } from '../state/expConditions/expconditions.selector';
 import { TaskEvaluationService } from './task-evaluation.service';
+import { RepObject } from '../classes/rep-object';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -24,21 +26,25 @@ export class RandomizationService {
   private selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
   private selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
-  //order of tasks
+  //order of reps
   public inputOrder : InputType[] = [InputType.MIX2, InputType.MOUSE];
   public taskOrder : Tasks[] = [Tasks.SELECT];
-  public positionOrder : Positions[] = [Positions.POS1, Positions.POS2];
+  public repOrder : RepObject[] = []
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
-
-  // each input method: 2 different sizes, each 20 repetitions (position is random!)
-  public sizeOrder = [Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L];
   public repsDone : number = 0;
-  public selectedSize : Sizes =  this.sizeOrder[0];
-
-  //order: target on screen 2 or 1?
-  public successTargetOnScreen1Order : boolean[] = [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false];
-  public successTargetOnScreen1 : boolean = this.successTargetOnScreen1Order[0];
+  //current rep
+  public selectedSize : Sizes =  Sizes.S;
+  public successTargetOnScreen1 : boolean = true;
+  public selectedPos : Positions = Positions.POS1
+  public getUnselectedPos(): Positions {
+      if (this.selectedPos == Positions.POS1) {
+        return Positions.POS2;
+      }
+      else{
+        return Positions.POS1
+      }
+  }
 
   //final page after finishing inputs 
   public everythingDone: boolean = false;
@@ -46,7 +52,7 @@ export class RandomizationService {
 
   messageSubject = new Subject();
   
-  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService) { 
+  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService, private http: HttpClient) { 
     this.randomizeExperiment();
 
     this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak possible
@@ -98,22 +104,37 @@ export class RandomizationService {
     }
   }
 
-  public nextRep() : void {
+  public async nextRep() : Promise<void> {
     //endTask(); must be called separatly!
-    if(this.repsDone + 1 < this.sizeOrder.length){
-      this.selectedSize = this.sizeOrder[this.repsDone+1];
+    if(this.repsDone + 1 < this.repOrder.length){
+      this.selectedSize = this.repOrder[this.repsDone+1].size;
       this.taskEvaluationService.selectedSize = this.selectedSize;
-      this.shuffle(this.positionOrder);
-      this.successTargetOnScreen1 = this.successTargetOnScreen1Order[this.repsDone+1]; 
+      this.successTargetOnScreen1 = this.repOrder[this.repsDone+1].mainScreen;
       this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
-      this.taskEvaluationService.pos = this.positionOrder[0];
-      this.playNumberAudio(this.positionOrder[0], this.successTargetOnScreen1).then(() => {
-        this.repsDone++;
-        this.taskEvaluationService.startTask();
-      })
+      this.selectedPos = this.repOrder[this.repsDone+1].pos;
+      this.taskEvaluationService.pos = this.selectedPos;
+      if(this.repOrder[this.repsDone+1].numberInBlock == 0){
+        await this.nextBlockAssignment(this.repsDone+1);
+      }
+      this.repsDone++;
+      this.taskEvaluationService.startTask();
     }
     else{ 
       this.nextTask();
+    }
+    return
+  }
+
+  private async nextBlockAssignment(nextRep: number): Promise<void> {
+    try {
+      await this.playNumberAudio(this.repOrder[nextRep].pos, this.repOrder[nextRep].mainScreen);
+      await this.playNumberAudio(this.repOrder[nextRep + 1].pos, this.repOrder[nextRep + 1].mainScreen);
+      await this.playNumberAudio(this.repOrder[nextRep + 2].pos, this.repOrder[nextRep + 2].mainScreen);
+      await this.playNumberAudio(this.repOrder[nextRep + 3].pos, this.repOrder[nextRep + 3].mainScreen);
+      return;
+    } catch (error) {
+      console.error("An error occurred while playing the sounds:", error);
+      return;
     }
   }
 
@@ -172,22 +193,55 @@ export class RandomizationService {
   }
 
   private randomizeNewTask(){
-    this.shuffle(this.sizeOrder); 
-    this.shuffle(this.successTargetOnScreen1Order);
-    console.log(this.sizeOrder);
-    console.log(this.successTargetOnScreen1Order);
-    this.addFirstDummyRep() //this will be filtered during analysis (added to have equal distance calculations during all countet reps + because sometimes problems during first rep)
-    this.selectedSize = this.sizeOrder[0]; //first size
-    this.successTargetOnScreen1 = this.successTargetOnScreen1Order[0]; //first screen
-    this.taskEvaluationService.selectedSize = this.selectedSize;
-    this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
+    this.readAndShuffleRepOrderFromCSV("assets/repOrder.csv").then((repOrder)=>{
+      this.repOrder = repOrder
+      console.log("repOrder for next task:",this.repOrder);
+      //TODO cannot call nextRep instead of lines below? (without: this.taskEvaluationService.startTask())?
+      this.selectedSize = this.repOrder[this.repsDone+1].size; //first size
+      this.taskEvaluationService.selectedSize = this.selectedSize;
+      this.successTargetOnScreen1 = this.repOrder[this.repsDone+1].mainScreen; //first screen
+      this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
+      this.selectedPos = this.repOrder[this.repsDone+1].pos; //first pos
+      this.taskEvaluationService.pos = this.selectedPos;
+    })
   }
 
-  private addFirstDummyRep(){
-    this.sizeOrder.unshift(Sizes.S)
-    this.successTargetOnScreen1Order.unshift(false)
+  private async readFileFromAssets(filePath: string): Promise<string> {
+    try {
+      const data = await firstValueFrom(this.http.get(filePath, { responseType: 'text' }));
+      return data as string;
+    } catch (error) {
+      console.error('Error reading file:', error);
+      return ''; // Return an empty string or handle the error accordingly
+    }
   }
 
-  //note: position shuffled on every rep
+  private async readAndShuffleRepOrderFromCSV(filename: string): Promise<RepObject[]> {
+    const repOrder: RepObject[] = [];
+    try{
+      const fileContent = await this.readFileFromAssets(filename)
+      const lines: string[] = fileContent.trim().replace(/\r/g, '').split('\n');
+      this.shuffle(lines)
+      lines.forEach((line: string) => {
+        const parts: string[] = line.split(';');
+        const size: Sizes = this.parseEnum(parts[4]);
+        const positions : number[] = parts.slice(0, 4).map((numStr: string) => parseInt(numStr));
+        positions.forEach((num : number, index : number) => {
+          const pos : Positions = num%2==0?Positions.POS2:Positions.POS1;
+          const mainScreen : boolean = num<=2?true:false;
+          repOrder.push({pos: pos, mainScreen: mainScreen, size: size, numberInBlock: index});
+        })
+      });
+    }
+    catch (error){
+      console.error("Error while reading the file: ", error)
+    }
+    return repOrder;
+  }
+
+  private parseEnum(value: string): Sizes {
+    return value as Sizes;
+}
+
 
 }

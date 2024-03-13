@@ -28,6 +28,7 @@ import { DualScreenComponent } from './dual-screen/dual-screen.component';
 import { SurfaceTagsComponent } from './surface-tags/surface-tags.component';
 import { InitialExplanationComponent } from './initial-explanation/initial-explanation.component';
 import { MatCardTitlePipe } from './mat-card-title.pipe';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { MatCardTitlePipe } from './mat-card-title.pipe';
       expConditionsData : expConditionsReducer
     }),
     BrowserAnimationsModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [PendingChangesGuard],
   bootstrap: [AppComponent]

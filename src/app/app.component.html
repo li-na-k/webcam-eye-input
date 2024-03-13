@@ -7,7 +7,7 @@
     <div *ngIf="!showRecalibration" 
         style="background-color: white; border-radius: 15px; padding: 10px 15px; 
         display: flex; justify-content: flex-start; align-items:center; width: 600px; flex-wrap: wrap;">
-        <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.sizeOrder; index as i">
+        <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.repOrder; index as i">
             <span *ngIf="i + 1 <= randomizationService.repsDone">●</span>
             <span *ngIf="i + 1 > randomizationService.repsDone">○</span>
         </span>
