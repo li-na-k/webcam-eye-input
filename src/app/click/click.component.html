@@ -12,8 +12,8 @@
         </mat-card>
     </div>
     <div *ngIf="clicked">
-        <div class="success" *ngIf="!error"> ✓ </div>
-        <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
+        <div class="success" *ngIf="!error"> 🔊 </div>
+        <!-- <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div> -->
     </div>  
 </dual-screen>
 
@@ -30,8 +30,8 @@
     </mat-card>
 </div>
 <div *ngIf="clicked">
-    <div class="success" *ngIf="!error"> ✓ </div>
-    <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div>
+    <div class="success" *ngIf="!error"> 🔊 </div>
+    <!-- <div class="success" *ngIf="error" style="color: var(--red)"> ✖ </div> -->
 </div>  
 
-<app-popup-pointer-lock-stop *ngIf="pointerLockStopped" (addSuccess)="addSuccess(true)" (startMix2)="activateSelectedInputType()"></app-popup-pointer-lock-stop>
+<app-popup-pointer-lock-stop *ngIf="pointerLockStopped" (addSuccess)="skipBlock()" (startMix2)="activateSelectedInputType()"></app-popup-pointer-lock-stop>

@@ -32,7 +32,7 @@ export class RandomizationService {
   public repOrder : RepObject[] = []
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
-  public repsDone : number = 0;
+  public repsDone : number = -1;
   //current rep
   public selectedSize : Sizes =  Sizes.S;
   public successTargetOnScreen1 : boolean = true;
@@ -55,7 +55,7 @@ export class RandomizationService {
   constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService, private http: HttpClient) { 
     this.randomizeExperiment();
 
-    this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak possible
+    this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak
       .subscribe(d => {
         this.input = d
       });
@@ -67,7 +67,7 @@ export class RandomizationService {
 
   //source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
   private shuffle(array : any[]) : any[]{
-    let currentIndex = array.length,  randomIndex;
+    let currentIndex : number = array.length,  randomIndex;
     while (currentIndex != 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
@@ -91,7 +91,7 @@ export class RandomizationService {
 
   private nextTask() : void{
     this.randomizeNewTask()
-    this.repsDone = 0;
+    this.repsDone = -1;
     if(this.tasksDone < this.taskOrder.length){
       this.selectTask(this.taskOrder[this.tasksDone])
       this.tasksDone++;
@@ -104,38 +104,59 @@ export class RandomizationService {
     }
   }
 
-  public async nextRep() : Promise<void> {
-    //endTask(); must be called separatly!
-    if(this.repsDone + 1 < this.repOrder.length){
-      this.selectedSize = this.repOrder[this.repsDone+1].size;
-      this.taskEvaluationService.selectedSize = this.selectedSize;
-      this.successTargetOnScreen1 = this.repOrder[this.repsDone+1].mainScreen;
-      this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
-      this.selectedPos = this.repOrder[this.repsDone+1].pos;
-      this.taskEvaluationService.pos = this.selectedPos;
-      if(this.repOrder[this.repsDone+1].numberInBlock == 0){
-        await this.nextBlockAssignment(this.repsDone+1);
-      }
+  public async nextRep(): Promise<void> { //endTask(); must be called separately!
+    return new Promise<void>((resolve, reject) => {
       this.repsDone++;
-      this.taskEvaluationService.startTask();
-    }
-    else{ 
-      this.nextTask();
-    }
-    return
+      if (this.repsDone < this.repOrder.length) {
+        this.selectedSize = this.repOrder[this.repsDone].size;
+        this.taskEvaluationService.selectedSize = this.selectedSize;
+        this.successTargetOnScreen1 = this.repOrder[this.repsDone].mainScreen;
+        this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
+        this.selectedPos = this.repOrder[this.repsDone].pos;
+        this.taskEvaluationService.pos = this.selectedPos;
+        if (this.repOrder[this.repsDone].numberInBlock == 0) {
+          this.playBlockSound(this.repsDone)
+            .then(() => {
+              setTimeout(()=>{
+                this.taskEvaluationService.startTask();
+                resolve();
+              }, 500)
+            })
+            .catch(error => {
+              console.error("Error while playing block sound:", error);
+              reject(error);
+            });
+        } else {
+          this.taskEvaluationService.startTask();
+          resolve();
+        }
+      } else {
+        this.nextTask();
+        resolve();
+      }
+    });
   }
 
-  private async nextBlockAssignment(nextRep: number): Promise<void> {
-    try {
-      await this.playNumberAudio(this.repOrder[nextRep].pos, this.repOrder[nextRep].mainScreen);
-      await this.playNumberAudio(this.repOrder[nextRep + 1].pos, this.repOrder[nextRep + 1].mainScreen);
-      await this.playNumberAudio(this.repOrder[nextRep + 2].pos, this.repOrder[nextRep + 2].mainScreen);
-      await this.playNumberAudio(this.repOrder[nextRep + 3].pos, this.repOrder[nextRep + 3].mainScreen);
-      return;
-    } catch (error) {
-      console.error("An error occurred while playing the sounds:", error);
-      return;
-    }
+  public async playBlockSound(rep: number): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          if (rep < this.repOrder.length - 3) {
+            await this.playNumberAudio(this.repOrder[rep].pos, this.repOrder[rep].mainScreen);
+            await this.playNumberAudio(this.repOrder[rep + 1].pos, this.repOrder[rep + 1].mainScreen);
+            await this.playNumberAudio(this.repOrder[rep + 2].pos, this.repOrder[rep + 2].mainScreen);
+            await this.playNumberAudio(this.repOrder[rep + 3].pos, this.repOrder[rep + 3].mainScreen);
+          } else {
+            console.error("nextRep index out of bounds.");
+            return reject("Index out of bounds");
+          }
+          resolve(true);
+        } catch (error) {
+          console.error("An error occurred while playing the sounds:", error);
+          reject(error);
+        }
+      }, 500);
+    });
   }
 
   public selectTask(task : Tasks) : void{
@@ -181,7 +202,7 @@ export class RandomizationService {
     else{
       numberString = number;
     }
-    let src = "assets/number-" + numberString + ".mp3";
+    let src : string = "assets/number-" + numberString + ".mp3";
     return this.taskEvaluationService.playAudio(src); 
   }
 
@@ -196,20 +217,13 @@ export class RandomizationService {
     this.readAndShuffleRepOrderFromCSV("assets/repOrder.csv").then((repOrder)=>{
       this.repOrder = repOrder
       console.log("repOrder for next task:",this.repOrder);
-      //TODO cannot call nextRep instead of lines below? (without: this.taskEvaluationService.startTask())?
-      this.selectedSize = this.repOrder[this.repsDone+1].size; //first size
-      this.taskEvaluationService.selectedSize = this.selectedSize;
-      this.successTargetOnScreen1 = this.repOrder[this.repsDone+1].mainScreen; //first screen
-      this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
-      this.selectedPos = this.repOrder[this.repsDone+1].pos; //first pos
-      this.taskEvaluationService.pos = this.selectedPos;
     })
   }
 
   private async readFileFromAssets(filePath: string): Promise<string> {
     try {
-      const data = await firstValueFrom(this.http.get(filePath, { responseType: 'text' }));
-      return data as string;
+      const data : string = await firstValueFrom(this.http.get(filePath, { responseType: 'text' }));
+      return data;
     } catch (error) {
       console.error('Error reading file:', error);
       return ''; // Return an empty string or handle the error accordingly
@@ -241,7 +255,6 @@ export class RandomizationService {
 
   private parseEnum(value: string): Sizes {
     return value as Sizes;
-}
-
+  }
 
 }

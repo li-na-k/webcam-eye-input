@@ -55,6 +55,10 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
         this.success = false;
       },1000);
     }
+
+    public override skipBlock(): void {
+      //not needed here
+    }
   
     protected startMouseInput(){
       this.clickArea!.addEventListener('mousedown', this.bound_changeOnClick);

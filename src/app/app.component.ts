@@ -45,7 +45,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   }
 
   //Test Mode
-  protected showTestMode : boolean = false; //TODO!
+  protected showTestMode : boolean = false; //not needed here - test mode in seperate branch
 
   //task explanation
   protected showTaskPopup : boolean = false; 
@@ -87,15 +87,14 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true
   }
 
-  startExperiment(){ //!! TODO
+  startExperiment(){
+    console.log("start Exp")
+    this.baseTaskComponent.showInterTrialPage(true); 
+    this.randomizationService.nextRep().then(()=>{
+      this.baseTaskComponent.showInterTrialPage(false);
+    });
+    this.baseTaskComponent.activateSelectedInputType();
     this.baseTaskComponent.showInterTrialPage(true);
-    // this.randomizationService.playNumberAudio(this.randomizationService.positionOrder[0], this.randomizationService.successTargetOnScreen1).then(() => {
-    this.taskEvaluationService.startTask();
-    // });
-    setTimeout(() => {
-      this.baseTaskComponent.showInterTrialPage(false)
-      this.baseTaskComponent.activateSelectedInputType();
-    }, 1000)
   }
 
 

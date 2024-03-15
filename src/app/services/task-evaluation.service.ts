@@ -123,7 +123,7 @@ export class TaskEvaluationService {
 
   public playAudio(src : string) : Promise<Event>{
     return new Promise(function(resolve, reject){
-      let audio = new Audio();
+      let audio : HTMLAudioElement = new Audio();
       audio.preload = "auto";
       audio.src = src; /* source: http://freesoundeffect.net/sound/correct-answer-bling-1-sound-effect */
       audio.load();

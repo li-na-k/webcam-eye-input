@@ -55,17 +55,22 @@ export class ClickComponent extends BaseTasksComponent{
    super(store, cdRef, taskEvaluationService, randomizationService)
   }
 
-  async getclickAreas(){
-    const clickAreas_mainScreen = document.getElementsByClassName(this.className)
-    const clickAreas_secondScreen = this.dualscreen.secondWindow.document.getElementsByClassName(this.className);
-    this.clickAreas = Array.from(clickAreas_mainScreen).concat(Array.from(clickAreas_secondScreen));
-    //find target area / task element
-    for (var i=0, n=this.clickAreas.length; i < n; ++i){
-      let clickArea = this.clickAreas[i];
-      if(clickArea?.id == this.taskElementID){
-        this.taskElement = clickArea;
-        break;
-      }
+  private async getclickAreas() {
+    try {
+        const clickAreas_mainScreen = document.getElementsByClassName(this.className);
+        const clickAreas_secondScreen = this.dualscreen.secondWindow.document.getElementsByClassName(this.className);
+        this.clickAreas = Array.from(clickAreas_mainScreen).concat(Array.from(clickAreas_secondScreen));
+        // Find target area / task element
+        for (let i = 0, n = this.clickAreas.length; i < n; ++i) {
+            let clickArea = this.clickAreas[i];
+            if (clickArea?.id === this.taskElementID) {
+                this.taskElement = clickArea;
+                return; // Exit loop once the task element is found
+            }
+        }
+        console.error("Task element with ID", this.taskElementID, "not found.");
+    } catch (error) {
+        console.error("An error occurred while retrieving click areas:", error);
     }
   }
 
@@ -80,7 +85,6 @@ export class ClickComponent extends BaseTasksComponent{
         this.currentScreen = d;
       })
   }
-
 
   private changeScreen(toScreen : Screens){
     //jump
@@ -123,16 +127,32 @@ export class ClickComponent extends BaseTasksComponent{
       }
   }
 
-  public addSuccess(aborted?: boolean){
-    if(!aborted){
-      this.taskEvaluationService.calculateTargetDistance(this.taskElement as HTMLElement,this.taskEvaluationService.targetOnMainScreen?window:this.dualscreen.secondWindow)
+  public async addSuccess() {
+    this.taskEvaluationService.calculateTargetDistance(this.taskElement as HTMLElement, this.taskEvaluationService.targetOnMainScreen ? window : this.dualscreen.secondWindow);
+    this.error = false;
+    this.taskEvaluationService.endTask(false);
+    this.showInterTrialPage(true);
+    try {
+        await this.randomizationService.nextRep();
+    } catch (error) {
+        console.error("An error occurred during nextRep():", error);
     }
-    this.error = false; 
-    this.taskEvaluationService.endTask(aborted);
-    this.showInterTrialPage(true); 
-    this.randomizationService.nextRep().then(()=>{
-      this.showInterTrialPage(false);
-    });
+    this.showInterTrialPage(false);
+  }
+
+  public async skipBlock() {
+    const repAtSkip = this.randomizationService.repsDone;
+    while (this.randomizationService.repsDone % 4 !== 0 || this.randomizationService.repsDone === repAtSkip) {
+        try {
+            this.error = false;
+            this.taskEvaluationService.endTask(true);
+            this.showInterTrialPage(true);
+            await this.randomizationService.nextRep();
+        } catch (error) {
+            console.error("An error occurred during nextRep():", error);
+        }
+    }
+    this.showInterTrialPage(false);
   }
 
   protected startMouseInput(){
@@ -144,32 +164,41 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   private bound_changeOnClick = this.changeOnClick.bind(this);
-  private async changeOnClick(ev : any){
-    await this.getclickAreas(); //cannot be on afterViewInit because second window is not guaranteed to have loaded yet
-    let currentClickArea : HTMLElement | null = null;
-    let arrow = this.dualscreen.getActiveScreen()==2?this.dualscreen.secondScreen_arrow.nativeElement:this.mainScreen_arrow;
-    let style = window.getComputedStyle(arrow);
-    let matrix = new WebKitCSSMatrix(style.transform);
-    let x = matrix.m41; 
-    let y = matrix.m42;
-    if(this.selectedInputType == InputType.MIX2){
-      //only check click areas of active screen (first half of clickAreas array on main screen, second half on second screen
-      var halflength = Math.ceil(this.clickAreas!.length / 2);    
-      var activeClickAreas : Element[] = this.dualscreen.getActiveScreen() == 1?this.clickAreas!.slice(0,halflength):this.clickAreas!.slice(halflength, undefined)
-      for (let i = 0; i < activeClickAreas!.length; i++){
-        let clickArea = activeClickAreas![i] as HTMLElement;
-        let inside = false;
-        inside = this.eyeInputService.isInside(clickArea, x,y);  
-        if(inside){
-          currentClickArea = clickArea;
-          break; //exit for loop as soon as clicked area found
-        }
+  private async changeOnClick(ev: any) {
+      try {
+          await this.getclickAreas();
+          const currentClickArea = this.determineClickedArea(ev);
+          if (currentClickArea) {
+              this.checkIfError(currentClickArea);
+          }
+      } catch (error) {
+          console.error("An error occurred in changeOnClick:", error);
       }
-    }
-    if(this.selectedInputType == InputType.MOUSE){
-      currentClickArea = ev.target; 
-    }
-    this.checkIfError(currentClickArea);
+  }
+
+  private determineClickedArea(ev: any): HTMLElement | null {
+      let currentClickArea: HTMLElement | null = null;
+      let arrow = this.dualscreen.getActiveScreen() === 2 ? this.dualscreen.secondScreen_arrow.nativeElement : this.mainScreen_arrow;
+      let style = window.getComputedStyle(arrow);
+      let matrix = new WebKitCSSMatrix(style.transform);
+      let x = matrix.m41;
+      let y = matrix.m42;
+      if (this.selectedInputType === InputType.MIX2) {
+          const halflength = Math.ceil(this.clickAreas!.length / 2);
+          const activeClickAreas = this.dualscreen.getActiveScreen() === 1 ? this.clickAreas!.slice(0, halflength) : this.clickAreas!.slice(halflength);
+
+          for (let i = 0; i < activeClickAreas.length; i++) {
+              const clickArea = activeClickAreas[i] as HTMLElement;
+              if (this.eyeInputService.isInside(clickArea, x, y)) {
+                  currentClickArea = clickArea;
+                  break;
+              }
+          }
+      }
+      if (this.selectedInputType === InputType.MOUSE) {
+          currentClickArea = ev.target;
+      }
+      return currentClickArea;
   }
 
   public showInterTrialPage(show : boolean){

@@ -34,7 +34,7 @@ export class SocketService {
     this.listenTo("gazeData").subscribe((data : any) => {
       //store current x and y pos
       if(data.gaze_on_surfaces[0]?.on_surf){ //gaze is on this screen 
-        this.store.dispatch(changeXPos({newx: data.gaze_on_surfaces[0].norm_pos[0]})); //TODO why several?
+        this.store.dispatch(changeXPos({newx: data.gaze_on_surfaces[0].norm_pos[0]}));
         this.store.dispatch(changeYPos({newy: data.gaze_on_surfaces[0].norm_pos[1]}));
         this.store.dispatch(changeScreen({newScreen: data.name}));
       }
