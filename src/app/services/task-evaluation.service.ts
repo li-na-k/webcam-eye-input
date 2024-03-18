@@ -42,6 +42,7 @@ export class TaskEvaluationService {
   private taskRunning : boolean = false;
   private errorCount : number = 0;
   public selectedSize : Sizes = Sizes.S; //set by randomization Service
+  public numberInBlock : number = 0; //set by randomization Service
   public targetOnMainScreen : boolean = false; //set by randomization Service
   public pos : Positions = Positions.POS1; //set by randomization Service
 
@@ -58,6 +59,7 @@ export class TaskEvaluationService {
       result.inputType = this.selectedInputType;
       result.task = this.selectedTask;
       result.size = this.selectedSize;
+      result.numberInBlock = this.numberInBlock;
       result.targetOnMainScreen = this.targetOnMainScreen;
       result.positionOnScreen = this.pos;
       result.setPosNumber()
@@ -162,6 +164,7 @@ export class TaskEvaluationService {
       "task",
       "inputType",
       "size",
+      "numberInBlock",
       "duration",
       "durationPerPixel",
       "errors",

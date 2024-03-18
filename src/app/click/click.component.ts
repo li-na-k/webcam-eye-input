@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, HostListener, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { EyeInputService } from 'src/app/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
@@ -11,8 +11,7 @@ import { Screens } from '../enums/screens';
 import { Observable, distinctUntilChanged, takeUntil } from 'rxjs';
 import { selectCurrentScreen } from '../state/eyetracking/eyetracking.selector';
 import { SocketService } from '../services/socket.service';
-import { MatCardTitlePipe } from '../mat-card-title.pipe';
-import { Positions } from '../enums/positions';
+
 @Component({
   selector: 'app-click',
   providers: [{ provide: BaseTasksComponent, useExisting: ClickComponent }],
@@ -140,19 +139,24 @@ export class ClickComponent extends BaseTasksComponent{
     this.showInterTrialPage(false);
   }
 
-  public async skipBlock() {
-    const repAtSkip = this.randomizationService.repsDone;
-    while (this.randomizationService.repsDone % 4 !== 0 || this.randomizationService.repsDone === repAtSkip) {
-        try {
-            this.error = false;
-            this.taskEvaluationService.endTask(true);
-            this.showInterTrialPage(true);
-            await this.randomizationService.nextRep();
-        } catch (error) {
-            console.error("An error occurred during nextRep():", error);
-        }
-    }
-    this.showInterTrialPage(false);
+  public async skipBlock() : Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const repAtSkip = this.randomizationService.repsDone;
+        while (this.randomizationService.repsDone % 4 !== 0 || this.randomizationService.repsDone === repAtSkip) {
+          this.error = false;
+          this.taskEvaluationService.endTask(true);
+          this.showInterTrialPage(true);
+          await this.randomizationService.nextRep()
+        } 
+        this.showInterTrialPage(false)
+        resolve();
+      }
+      catch (error) {
+        console.error("An error occurred during skipBlock():", error);
+        return reject(error)
+      }  
+    })
   }
 
   protected startMouseInput(){

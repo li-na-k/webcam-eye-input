@@ -6,24 +6,22 @@
     <!-- progress + skip -->
     <div *ngIf="!showRecalibration" 
         style="background-color: white; border-radius: 15px; padding: 10px 15px; 
-        display: flex; justify-content: flex-start; align-items:center; width: 600px; flex-wrap: wrap;">
+        display: flex; justify-content: flex-start; align-items:center; width: 650px; flex-wrap: wrap;">
         <span style="color: var(--green); font-size: 40px;" *ngFor="let rep of randomizationService.repOrder; index as i">
             <span *ngIf="(i+1)%4 == 0 && i + 1 <= randomizationService.repsDone">●</span>
             <span *ngIf="(i+1)%4 == 0 && i + 1 > randomizationService.repsDone">○</span>
         </span>
         <div style="font-size: 12px; line-height: 15px; padding: 5px;" *ngIf="selectedInputType == InputType.MIX2">To skip press esc.</div>
-        <button [disabled]="showTestMode" *ngIf="selectedInputType != InputType.MIX2" style="margin: 8px 5px;" (click)="baseTaskComponent.skipBlock(); this.blur($event)">Skip</button>
+        <button id="skip" *ngIf="selectedInputType != InputType.MIX2" style="margin: 8px 5px;" (click)="skipButtonClick()">Skip</button>
     </div>
 
     <span class="white-box" *ngIf="!showRecalibration" >
         <div>
-            <span style="font-weight: bold;">{{selectedTask$ | async}}</span>
-            with 
             <span style="font-weight: bold;">{{selectedInputType$ | async}}</span>
         </div>
-        <button *ngIf="!showTestMode && selectedInputType != InputType.MIX2" class="button-header" mat-icon-button style="margin: 10px 10px; display:block;" type="button" (click)="showTaskPopup = true; this.blur($event);">
+        <!-- <button *ngIf="!showTestMode && selectedInputType != InputType.MIX2" class="button-header" mat-icon-button style="margin: 10px 10px; display:block;" type="button" (click)="showTaskPopup = true; this.blur($event);">
             <mat-icon>question_mark</mat-icon>
-        </button>
+        </button> -->
     </span>
 </div>
         

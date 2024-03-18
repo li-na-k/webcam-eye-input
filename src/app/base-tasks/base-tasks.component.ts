@@ -60,9 +60,8 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
   protected abstract startMix2Input() : void;
   abstract stopAllInputs() : void;
   abstract addSuccess(aborted?: boolean) : void;
-  abstract skipBlock() : void;
+  abstract skipBlock() : Promise<void>;
   abstract showInterTrialPage(show : boolean) : void;
-
 
 
   public activateSelectedInputType(){

@@ -18,6 +18,9 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     public override secondWindowLoaded: boolean = false;
     private clickArea : HTMLElement | null = null; //all areas
     protected Input = InputType;
+    public disableSkip(): boolean{
+      return false
+    }
   
     private taskElementID : string = "click-task"; //area that shows success when clicked
     protected success = false;
@@ -56,8 +59,9 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       },1000);
     }
 
-    public override skipBlock(): void {
+    public override skipBlock(): Promise<void> {
       //not needed here
+      return new Promise((d) => d)
     }
   
     protected startMouseInput(){

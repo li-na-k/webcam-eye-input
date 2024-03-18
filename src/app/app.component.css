@@ -38,13 +38,12 @@ mat-spinner{
     position: absolute; 
     top: 0px; 
     left: auto;
-    right: 180px; 
+    right: 150px; 
     padding: 15px; 
     height: 50px;
     display: flex; 
     align-items: flex-start;
     gap: 15px; 
-
 }
 
 .instructions{
@@ -90,7 +89,7 @@ input{
     padding: 10px 15px; 
     border-radius: 15px; 
     height: 70px; 
-    min-width: 200px; 
+    min-width: 100px; 
     text-align: center; 
     display: flex; 
     justify-content: center; 

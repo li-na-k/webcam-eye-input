@@ -96,7 +96,19 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     this.baseTaskComponent.activateSelectedInputType();
     this.baseTaskComponent.showInterTrialPage(true);
   }
-
+  
+  protected skipButtonClick = () => {
+    const skipButton = document.getElementById("skip");
+    if(skipButton && skipButton instanceof HTMLButtonElement){
+      (skipButton as HTMLButtonElement).disabled = true
+      this.baseTaskComponent.skipBlock().then(
+          () => (skipButton as HTMLButtonElement).disabled = false
+      )
+    }
+    else{
+      console.error("No skip button found.")
+    }
+  }
 
   blur($event : any){
     $event.target.blur();

@@ -27,7 +27,7 @@ export class RandomizationService {
   private selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
   //order of reps
-  public inputOrder : InputType[] = [InputType.MIX2, InputType.MOUSE];
+  public inputOrder : InputType[] = [InputType.MOUSE];
   public taskOrder : Tasks[] = [Tasks.SELECT];
   public repOrder : RepObject[] = []
   public inputsDone : number = 0; 
@@ -108,6 +108,7 @@ export class RandomizationService {
     return new Promise<void>((resolve, reject) => {
       this.repsDone++;
       if (this.repsDone < this.repOrder.length) {
+        this.taskEvaluationService.numberInBlock = this.repOrder[this.repsDone].numberInBlock;
         this.selectedSize = this.repOrder[this.repsDone].size;
         this.taskEvaluationService.selectedSize = this.selectedSize;
         this.successTargetOnScreen1 = this.repOrder[this.repsDone].mainScreen;

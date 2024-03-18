@@ -7,6 +7,7 @@ export class TaskResult {
     inputType : InputType | null = null;
     task : Tasks | null = null;
     size : Sizes | null = null;
+    numberInBlock : number = 0; 
     startTime : number = new Date().getTime();
     endTime : number = new Date().getTime();
     duration : number = 0;
