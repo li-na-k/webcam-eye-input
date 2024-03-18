@@ -87,14 +87,11 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true
   }
 
-  startExperiment(){
+  async startExperiment(){
     console.log("start Exp")
     this.baseTaskComponent.showInterTrialPage(true); 
-    this.randomizationService.nextRep().then(()=>{
-      this.baseTaskComponent.showInterTrialPage(false);
-    });
-    this.baseTaskComponent.activateSelectedInputType();
-    this.baseTaskComponent.showInterTrialPage(true);
+    await this.randomizationService.nextRep();
+    this.baseTaskComponent.showInterTrialPage(false);
   }
   
   protected skipButtonClick = () => {

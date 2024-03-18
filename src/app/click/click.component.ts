@@ -143,11 +143,11 @@ export class ClickComponent extends BaseTasksComponent{
     return new Promise(async (resolve, reject) => {
       try {
         const repAtSkip = this.randomizationService.repsDone;
-        while (this.randomizationService.repsDone % 4 !== 0 || this.randomizationService.repsDone === repAtSkip) {
+        while (this.randomizationService.repsDone > 0 && this.randomizationService.repsDone % 4 !== 0 || this.randomizationService.repsDone === repAtSkip) {
           this.error = false;
           this.taskEvaluationService.endTask(true);
           this.showInterTrialPage(true);
-          await this.randomizationService.nextRep()
+          await this.randomizationService.nextRep() //if nextTask is called: repsDone set to -1 -> check for larger 0 in while loop
         } 
         this.showInterTrialPage(false)
         resolve();
@@ -206,13 +206,22 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   public showInterTrialPage(show : boolean){
+    const skipButton = document.getElementById("skip");
     this.clicked = show
     this.setCurrentCursorVisibility(!show);
     if(!show){
       if(this.selectedInputType == InputType.MOUSE){ //to add eventListeners to new clickAreas 
         this.activateSelectedInputType();
       }
+      if(skipButton && skipButton instanceof HTMLButtonElement){
+        (skipButton as HTMLButtonElement).disabled = false
+      }
       this.error = false;
+    }
+    else{
+      if(skipButton && skipButton instanceof HTMLButtonElement){
+        (skipButton as HTMLButtonElement).disabled = true
+      }
     }
   }
 

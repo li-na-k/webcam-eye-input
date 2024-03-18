@@ -91,7 +91,7 @@ export class RandomizationService {
 
   private nextTask() : void{
     this.randomizeNewTask()
-    this.repsDone = -1;
+    this.repsDone = -1; //will be set to 0 at call of nextRep
     if(this.tasksDone < this.taskOrder.length){
       this.selectTask(this.taskOrder[this.tasksDone])
       this.tasksDone++;
@@ -105,8 +105,9 @@ export class RandomizationService {
   }
 
   public async nextRep(): Promise<void> { //endTask(); must be called separately!
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
       this.repsDone++;
+      console.log("repsDone:", this.repsDone)
       if (this.repsDone < this.repOrder.length) {
         this.taskEvaluationService.numberInBlock = this.repOrder[this.repsDone].numberInBlock;
         this.selectedSize = this.repOrder[this.repsDone].size;
@@ -116,17 +117,11 @@ export class RandomizationService {
         this.selectedPos = this.repOrder[this.repsDone].pos;
         this.taskEvaluationService.pos = this.selectedPos;
         if (this.repOrder[this.repsDone].numberInBlock == 0) {
-          this.playBlockSound(this.repsDone)
-            .then(() => {
-              setTimeout(()=>{
-                this.taskEvaluationService.startTask();
-                resolve();
-              }, 500)
-            })
-            .catch(error => {
-              console.error("Error while playing block sound:", error);
-              reject(error);
-            });
+          await this.playBlockSound(this.repsDone)
+          setTimeout(()=>{
+            this.taskEvaluationService.startTask();
+            resolve();
+          }, 500)
         } else {
           this.taskEvaluationService.startTask();
           resolve();
@@ -138,7 +133,7 @@ export class RandomizationService {
     });
   }
 
-  public async playBlockSound(rep: number): Promise<boolean> {
+  private async playBlockSound(rep: number): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       setTimeout(async () => {
         try {
