@@ -26,8 +26,7 @@ export class ClickComponent extends BaseTasksComponent{
     }
     else if(this.mainScreen_arrow && this.dualscreen.mainWindow){
       this.eyeInputService.moveArrowWithMouse(e, this.mainScreen_arrow, [0, this.dualscreen.mainWindow.width, this.dualscreen.mainWindow.height, 0]);
-    }
-    this.eyeInputService.bound_analyseMix2; //Track mouse / eye distribution 
+    }   
   }
 
   @ViewChild('dualscreen') dualscreen! : any;
@@ -86,22 +85,21 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   private changeScreen(toScreen : Screens){
-    //jump
     this.mainScreen_arrow!.classList.remove("smoothTransition"); //jump
     this.dualscreen.secondScreen_arrow.nativeElement.classList.remove("smoothTransition"); //jump
     if(toScreen == Screens.MAINSCREEN){ //from top to bottom (= second to main screen) 
       this.dualscreen.focusMainWindow();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
-      this.eyeInputService.moveArrowWithEyes(this.mainScreen_arrow!, window);
+      this.eyeInputService.moveArrowWithEyes(this.mainScreen_arrow!, window); //move cursor to gaze position at new screen
       this.mainScreen_arrow!.style.visibility = 'visible';
-      this.eyeInputService.activateMix2Input(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
+      this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
       this.eyeInputService.moveArrowWithEyes(this.dualscreen.secondScreen_arrow.nativeElement, this.dualscreen.secondWindow);
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
       this.mainScreen_arrow!.style.visibility = 'hidden';
-      this.eyeInputService.activateMix2Input(this.dualscreen.secondWindow, this.dualscreen.secondScreen_arrow.nativeElement, this.timeOutAfterMouseInput);
+      this.eyeInputService.activateEyeInput(this.dualscreen.secondWindow, this.dualscreen.secondScreen_arrow.nativeElement, this.timeOutAfterMouseInput);
     }
     this.taskEvaluationService.addScreenChange();
   }
@@ -227,7 +225,7 @@ export class ClickComponent extends BaseTasksComponent{
 
   protected startMix2Input(){
     this.webSocketService.startSendingGazeData();
-    this.eyeInputService.activateMix2Input(window, this.mainScreen_arrow, this.timeOutAfterMouseInput); //Start with main screen
+    this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput); //Start with main screen
     this.mainScreen_arrow!.style.visibility = 'visible';
     //start waiting for screen changes and clicks
     this.startScreenChangeDetection();

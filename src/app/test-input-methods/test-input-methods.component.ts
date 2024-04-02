@@ -82,7 +82,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
     }
   
     protected async startMix2Input(){
-      await this.eyeInputService.activateMix2Input(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
+      await this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
       document.addEventListener('mousedown', this.bound_changeOnClick);
       /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
       have been better, but it cannot be removed, which is necessary here (for other input methods)

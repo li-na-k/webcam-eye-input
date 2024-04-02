@@ -5,7 +5,6 @@ import { selectCurrentEyePos } from 'src/app/state/eyetracking/eyetracking.selec
 import { AppState } from 'src/app/state/app.state';
 import { TaskEvaluationService } from './task-evaluation.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -18,10 +17,6 @@ export class EyeInputService implements OnDestroy {
   private timeOutAfterMouseInput : any;
   private moveArrowInterval : any;
   private arrow : HTMLElement | null = null; //currently active fake cursor
-  private sbRight = 0; 
-  private sbBottom = 0;
-  private sbLeft = 0;
-  private sbTop = 0;
   private timeout : number = 1000; //in this branch: after what time is mouseInput interval considered to have ended (for TaskResult)
 
   private x = 0.0;
@@ -36,7 +31,7 @@ export class EyeInputService implements OnDestroy {
       });
   }
 
-  public areEyesInsideElement(el : HTMLElement) : boolean{
+  public areEyesInsideElement(el : HTMLElement) : boolean {
     return this.isInside(el, this.x, this.y);
   }
 
@@ -97,30 +92,24 @@ export class EyeInputService implements OnDestroy {
       y = limits[0]
     }
     arrow!.style.transform = "translate(" + x + "px, " + y + "px)"
+    this.registerMouseStartStop()
   }
 
-  public async activateMix2Input(window: Window, arrow : HTMLElement | null, timeout: number){
+  public async activateEyeInput(window: Window, arrow : HTMLElement | null, timeout: number){
     this.stopMix2Input();
-    //lock original cursor, add fake arrow instead
     if(!window){
       throw Error("Provided window is null.")
     }
     if(!arrow){
       throw Error("Provided arrow is null.")
     }
-    //assign method parameters to instance properties to be able to use them in moveArrowWithMouse()
-    this.sbRight = window.document.body.getBoundingClientRect().right;
-    this.sbBottom =  window.document.body.getBoundingClientRect().bottom;
-    this.sbLeft =  window.document.body.getBoundingClientRect().left;
-    this.sbTop =  window.document.body.getBoundingClientRect().top;
     this.arrow = arrow;
     this.timeout = timeout;
+    //lock original cursor, add fake arrow instead
     if(document.pointerLockElement == null){ //if not already locked
       await document.body.requestPointerLock();   
     }
     this.arrow!.style.visibility = 'visible';
-    this.arrow!.style.left = "0%";
-    this.arrow!.style.top = "0%";
     //eye input
     clearInterval(this.moveArrowInterval);
     this.moveArrowInterval = setInterval(() => {
@@ -130,27 +119,11 @@ export class EyeInputService implements OnDestroy {
       }
       else{
         this.arrow!.classList.remove("smoothTransition");
-      }
-    document.addEventListener('mousemove', this.bound_mouseTakeover); 
-    }, 15); //monitor refresh 60 hz -> 16.6 ms (60 hertz world camera as well), higher frame rate cannot be detected by human eye anyways
+      } 
+    }, 15); //monitor refresh 60 hz -> 16.6 ms (60 hertz world camera as well)
   }
 
-  private bound_mouseTakeover = this.mouseTakeover.bind(this);
-  private mouseTakeover(e : any){
-    clearTimeout(this.timeOutAfterMouseInput);
-    if(!this.mouseInput){ //until now it was eye input, now change to mouse input
-      this.mouseInput = true;
-      this.taskEvaluationService.endEyeMouseInterval(); //end previous EYE interval
-    }
-    this.moveArrowWithMouse(e, this.arrow!, [this.sbTop, this.sbRight, this.sbBottom, this.sbLeft]);
-    this.timeOutAfterMouseInput = setTimeout(() => {
-      this.mouseInput = false;
-      this.taskEvaluationService.endEyeMouseInterval(); //end previous MOUSE interval, timeout after mouse input (500ms) counts as mouse input
-    }, this.timeout)
-  }
-
-  public bound_analyseMix2 = this.analyseMix2.bind(this);
-  private analyseMix2(){ //like mouseTakeover but without takeover of fake cursor (only for analysing how eye/mouse usage was during Mix2)
+  private registerMouseStartStop(){ //like mouseTakeover but without takeover of fake cursor (only for analysing how eye/mouse usage was during Mix2)
     clearTimeout(this.timeOutAfterMouseInput);
     if(!this.mouseInput){ //until now it was eye input, now change to mouse input
       this.mouseInput = true;
@@ -168,7 +141,6 @@ export class EyeInputService implements OnDestroy {
     if(document.pointerLockElement){
       document.exitPointerLock();
     }
-    document.removeEventListener('mousemove', this.bound_mouseTakeover);
     //replace fake cursor with real cursor again
     if(this.arrow){
       this.arrow.style.visibility = 'hidden';
