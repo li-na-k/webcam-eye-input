@@ -88,6 +88,7 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   }
 
   async startExperiment(){
+    this.baseTaskComponent.activateSelectedInputType();
     console.log("start Exp")
     this.baseTaskComponent.showInterTrialPage(true); 
     await this.randomizationService.nextRep();
