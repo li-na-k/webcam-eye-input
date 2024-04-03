@@ -133,19 +133,27 @@ export class RandomizationService {
     });
   }
 
+  public getNextBlockNumbers(rep : number) : number[]{
+    let nextBlock : number[] = []
+    nextBlock.length = 0
+    if (rep < this.repOrder.length - 3) {
+      for(let i = rep; i < rep+4; ++i){
+        nextBlock.push(this.getTargetNumber(this.repOrder[i].pos, this.repOrder[i].mainScreen))
+      }
+    } else {
+      console.error("No next Block. NextRep index out of bounds.")
+    }
+    return nextBlock
+  }
+
   private async playBlockSound(rep: number): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       setTimeout(async () => {
         try {
-          if (rep < this.repOrder.length - 3) {
-            await this.playNumberAudio(this.repOrder[rep].pos, this.repOrder[rep].mainScreen);
-            await this.playNumberAudio(this.repOrder[rep + 1].pos, this.repOrder[rep + 1].mainScreen);
-            await this.playNumberAudio(this.repOrder[rep + 2].pos, this.repOrder[rep + 2].mainScreen);
-            await this.playNumberAudio(this.repOrder[rep + 3].pos, this.repOrder[rep + 3].mainScreen);
-          } else {
-            console.error("nextRep index out of bounds.");
-            return reject("Index out of bounds");
-          }
+          let nextBlock = this.getNextBlockNumbers(rep) 
+            for (let num of nextBlock){
+              await this.playNumberAudio(num);
+           }
           resolve(true);
         } catch (error) {
           console.error("An error occurred while playing the sounds:", error);
@@ -190,14 +198,19 @@ export class RandomizationService {
     }
   }
 
-  public playNumberAudio(number : Positions, mainScreen : boolean) : Promise<Event>{
-    let numberString : string = "1";
+  private getTargetNumber(pos: Positions, mainScreen : boolean) : number {
+    let number = 0
     if(mainScreen){
-      numberString = String(Number(number) + 2)
+      number = (Number(pos) + 2)
     }
     else{
-      numberString = number;
+      number = Number(pos);
     }
+    return number;
+  }
+
+  public playNumberAudio(num : number) : Promise<Event>{
+    let numberString : string = String(num)
     let src : string = "assets/number-" + numberString + ".mp3";
     return this.taskEvaluationService.playAudio(src); 
   }
