@@ -1,6 +1,5 @@
-.success{
+.nextBlock{
     font-size: 70px;
-    color: var(--green);
     display:flex;
     justify-content:center;
     align-items:center;
