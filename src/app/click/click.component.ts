@@ -85,23 +85,28 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   private changeScreen(toScreen : Screens){
+    const eyeInputTimeOut = 500 //after screenchange, wait a few seconds before moving cursor with eye again (easier mouse take over after screen change!)
     this.mainScreen_arrow!.classList.remove("smoothTransition"); //jump
     this.dualscreen.secondScreen_arrow.nativeElement.classList.remove("smoothTransition"); //jump
+    this.taskEvaluationService.addScreenChange();
     if(toScreen == Screens.MAINSCREEN){ //from top to bottom (= second to main screen) 
       this.dualscreen.focusMainWindow();
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
       this.eyeInputService.moveArrowWithEyes(this.mainScreen_arrow!, window); //move cursor to gaze position at new screen
       this.mainScreen_arrow!.style.visibility = 'visible';
-      this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
+      setTimeout(() => {
+        this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
+      }, eyeInputTimeOut)
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
       this.eyeInputService.moveArrowWithEyes(this.dualscreen.secondScreen_arrow.nativeElement, this.dualscreen.secondWindow);
       this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
       this.mainScreen_arrow!.style.visibility = 'hidden';
-      this.eyeInputService.activateEyeInput(this.dualscreen.secondWindow, this.dualscreen.secondScreen_arrow.nativeElement, this.timeOutAfterMouseInput);
-    }
-    this.taskEvaluationService.addScreenChange();
+      setTimeout(() => {
+        this.eyeInputService.activateEyeInput(this.dualscreen.secondWindow, this.dualscreen.secondScreen_arrow.nativeElement, this.timeOutAfterMouseInput);
+      }, eyeInputTimeOut)
+      }
   }
 
   protected startEyeInput(){ //not needed for this experiment

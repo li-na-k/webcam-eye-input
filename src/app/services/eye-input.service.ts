@@ -17,7 +17,7 @@ export class EyeInputService implements OnDestroy {
   private timeOutAfterMouseInput : any;
   private moveArrowInterval : any;
   private arrow : HTMLElement | null = null; //currently active fake cursor
-  private timeout : number = 1000; //in this branch: after what time is mouseInput interval considered to have ended (for TaskResult)
+  private timeout : number = 1000; //after what time is mouseInput interval considered to have ended (for switch to EyeInput + TaskResult EyeMouseDistribution)
 
   private x = 0.0;
   private y = 0.0;
