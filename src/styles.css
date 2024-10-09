@@ -61,6 +61,7 @@ button:disabled{
     visibility: hidden; 
     pointer-events: none;
     z-index: 1000;
+    will-change: transform;
     /* -webkit-filter: drop-shadow(2px 4px 6px black);
     filter: drop-shadow(2px 4px 6px black); */
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil, throttleTime } from 'rxjs';
 import io from 'socket.io-client';
 import { AppState } from '../state/app.state';
 import { changeScreen, changeXPos, changeYPos } from '../state/eyetracking/eyetracking.action';
@@ -31,7 +31,11 @@ export class SocketService {
   startSendingGazeData(){
     console.log("start sending gaze data")
     this.socket.emit("startSendingGazeData");
-    this.listenTo("gazeData").subscribe((data : any) => {
+    this.listenTo("gazeData")
+    .pipe(
+      throttleTime(1000 / 60)  // Process at 60 Hz (16.67 ms)
+    )
+    .subscribe((data : any) => {
       //store current x and y pos
       if(data.gaze_on_surfaces[0]?.on_surf){ //gaze is on this screen 
         this.store.dispatch(changeXPos({newx: data.gaze_on_surfaces[0].norm_pos[0]}));

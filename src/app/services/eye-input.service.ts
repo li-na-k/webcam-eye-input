@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentEyePos } from 'src/app/state/eyetracking/eyetracking.selector';
@@ -18,11 +18,13 @@ export class EyeInputService implements OnDestroy {
   private moveArrowInterval : any;
   private arrow : HTMLElement | null = null; //currently active fake cursor
   private timeout : number = 1000; //after what time is mouseInput interval considered to have ended (for switch to EyeInput + TaskResult EyeMouseDistribution)
+  private renderer: Renderer2;
 
   private x = 0.0;
   private y = 0.0;
 
-  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService) { 
+  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService, rendererFactory: RendererFactory2) { 
+    this.renderer = rendererFactory.createRenderer(null, null);
     this.currentEyePos$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => {
@@ -69,7 +71,10 @@ export class EyeInputService implements OnDestroy {
   public moveArrowWithEyes(arrow : HTMLElement, window : Window){ //move to current eye pos
     let x = this.x * window.innerWidth;
     let y = (1-this.y) * window.innerHeight;
-    arrow.style.transform = "translate(" + x + "px, " + y + "px)"
+
+    requestAnimationFrame(() => { //DOM is only manipulated once per frame -> more efficient
+      arrow.style.transform = `translate(${x}px, ${y}px)`;
+  });
   } 
 
   public moveArrowWithMouse(e : any, arrow : HTMLElement, limits : [number, number, number, number]){ //move according to mouse movement
@@ -109,18 +114,24 @@ export class EyeInputService implements OnDestroy {
     if(document.pointerLockElement == null){ //if not already locked
       await document.body.requestPointerLock();   
     }
-    this.arrow!.style.visibility = 'visible';
+    this.renderer.setStyle(this.arrow, 'visibility', 'visible');
     //eye input
+    const refreshRate = 60; // screen refresh rate, adapt if necessary
+    const intervalDelay = 1000 / refreshRate;
     clearInterval(this.moveArrowInterval);
+    let lastUpdate = 0;
     this.moveArrowInterval = setInterval(() => {
-      if(!this.mouseInput){
-        this.arrow!.classList.add("smoothTransition");
-        this.moveArrowWithEyes(this.arrow!, window);
+      const now = performance.now();
+      if (now - lastUpdate >= intervalDelay) { // only update when necessary
+        if(!this.mouseInput){
+          this.renderer.addClass(this.arrow!, 'smoothTransition');
+          this.moveArrowWithEyes(this.arrow!, window);
+        } else {
+          this.renderer.removeClass(this.arrow!, 'smoothTransition');
+        }
+        lastUpdate = now;
       }
-      else{
-        this.arrow!.classList.remove("smoothTransition");
-      } 
-    }, 15); //monitor refresh 60 hz -> 16.6 ms (60 hertz world camera as well)
+    }, intervalDelay);
   }
 
   private registerMouseStartStop(){ //like mouseTakeover but without takeover of fake cursor (only for analysing how eye/mouse usage was during Mix2)
@@ -152,5 +163,8 @@ export class EyeInputService implements OnDestroy {
   ngOnDestroy(): void{
     this.destroy$.next(true);
     this.destroy$.complete();
+    clearTimeout(this.timeOutAfterMouseInput);
+    clearInterval(this.moveArrowInterval); // clear the interval
+    this.stopMix2Input();
   }
 }
