@@ -30,7 +30,7 @@ mat-card{
 }
 
 mat-card:hover{
-    cursor: pointer;
+    cursor: default;
 }
 
 mat-card-title{
