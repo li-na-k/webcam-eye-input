@@ -11,8 +11,8 @@
             <span *ngIf="(i+1)%4 == 0 && i + 1 <= randomizationService.repsDone">●</span>
             <span *ngIf="(i+1)%4 == 0 && i + 1 > randomizationService.repsDone">○</span>
         </span>
-        <div style="font-size: 12px; line-height: 15px; padding: 5px;" *ngIf="selectedInputType == InputType.MIX2">To skip press esc.</div>
-        <button id="skip" *ngIf="selectedInputType != InputType.MIX2" style="margin: 8px 5px;" (click)="skipButtonClick()">Skip</button>
+        <div style="font-size: 12px; line-height: 15px; padding: 5px;" *ngIf="selectedInputType == InputType.MIX2 || selectedInputType == InputType.MIX1">To skip press esc.</div>
+        <button id="skip" *ngIf="selectedInputType != InputType.MIX2 && selectedInputType != InputType.MIX1" style="margin: 8px 5px;" (click)="skipButtonClick()">Skip</button>
     </div>
 
     <span class="white-box" *ngIf="!showRecalibration" >
@@ -69,7 +69,7 @@
                     <!-- <div style="margin-bottom: 20px;">
                         <strong style="font-size: 25px; vertical-align: top;">> </strong>{{randomizationService.taskInstructions}}
                     </div> -->
-                    <div *ngIf="selectedInputType == InputType.MIX2" style="margin-bottom: 20px; padding: 5px; color: var(--apricot); border: 3px solid var(--apricot); border-radius: 5px;">
+                    <div *ngIf="selectedInputType == InputType.MIX2 || selectedInputType == InputType.MIX1" style="margin-bottom: 20px; padding: 5px; color: var(--apricot); border: 3px solid var(--apricot); border-radius: 5px;">
                         ⚠ Calibration necessary! Ask the instructor for help.
                     </div>
                     <button
@@ -83,8 +83,8 @@
                             <span style="padding: 5px 5px"> Start task</span>
                         </div>
                     </button>
-                    <div *ngIf="selectedInputType != InputType.MIX2" style="width: 200px; font-size: 12px; line-height:15px; margin: auto; margin-top: 15px;">If you cannot complete a task, click the skip button at the top.</div>
-                    <div *ngIf="selectedInputType == InputType.MIX2" style="width: 200px; font-size: 12px; line-height:15px; margin: auto; margin-top: 15px;">If you cannot complete a task, press esc and then click the skip button.</div>           
+                    <div *ngIf="selectedInputType != InputType.MIX2 && selectedInputType != InputType.MIX1" style="width: 200px; font-size: 12px; line-height:15px; margin: auto; margin-top: 15px;">If you cannot complete a task, click the skip button at the top.</div>
+                    <div *ngIf="selectedInputType == InputType.MIX2 || selectedInputType == InputType.MIX1" style="width: 200px; font-size: 12px; line-height:15px; margin: auto; margin-top: 15px;">If you cannot complete a task, press esc and then click the skip button.</div>           
                 </div>
         </div>
     </div>

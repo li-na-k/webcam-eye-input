@@ -100,7 +100,7 @@ export class EyeInputService implements OnDestroy {
     this.registerMouseStartStop()
   }
 
-  public async activateEyeInput(window: Window, arrow : HTMLElement | null, timeout: number){
+  public async activateEyeInput(window: Window, arrow : HTMLElement | null, timeout: number, moveCursor : boolean = true){
     this.stopMix2Input();
     if(!window){
       throw Error("Provided window is null.")
@@ -123,7 +123,7 @@ export class EyeInputService implements OnDestroy {
     this.moveArrowInterval = setInterval(() => {
       const now = performance.now();
       if (now - lastUpdate >= intervalDelay) { // only update when necessary
-        if(!this.mouseInput){
+        if(!this.mouseInput && moveCursor){
           this.renderer.addClass(this.arrow!, 'smoothTransition');
           this.moveArrowWithEyes(this.arrow!, window);
         } else {
