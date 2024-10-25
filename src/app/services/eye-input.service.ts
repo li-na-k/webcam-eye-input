@@ -101,7 +101,7 @@ export class EyeInputService implements OnDestroy {
   }
 
   public async activateEyeInput(window: Window, arrow : HTMLElement | null, timeout: number, moveCursor : boolean = true){
-    this.stopMix2Input();
+    //this.stopMix2Input();
     if(!window){
       throw Error("Provided window is null.")
     }

@@ -21,10 +21,10 @@ import { SocketService } from '../services/socket.service';
 export class ClickComponent extends BaseTasksComponent{
   @HostListener('body:mousemove', ['$event']) 
   onMouseMove(e : any) {
-    if(this.dualscreen.getActiveScreen() == 2 && this.dualscreen.secondScreen_arrow && this.dualscreen.secondWindow){
+    if(this.dualscreen.secondScreen_arrow && this.dualscreen.secondWindow){ // move second screen arrow with mouse
       this.eyeInputService.moveArrowWithMouse(e, this.dualscreen.secondScreen_arrow.nativeElement, [0, this.dualscreen.secondWindow.width, this.dualscreen.secondWindow.height, 0]);
     }
-    else if(this.mainScreen_arrow && this.dualscreen.mainWindow){
+    if(this.mainScreen_arrow && this.dualscreen.mainWindow){ //move main screen arrow with mouse
       this.eyeInputService.moveArrowWithMouse(e, this.mainScreen_arrow, [0, this.dualscreen.mainWindow.width, this.dualscreen.mainWindow.height, 0]);
     }   
   }
@@ -74,50 +74,71 @@ export class ClickComponent extends BaseTasksComponent{
 
   private currentScreen : Screens = Screens.MAINSCREEN;
   private currentScreen$ : Observable<any> = this.store.select(selectCurrentScreen);
-  private startScreenChangeDetection(moveCursor : boolean = true) {
+  private startScreenChangeDetection(moveCursor : boolean = true, hideInactiveCursor : boolean = true) {
     console.log("screen detection started")
     this.currentScreen$
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe(d => {
-        this.changeScreen(d, moveCursor)
+        this.changeScreen(d, moveCursor, hideInactiveCursor)
         this.currentScreen = d;
       })
   }
 
-  private changeScreen(toScreen : Screens, moveCursor : boolean = true){
-    const eyeInputTimeOut = 500 //after screenchange, wait a few seconds before moving cursor with eye again (easier mouse take over after screen change!)
+  private changeScreen(toScreen : Screens, moveCursor : boolean = true, hideInactiveCursor : boolean = true){
+    const eyeInputTimeOut = 0 //after screenchange, wait a few seconds before moving cursor with eye again (easier mouse take over after screen change!)
     this.mainScreen_arrow!.classList.remove("smoothTransition"); //jump
     this.dualscreen.secondScreen_arrow.nativeElement.classList.remove("smoothTransition"); //jump
     this.taskEvaluationService.addScreenChange();
     if(toScreen == Screens.MAINSCREEN){ //from top to bottom (= second to main screen) 
       this.dualscreen.focusMainWindow();
-      this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
-      this.eyeInputService.moveArrowWithEyes(this.mainScreen_arrow!, window); //move cursor to gaze position at new screen
-      this.mainScreen_arrow!.style.visibility = 'visible';
+      if(moveCursor) this.eyeInputService.moveArrowWithEyes(this.mainScreen_arrow!, window); //move cursor to gaze position at new screen
+      hideInactiveCursor?this.toggleCursorVisibility(toScreen):this.toggleCursorColor(toScreen);
       setTimeout(() => {
         this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput, moveCursor);
       }, eyeInputTimeOut)
     }
     else{ //from bottom to top (= main to second screen)
       this.dualscreen.focusSecondWindow();
-      this.eyeInputService.moveArrowWithEyes(this.dualscreen.secondScreen_arrow.nativeElement, this.dualscreen.secondWindow);
-      this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
-      this.mainScreen_arrow!.style.visibility = 'hidden';
+      if(moveCursor) this.eyeInputService.moveArrowWithEyes(this.dualscreen.secondScreen_arrow.nativeElement, this.dualscreen.secondWindow);
+      hideInactiveCursor?this.toggleCursorVisibility(toScreen):this.toggleCursorColor(toScreen);
       setTimeout(() => {
         this.eyeInputService.activateEyeInput(this.dualscreen.secondWindow, this.dualscreen.secondScreen_arrow.nativeElement, this.timeOutAfterMouseInput, moveCursor);
       }, eyeInputTimeOut)
       }
   }
 
+  private toggleCursorVisibility(activeScreen : Screens){
+    if(activeScreen == Screens.MAINSCREEN){ // hide second screen cursor
+      this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
+      this.mainScreen_arrow!.style.visibility = "visible";
+    }
+    else{ // hide main screen cursor
+      this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
+      this.mainScreen_arrow!.style.visibility = 'hidden';
+    }
+  }
+
+  private toggleCursorColor(activeScreen : Screens){
+    if(activeScreen == Screens.MAINSCREEN){ // hide second screen cursor
+      this.dualscreen.secondScreen_arrow.nativeElement.style.opacity = "0.5";
+      this.mainScreen_arrow!.style.opacity = "1";
+    }
+    else{ // hide main screen cursor
+      this.dualscreen.secondScreen_arrow.nativeElement.style.opacity = "1";
+      this.mainScreen_arrow!.style.opacity = "0.5";
+    }
+  }
+
   protected startEyeInput(){ //not needed for this experiment
   }
 
-  protected startMix1Input(){ //Mix2 but eyes only for changing screen
+  protected startMix1Input(){ //Ninja Cursors - eyes only for changing screen/cursor
     this.webSocketService.startSendingGazeData();
     this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput, false); //Start with main screen
     this.mainScreen_arrow!.style.visibility = 'visible';
+    this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
     //start waiting for screen changes and clicks
-    this.startScreenChangeDetection(false);
+    this.startScreenChangeDetection(false, false);
     document.addEventListener('mousedown', this.bound_changeOnClick);
     this.mix2loaded = true;
   }
@@ -240,7 +261,7 @@ export class ClickComponent extends BaseTasksComponent{
     this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput); //Start with main screen
     this.mainScreen_arrow!.style.visibility = 'visible';
     //start waiting for screen changes and clicks
-    this.startScreenChangeDetection();
+    this.startScreenChangeDetection(true, true);
     document.addEventListener('mousedown', this.bound_changeOnClick);
     this.mix2loaded = true;
   }
