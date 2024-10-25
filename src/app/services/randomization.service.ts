@@ -251,7 +251,7 @@ export class RandomizationService {
         const positions : number[] = parts.slice(0, 4).map((numStr: string) => parseInt(numStr));
         positions.forEach((num : number, index : number) => {
           const pos : Positions = num%2==0?Positions.POS2:Positions.POS1;
-          const mainScreen : boolean = num<=2?true:false;
+          const mainScreen : boolean = num<=2?false:true;
           repOrder.push({pos: pos, mainScreen: mainScreen, size: size, numberInBlock: index});
         })
       });
