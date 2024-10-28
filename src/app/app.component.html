@@ -11,8 +11,9 @@
             <span *ngIf="(i+1)%4 == 0 && i + 1 <= randomizationService.repsDone">●</span>
             <span *ngIf="(i+1)%4 == 0 && i + 1 > randomizationService.repsDone">○</span>
         </span>
+        <!-- 
         <div style="font-size: 12px; line-height: 15px; padding: 5px;" *ngIf="selectedInputType == InputType.MIX2 || selectedInputType == InputType.MIX1">To skip press esc.</div>
-        <button id="skip" *ngIf="selectedInputType != InputType.MIX2 && selectedInputType != InputType.MIX1" style="margin: 8px 5px;" (click)="skipButtonClick()">Skip</button>
+        <button id="skip" *ngIf="selectedInputType != InputType.MIX2 && selectedInputType != InputType.MIX1" style="margin: 8px 5px;" (click)="skipButtonClick()">Skip</button> -->
     </div>
 
     <span class="white-box" *ngIf="!showRecalibration" >
