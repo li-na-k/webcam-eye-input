@@ -60,7 +60,7 @@ button:disabled{
     width: 20px;
     visibility: hidden; 
     pointer-events: none;
-    z-index: 1000;
+    z-index: 10;
     will-change: transform;
     /* -webkit-filter: drop-shadow(2px 4px 6px black);
     filter: drop-shadow(2px 4px 6px black); */
@@ -133,7 +133,7 @@ button:disabled{
     right: 0;
     bottom: 0;
     background-color: #fff;
-    z-index: 2;
+    z-index: 100;
 } 
 
 .FlexboxCentered{
