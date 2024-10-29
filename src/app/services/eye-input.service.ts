@@ -85,11 +85,12 @@ export class EyeInputService implements OnDestroy {
   }
 
   public moveArrowWithMouse(e: MouseEvent, arrow: HTMLElement, limits: [number, number, number, number]) {
+    const pointerAcceleration : number = 2;
     this.ngZone.runOutsideAngular(() => {
 
       const matrix = new WebKitCSSMatrix(window.getComputedStyle(arrow).transform);
-      let x = matrix.m41 + e.movementX;
-      let y = matrix.m42 + e.movementY;
+      let x = matrix.m41 + e.movementX*pointerAcceleration;
+      let y = matrix.m42 + e.movementY*pointerAcceleration;
       
       x = Math.max(limits[3], Math.min(x, limits[1])); // Left and right boundaries
       y = Math.max(limits[0], Math.min(y, limits[2])); // Top and bottom boundaries
