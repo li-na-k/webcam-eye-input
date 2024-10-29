@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, Pipe, PipeTransform, Renderer2, RendererFactory2, ViewChild } from '@angular/core';
 import { EyeInputService } from 'src/app/services/eye-input.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
@@ -43,14 +43,18 @@ export class ClickComponent extends BaseTasksComponent{
 
   private screenChangeDetection_interval : any = null;
 
+  private renderer: Renderer2;
+
   constructor(
     cdRef: ChangeDetectorRef, 
+    rendererFactory : RendererFactory2,
     private eyeInputService : EyeInputService, 
     store : Store<AppState>, 
     taskEvaluationService : TaskEvaluationService, 
     randomizationService : RandomizationService,
     private webSocketService : SocketService) {
-   super(store, cdRef, taskEvaluationService, randomizationService)
+   super(store, cdRef, taskEvaluationService, randomizationService);
+   this.renderer = rendererFactory.createRenderer(null, null);
   }
 
   private async getclickAreas() {
@@ -109,23 +113,24 @@ export class ClickComponent extends BaseTasksComponent{
 
   private toggleCursorVisibility(activeScreen : Screens){
     if(activeScreen == Screens.MAINSCREEN){ // hide second screen cursor
-      this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "hidden";
-      this.mainScreen_arrow!.style.visibility = "visible";
+      this.renderer.setStyle(this.dualscreen.secondScreen_arrow.nativeElement, 'visibility', 'hidden');
+      this.renderer.setStyle(this.mainScreen_arrow, 'visibility', 'visible');
+
     }
     else{ // hide main screen cursor
-      this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
-      this.mainScreen_arrow!.style.visibility = 'hidden';
+      this.renderer.setStyle(this.dualscreen.secondScreen_arrow.nativeElement, 'visibility', 'visible');
+      this.renderer.setStyle(this.mainScreen_arrow, 'visibility', 'hidden');
     }
   }
 
   private toggleCursorColor(activeScreen : Screens){
     if(activeScreen == Screens.MAINSCREEN){ // hide second screen cursor
-      this.dualscreen.secondScreen_arrow.nativeElement.style.opacity = "0.5";
-      this.mainScreen_arrow!.style.opacity = "1";
+      this.renderer.setStyle(this.dualscreen.secondScreen_arrow.nativeElement, 'opacity', '0.5');
+      this.renderer.setStyle(this.mainScreen_arrow, 'opacity', '1');
     }
     else{ // hide main screen cursor
-      this.dualscreen.secondScreen_arrow.nativeElement.style.opacity = "1";
-      this.mainScreen_arrow!.style.opacity = "0.5";
+      this.renderer.setStyle(this.dualscreen.secondScreen_arrow.nativeElement, 'opacity', '1');
+      this.renderer.setStyle(this.mainScreen_arrow, 'opacity', '0.5');
     }
   }
 
@@ -135,8 +140,8 @@ export class ClickComponent extends BaseTasksComponent{
   protected startMix1Input(){ //Ninja Cursors - eyes only for changing screen/cursor
     this.webSocketService.startSendingGazeData();
     this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput, false); //Start with main screen
-    this.mainScreen_arrow!.style.visibility = 'visible';
-    this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = "visible";
+    this.renderer.setStyle(this.mainScreen_arrow, 'visibility', 'visible');
+    this.renderer.setStyle(this.dualscreen.secondScreen_arrow.nativeElement, 'visibility', 'visible');
     //start waiting for screen changes and clicks
     this.startScreenChangeDetection(false, false);
     document.addEventListener('mousedown', this.bound_changeOnClick);
@@ -259,7 +264,7 @@ export class ClickComponent extends BaseTasksComponent{
   protected startMix2Input(){
     this.webSocketService.startSendingGazeData();
     this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput); //Start with main screen
-    this.mainScreen_arrow!.style.visibility = 'visible';
+    this.renderer.setStyle(this.mainScreen_arrow, 'visibility', 'visible');
     //start waiting for screen changes and clicks
     this.startScreenChangeDetection(true, true);
     document.addEventListener('mousedown', this.bound_changeOnClick);
@@ -288,16 +293,16 @@ export class ClickComponent extends BaseTasksComponent{
   private setCurrentCursorVisibility(visible : boolean){
     if(this.selectedInputType == InputType.MOUSE){
       let style = (!visible)?'none':'';
-      document.body.style.cursor = style
-      this.dualscreen.secondWindow.document.body.style.cursor = style;
+      this.renderer.setStyle(document.body, 'cursor', style);
+      this.renderer.setStyle(this.dualscreen.secondWindow.document.body, 'cursor', style);
     }
     else{
       let style = (!visible)?'hidden':'visible';
       if(this.currentScreen == Screens.MAINSCREEN){
-        this.mainScreen_arrow!.style.visibility = style
+        this.renderer.setStyle(this.mainScreen_arrow, 'visibility', style);
       }
       else{
-        this.dualscreen.secondScreen_arrow.nativeElement.style.visibility = style
+        this.renderer.setStyle(this.dualscreen.secondScreen_arrow.nativeElement, 'visibility', style);
       }
     }
   }

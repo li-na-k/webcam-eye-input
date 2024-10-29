@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentEyePos } from 'src/app/state/eyetracking/eyetracking.selector';
@@ -23,7 +23,7 @@ export class EyeInputService implements OnDestroy {
   private x = 0.0;
   private y = 0.0;
 
-  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService, rendererFactory: RendererFactory2) { 
+  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService, rendererFactory: RendererFactory2, private ngZone: NgZone) { 
     this.renderer = rendererFactory.createRenderer(null, null);
     this.currentEyePos$
       .pipe(takeUntil(this.destroy$))
@@ -69,35 +69,35 @@ export class EyeInputService implements OnDestroy {
   }
 
   public moveArrowWithEyes(arrow : HTMLElement, window : Window){ //move to current eye pos
-    let x = this.x * window.innerWidth;
-    let y = (1-this.y) * window.innerHeight;
+    let x : number = this.x * window.innerWidth;
+    let y : number = (1-this.y) * window.innerHeight;
 
-    requestAnimationFrame(() => { //DOM is only manipulated once per frame -> more efficient
-      arrow.style.transform = `translate(${x}px, ${y}px)`;
-  });
+    this.applyTransformation(arrow, x, y);
   } 
 
-  public moveArrowWithMouse(e : any, arrow : HTMLElement, limits : [number, number, number, number]){ //move according to mouse movement
-    var style = window.getComputedStyle(arrow);
-    var matrix = new WebKitCSSMatrix(style.transform);
-    var currentx = matrix.m41; 
-    var currenty = matrix.m42;
-    let x = e.movementX + currentx;
-    let y = e.movementY + currenty;
-    if (x > limits[1]) {
-      x = limits[1]
-    }
-    else if (x < limits[3]) {
-      x = limits[3]
-    }
-    if (y > limits[2]) {
-      y = limits[2]
-    }
-    if (y < limits[0]) {
-      y = limits[0]
-    }
-    arrow!.style.transform = "translate(" + x + "px, " + y + "px)"
-    this.registerMouseStartStop()
+  private applyTransformation(obj: HTMLElement, x : number, y : number){  //DOM is only manipulated once per frame, without ng change detection -> more efficient
+    this.ngZone.runOutsideAngular(() => {
+      requestAnimationFrame(() => {
+        this.renderer.setStyle(obj, 'transform', `translate(${x}px, ${y}px)`);
+      });
+    });
+
+  }
+
+  public moveArrowWithMouse(e: MouseEvent, arrow: HTMLElement, limits: [number, number, number, number]) {
+    this.ngZone.runOutsideAngular(() => {
+
+      const matrix = new WebKitCSSMatrix(window.getComputedStyle(arrow).transform);
+      let x = matrix.m41 + e.movementX;
+      let y = matrix.m42 + e.movementY;
+      
+      x = Math.max(limits[3], Math.min(x, limits[1])); // Left and right boundaries
+      y = Math.max(limits[0], Math.min(y, limits[2])); // Top and bottom boundaries
+      
+      this.applyTransformation(arrow, x, y);
+      
+      this.registerMouseStartStop();
+    });
   }
 
   public async activateEyeInput(window: Window, arrow : HTMLElement | null, timeout: number, moveCursor : boolean = true){
@@ -120,18 +120,20 @@ export class EyeInputService implements OnDestroy {
     const intervalDelay = 1000 / refreshRate;
     clearInterval(this.moveArrowInterval);
     let lastUpdate = 0;
-    this.moveArrowInterval = setInterval(() => {
-      const now = performance.now();
-      if (now - lastUpdate >= intervalDelay) { // only update when necessary
-        if(!this.mouseInput && moveCursor){
-          this.renderer.addClass(this.arrow!, 'smoothTransition');
-          this.moveArrowWithEyes(this.arrow!, window);
-        } else {
-          this.renderer.removeClass(this.arrow!, 'smoothTransition');
+    this.ngZone.runOutsideAngular(() => {
+      this.moveArrowInterval = setInterval(() => {
+        const now = performance.now();
+        if (now - lastUpdate >= intervalDelay) { // only update when necessary
+          if(!this.mouseInput && moveCursor){
+            this.renderer.addClass(this.arrow!, 'smoothTransition');
+            this.moveArrowWithEyes(this.arrow!, window);
+          } else {
+            this.renderer.removeClass(this.arrow!, 'smoothTransition');
+          }
+          lastUpdate = now;
         }
-        lastUpdate = now;
-      }
-    }, intervalDelay);
+      }, intervalDelay);
+    });
   }
 
   private registerMouseStartStop(){ //like mouseTakeover but without takeover of fake cursor (only for analysing how eye/mouse usage was during Mix2)
@@ -154,9 +156,9 @@ export class EyeInputService implements OnDestroy {
     }
     //replace fake cursor with real cursor again
     if(this.arrow){
-      this.arrow.style.visibility = 'hidden';
+      this.renderer.setStyle(this.arrow, 'visibility', 'hidden');
     }
-    document.body.style.cursor = '';
+    this.renderer.setStyle(document.body, 'cursor', '');
     this.mouseInput = false;
   }
 
