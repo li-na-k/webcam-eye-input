@@ -22,10 +22,10 @@ export class ClickComponent extends BaseTasksComponent{
   @HostListener('body:mousemove', ['$event']) 
   onMouseMove(e : any) {
     if(this.dualscreen.secondScreen_arrow && this.dualscreen.secondWindow){ // move second screen arrow with mouse
-      this.eyeInputService.moveArrowWithMouse(e, this.dualscreen.secondScreen_arrow.nativeElement, [0, this.dualscreen.secondWindow.width, this.dualscreen.secondWindow.height, 0]);
+      this.eyeInputService.moveArrowWithMouse(e, this.dualscreen.secondScreen_arrow.nativeElement, [0, this.dualscreen.secondWindow.innerWidth, this.dualscreen.secondWindow.innerHeight, 0]);
     }
     if(this.mainScreen_arrow && this.dualscreen.mainWindow){ //move main screen arrow with mouse
-      this.eyeInputService.moveArrowWithMouse(e, this.mainScreen_arrow, [0, this.dualscreen.mainWindow.width, this.dualscreen.mainWindow.height, 0]);
+      this.eyeInputService.moveArrowWithMouse(e, this.mainScreen_arrow, [0, this.dualscreen.mainWindow.innerWidth, this.dualscreen.mainWindow.innerHeight, 0]);
     }   
   }
 
