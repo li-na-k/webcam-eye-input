@@ -119,7 +119,7 @@ export class TaskEvaluationService {
       console.log(result);
     }
     else{
-      console.log("tried to end task, but no task was running.")
+      console.error("tried to end task, but no task was running.")
     }
   }
 
@@ -143,7 +143,7 @@ export class TaskEvaluationService {
   prevScreen : Screens = Screens.MAINSCREEN;
   calculateTargetDistance(target : HTMLElement, window : Window){
     if (!this.taskRunning) {
-      console.warn("DOM may not have loaded yet. No target distance was calculated.");
+      console.error("DOM may not have loaded yet. No target distance was calculated.");
       return;
     }
     let result : TaskResult = this.results[this.results.length-1]; //current result object

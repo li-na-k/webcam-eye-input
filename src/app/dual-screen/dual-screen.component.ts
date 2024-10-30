@@ -77,7 +77,6 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
         this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=1300,height=700,left=50,top=50') ?? undefined;
       }
       setTimeout(() => {
-        console.log("second window loaded", this.secondWindow)
         this.attachContent();
         this.attachStyles();
         if(this.initialOpening && this.secondWindow){

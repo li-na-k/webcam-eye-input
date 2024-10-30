@@ -89,7 +89,6 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
       this.pointerLockInterval = setInterval(() => {
         if(this.mix2loaded && document.pointerLockElement == null){
           this.pointerLockStopped = true;
-          console.log("pointer lock zero!")
         }
         else{
           this.pointerLockStopped = false;

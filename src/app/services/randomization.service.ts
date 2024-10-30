@@ -107,7 +107,7 @@ export class RandomizationService {
   public async nextRep(): Promise<void> { //endTask(); must be called separately!
     return new Promise<void>(async (resolve, reject) => {
       this.repsDone++;
-      console.log("repsDone:", this.repsDone)
+      console.log("------------ repsDone:", this.repsDone)
       if (this.repsDone < this.repOrder.length) {
         this.taskEvaluationService.numberInBlock = this.repOrder[this.repsDone].numberInBlock;
         this.selectedSize = this.repOrder[this.repsDone].size;
@@ -225,7 +225,6 @@ export class RandomizationService {
   private randomizeNewTask(){
     this.readAndShuffleRepOrderFromCSV("assets/repOrder.csv").then((repOrder)=>{
       this.repOrder = repOrder
-      console.log("repOrder for next task:",this.repOrder);
     })
   }
 

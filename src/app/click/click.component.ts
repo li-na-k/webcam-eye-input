@@ -79,7 +79,6 @@ export class ClickComponent extends BaseTasksComponent{
   private currentScreen : Screens = Screens.MAINSCREEN;
   private currentScreen$ : Observable<any> = this.store.select(selectCurrentScreen);
   private startScreenChangeDetection(moveCursor : boolean = true, hideInactiveCursor : boolean = true) {
-    console.log("screen detection started")
     this.currentScreen$
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe(d => {
@@ -149,7 +148,6 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   protected checkIfError(clickArea : HTMLElement | null){
-      console.log("check if error click area", clickArea)
       if(clickArea){ //if not clicked outside of click area
         //Check if right area clicked
         if(clickArea?.id != this.taskElementID && clickArea.parentElement?.id != this.taskElementID){
