@@ -12,12 +12,13 @@ export class EyeInputService implements OnDestroy {
 
   private currentEyePos$ : Observable<any> = this.store.select(selectCurrentEyePos);
   private destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+
   // properties for Mix 2
   private mouseInput : boolean = false;
   private timeOutAfterMouseInput : any;
+  private timeout : number = 1000; //after what time is mouseInput interval considered to have ended (for switch to EyeInput + TaskResult EyeMouseDistribution) //TODO
   private moveArrowInterval : any;
   private arrow : HTMLElement | null = null; //currently active fake cursor
-  private timeout : number = 1000; //after what time is mouseInput interval considered to have ended (for switch to EyeInput + TaskResult EyeMouseDistribution)
   private renderer: Renderer2;
 
   private x = 0.0;
@@ -85,6 +86,7 @@ export class EyeInputService implements OnDestroy {
   }
 
   public moveArrowWithMouse(e: MouseEvent, arrow: HTMLElement, limits: [number, number, number, number]) {
+    this.taskEvaluationService.evaluateMouseStartStop(this.timeout); //similar to register MouseStartStop but to evaluate distribution - using same timeout as here
     const pointerAcceleration : number = 2;
     this.ngZone.runOutsideAngular(() => {
 
@@ -102,7 +104,6 @@ export class EyeInputService implements OnDestroy {
   }
 
   public async activateEyeInput(window: Window, arrow : HTMLElement | null, timeout: number, moveCursor : boolean = true){
-    //this.stopMix2Input();
     if(!window){
       throw Error("Provided window is null.")
     }
@@ -141,16 +142,15 @@ export class EyeInputService implements OnDestroy {
     clearTimeout(this.timeOutAfterMouseInput);
     if(!this.mouseInput){ //until now it was eye input, now change to mouse input
       this.mouseInput = true;
-      this.taskEvaluationService.endEyeMouseInterval(); //end previous EYE intervals
     }
     this.timeOutAfterMouseInput = setTimeout(() => {
       this.mouseInput = false;
-      this.taskEvaluationService.endEyeMouseInterval(); //end previous MOUSE interval, timeout after mouse input (500ms) counts as mouse input
     }, this.timeout)
   }
   
   public stopMix2Input(){ //stops last instances of stopMix2Input
     clearTimeout(this.timeOutAfterMouseInput);
+    this.taskEvaluationService.clearMouseStartStop();
     clearInterval(this.moveArrowInterval);
     if(document.pointerLockElement){
       document.exitPointerLock();

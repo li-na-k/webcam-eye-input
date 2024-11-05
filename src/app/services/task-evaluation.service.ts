@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { TaskResult } from '../classes/task-result';
@@ -16,7 +16,7 @@ type NewType = Observable<Tasks>;
 @Injectable({
   providedIn: 'root'
 })
-export class TaskEvaluationService {
+export class TaskEvaluationService implements OnDestroy {
 
   private selectedTask : Tasks | null = null;
   private selectedInputType : InputType | null = null;
@@ -36,6 +36,7 @@ export class TaskEvaluationService {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
+    this.clearMouseStartStop();
   }
 
   public results : TaskResult[] = []; //nicht als rxjs store weil mans einfach gleich hier in eine Datei reinschreibt, es muss ja sonst von nirgendwo drauf zugegriffen werden
@@ -46,7 +47,14 @@ export class TaskEvaluationService {
   public targetOnMainScreen : boolean = false; //set by randomization Service
   public pos : Positions = Positions.POS1; //set by randomization Service
 
+  // for mouse eye distribution detection
+  private intervalStartTime: number | null = null;
+  private isMouseMoving: boolean = false;
+  private timeoutId: any;
+  private result : TaskResult | null = null;
+
   startTask(){
+    console.log("--start task--")
     if(this.taskRunning){
       console.info("there is already a task running")
     }
@@ -62,8 +70,11 @@ export class TaskEvaluationService {
       result.numberInBlock = this.numberInBlock;
       result.targetOnMainScreen = this.targetOnMainScreen;
       result.positionOnScreen = this.pos;
-      result.setPosNumber()
+      result.setPosNumber();
       result.eyeMouseDistribution = [];
+      this.intervalStartTime = result.startTime;
+      this.result = result;
+      this.isMouseMoving = false;
     }
   }
 
@@ -76,15 +87,49 @@ export class TaskEvaluationService {
     }
   }
 
-  endEyeMouseInterval(){ //only for Mix2 input!
-    if(this.taskRunning){
-      let result : TaskResult = this.results[this.results.length-1] //current result object
-      if(result.eyeMouseDistribution){
-        let prevIntervalsDur = result.eyeMouseDistribution.reduce((a, b) => a + b, 0);
-        let duration : number = Date.now() - (result.startTime + prevIntervalsDur)
-        result.eyeMouseDistribution?.push(duration);
+  // called on every mouse move
+  evaluateMouseStartStop(timeout: number) {
+    const currentTime = Date.now();
+    // mouse was not moving before - start a new mouse interval & end previous eye interval
+    if (!this.isMouseMoving) {
+      if (this.intervalStartTime !== null) { //if a task is running
+        const eyeIntervalDuration = currentTime - this.intervalStartTime;
+        this.result?.eyeMouseDistribution.push(eyeIntervalDuration);
       }
+      this.isMouseMoving = true;
+      this.intervalStartTime = currentTime;
     }
+    // end current mouse interval if timeout is reached
+    if (this.timeoutId) clearTimeout(this.timeoutId);
+    this.timeoutId = setTimeout(() => {
+      if(this.isMouseMoving){
+        const mouseIntervalDuration = Date.now() - this.intervalStartTime!;
+        this.result?.eyeMouseDistribution.push(mouseIntervalDuration);
+        this.isMouseMoving = false;
+        this.intervalStartTime = Date.now(); // new start time for the next eye interval
+      }
+    }, timeout);
+  }
+
+  //end last interval and clear interval detection
+  clearMouseStartStop() {
+      const currentTime = Date.now();
+      // Close the last interval
+      if (this.intervalStartTime !== null) {
+        const finalIntervalDuration = currentTime - this.intervalStartTime;
+        this.result?.eyeMouseDistribution.push(finalIntervalDuration);
+      }
+      else {
+        console.error("Could not close LAST mouse interval because intervalStartTime was null.")
+        return;
+      }
+      // Clear any active timeout and reset state for a new task
+      this.intervalStartTime = null;
+      if (this.timeoutId) {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+      }
+      this.isMouseMoving = false;
   }
 
   addScreenChange(){
@@ -100,23 +145,23 @@ export class TaskEvaluationService {
 
   endTask(aborted? : boolean){
     if(this.taskRunning){
-      let result : TaskResult = this.results[this.results.length-1]
-      result.endTime = Date.now();
-      result.setDuration();
-      result.setPosNumber();
-      result.errors = this.errorCount;
-      this.endEyeMouseInterval(); //end last MOUSE interval (during Mix2 only)
+      this.result!.endTime = Date.now();
+      this.clearMouseStartStop(); //end last MOUSE interval (during Mix2 only)
+      this.result!.setDuration();
+      this.result!.setPosNumber();
+      this.result!.errors = this.errorCount;
       this.taskRunning = false;
       this.playAudio("assets/success.mp3");
       if(aborted){
-        result.aborted = aborted;
+        this.result!.aborted = aborted;
       }
-      if(result.eyeMouseDistribution){
-        result.eyeIntervalsDuration = result.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 == 0) ? val : 0), 0);
-        result.mouseIntervalsDuration = result.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 != 0) ? val : 0), 0);
-        result.intervalChanges = result.eyeMouseDistribution.length-1;
+      if(this.result!.eyeMouseDistribution){
+        this.result!.eyeIntervalsDuration = this.result!.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 == 0) ? val : 0), 0);
+        this.result!.mouseIntervalsDuration = this.result!.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 != 0) ? val : 0), 0);
+        this.result!.intervalChanges = this.result!.eyeMouseDistribution.length-1;
       }
-      console.log(result);
+      console.log(this.result);
+      this.result = null;
     }
     else{
       console.error("tried to end task, but no task was running.")
