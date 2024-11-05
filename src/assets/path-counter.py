@@ -3,7 +3,7 @@ from collections import Counter
 
 path_counter = Counter()
 
-with open('repOrder.csv', 'r') as file:
+with open('webcam-eye-input/src/assets/repOrder.csv', 'r') as file:
     reader = csv.reader(file, delimiter=';')
     for row in reader:
         path = list(map(int, row[:4]))

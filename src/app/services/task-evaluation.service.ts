@@ -183,7 +183,7 @@ export class TaskEvaluationService implements OnDestroy {
 
 
 
-  targetsOnYaxis = true; //specify here whether a setup with the second screen above or on the right is used
+  targetsOnYaxis = false; //specify here whether a setup with the second screen above or on the left is used
   prevDistanceToBorder : [number, number, number, number] = [0,0,0,0]; //[targetCenterFromTop, targetCenterToBottom, targetCenterFromLeft, targetCenterToRight]
   prevScreen : Screens = Screens.MAINSCREEN;
   calculateTargetDistance(target : HTMLElement, window : Window){
@@ -204,16 +204,16 @@ export class TaskEvaluationService implements OnDestroy {
 
     if(isSameScreen){
       this.result!.YdistancePrevTarget = Math.abs(this.prevDistanceToBorder[0] - targetCenterFromTop);
-      this.result!.XdistancePrevTarget = Math.abs(this.prevDistanceToBorder[3] - targetCenterFromLeft);
+      this.result!.XdistancePrevTarget = Math.abs(this.prevDistanceToBorder[2] - targetCenterFromLeft);
     }
     else{
-      if(this.result!.targetOnMainScreen){ // from second screen to main screen
+      if(this.result!.targetOnMainScreen){ // from second screen to main screen: ↓ or →
         this.result!.YdistancePrevTarget = this.prevDistanceToBorder[1] + targetCenterFromTop;
-        this.result!.XdistancePrevTarget = this.prevDistanceToBorder[2] + targetCenterToRight;
-      }
-      else{ // from main screen to second screen
-        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToBottom;
         this.result!.XdistancePrevTarget = this.prevDistanceToBorder[3] + targetCenterFromLeft;
+      }
+      else{ // from main screen to second screen: ↑ or ← 
+        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToBottom;
+        this.result!.XdistancePrevTarget = this.prevDistanceToBorder[2] + targetCenterToRight;
       }
     }
     this.prevDistanceToBorder = [targetCenterFromTop, targetCenterToBottom, targetCenterFromLeft, targetCenterToRight];
