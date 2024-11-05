@@ -134,11 +134,11 @@ export class TaskEvaluationService implements OnDestroy {
 
   addScreenChange(){
     if(this.taskRunning){
-      let result : TaskResult = this.results[this.results.length-1]; //current result object
-      let lastChange : number = result.screenChanges.length==0?0:result.screenChanges[result.screenChanges.length-1]
-      let currentChange : number = Date.now()-result.startTime;
+      //let result : TaskResult = this.results[this.results.length-1]; //current result object
+      let lastChange : number = this.result!.screenChanges.length==0?0:this.result!.screenChanges[this.result!.screenChanges.length-1]
+      let currentChange : number = Date.now()-this.result!.startTime;
       if(!(currentChange - lastChange < 50)){
-        result.screenChanges.push(currentChange);
+        this.result!.screenChanges.push(currentChange);
       }
     }
   }
@@ -191,7 +191,7 @@ export class TaskEvaluationService implements OnDestroy {
       console.error("DOM may not have loaded yet. No target distance was calculated.");
       return;
     }
-    let result : TaskResult = this.results[this.results.length-1]; //current result object
+    // let result : TaskResult = this.results[this.results.length-1]; //current result object
 
     const targetRect = target.getBoundingClientRect();
 
@@ -200,24 +200,24 @@ export class TaskEvaluationService implements OnDestroy {
     const targetCenterFromLeft = this.targetsOnYaxis ? 0 : Math.round(targetRect.left + 0.5 * (targetRect.right - targetRect.left)); // Center position from left →
     const targetCenterToRight = this.targetsOnYaxis ? 0 : Math.round(window.innerWidth - targetCenterFromLeft); // Center position to right of the window →
 
-    const isSameScreen = result.targetOnMainScreen == (this.prevScreen == Screens.MAINSCREEN)
+    const isSameScreen = this.result!.targetOnMainScreen == (this.prevScreen == Screens.MAINSCREEN)
 
     if(isSameScreen){
-      result.YdistancePrevTarget = Math.abs(this.prevDistanceToBorder[0] - targetCenterFromTop);
-      result.XdistancePrevTarget = Math.abs(this.prevDistanceToBorder[3] - targetCenterFromLeft);
+      this.result!.YdistancePrevTarget = Math.abs(this.prevDistanceToBorder[0] - targetCenterFromTop);
+      this.result!.XdistancePrevTarget = Math.abs(this.prevDistanceToBorder[3] - targetCenterFromLeft);
     }
     else{
-      if(result.targetOnMainScreen){ // from second screen to main screen
-        result.YdistancePrevTarget = this.prevDistanceToBorder[1] + targetCenterFromTop;
-        result.XdistancePrevTarget = this.prevDistanceToBorder[2] + targetCenterToRight;
+      if(this.result!.targetOnMainScreen){ // from second screen to main screen
+        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[1] + targetCenterFromTop;
+        this.result!.XdistancePrevTarget = this.prevDistanceToBorder[2] + targetCenterToRight;
       }
       else{ // from main screen to second screen
-        result.YdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToBottom;
-        result.XdistancePrevTarget = this.prevDistanceToBorder[3] + targetCenterFromLeft;
+        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToBottom;
+        this.result!.XdistancePrevTarget = this.prevDistanceToBorder[3] + targetCenterFromLeft;
       }
     }
     this.prevDistanceToBorder = [targetCenterFromTop, targetCenterToBottom, targetCenterFromLeft, targetCenterToRight];
-    this.prevScreen = result.targetOnMainScreen?Screens.MAINSCREEN:Screens.SECONDSCREEN;
+    this.prevScreen = this.result!.targetOnMainScreen?Screens.MAINSCREEN:Screens.SECONDSCREEN;
   }
 
   exportResults(){

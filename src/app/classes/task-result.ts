@@ -21,7 +21,7 @@ export class TaskResult {
     XdistancePrevTarget : number = 0;
     YdistancePrevTarget : number = 0;
 
-    eyeMouseDistribution? : number[]; //[eye interval duration, mouse interval duration, eye interval duration, mouse ....]
+    eyeMouseDistribution : number[] = []; //[eye interval duration, mouse interval duration, eye interval duration, mouse ....]
     mouseIntervalsDuration? : number;
     eyeIntervalsDuration? : number;
     intervalChanges? : number;
