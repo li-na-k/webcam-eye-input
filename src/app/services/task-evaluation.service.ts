@@ -156,11 +156,7 @@ export class TaskEvaluationService implements OnDestroy {
       if(aborted){
         this.result!.aborted = aborted;
       }
-      if(this.result!.eyeMouseDistribution){
-        this.result!.eyeIntervalsDuration = this.result!.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 == 0) ? val : 0), 0);
-        this.result!.mouseIntervalsDuration = this.result!.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 != 0) ? val : 0), 0);
-        this.result!.intervalChanges = this.result!.eyeMouseDistribution.length-1;
-      }
+      this.result!.setIntervalDurations();
       console.log(this.result);
       this.result = null;
     }

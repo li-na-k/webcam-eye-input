@@ -53,4 +53,9 @@ export class TaskResult {
         }
     }
 
+    public setIntervalDurations() {
+        this.eyeIntervalsDuration = this.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 == 0) ? val : 0), 0);
+        this.mouseIntervalsDuration = this.eyeMouseDistribution.reduce((sum, val, i) => sum + ((i % 2 != 0) ? val : 0), 0);
+        this.intervalChanges = this.eyeMouseDistribution.length-1;
+    }
 }
