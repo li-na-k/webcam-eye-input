@@ -215,6 +215,7 @@ export class TaskEvaluationService implements OnDestroy {
     }
     this.prevDistanceToBorder = [targetCenterFromTop, targetCenterToBottom, targetCenterFromLeft, targetCenterToRight];
     this.prevScreen = this.result!.targetOnMainScreen?Screens.MAINSCREEN:Screens.SECONDSCREEN;
+    console.log("distance", this.result!.XdistancePrevTarget)
   }
 
   calculateTargetSize(target : HTMLElement){
@@ -242,7 +243,10 @@ export class TaskEvaluationService implements OnDestroy {
       "eyeMouseDistribution",
       "mouseIntervalsDuration",
       "eyeIntervalsDuration",
-      "intervalChanges"
+      "intervalChanges",
+      "targetWidth",
+      "targetHeight",
+      "indexOfDifficulty"  
     ]);
   }
 
