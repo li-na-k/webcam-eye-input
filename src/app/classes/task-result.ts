@@ -13,13 +13,18 @@ export class TaskResult {
     duration : number = 0;
     durationPerPixel : number = 0;
     errors: number = 0;
+
     aborted : boolean = false;
     screenChanges : number[] = [];
     targetOnMainScreen: boolean = true;
     positionOnScreen : Positions = Positions.POS1; // 1 or 2
     posNumber : number = 0; //1 to 4
+
     XdistancePrevTarget : number = 0;
     YdistancePrevTarget : number = 0;
+    targetWidth : number = 0;
+    targetHeight : number = 0;
+    indexOfDifficulty : number = 0;
 
     eyeMouseDistribution : number[] = []; //[eye interval duration, mouse interval duration, eye interval duration, mouse ....]
     mouseIntervalsDuration? : number;
@@ -33,8 +38,19 @@ export class TaskResult {
         }
         this.durationPerPixel = this.duration / this.XdistancePrevTarget;
     };
+
     public setPosNumber() { 
         const posPipe = new MatCardTitlePipe();
         this.posNumber = parseInt(posPipe.transform(this.positionOnScreen,this.targetOnMainScreen)); 
     }
+
+    public setIndexOfDifficulty() {
+        if(this.YdistancePrevTarget > this.XdistancePrevTarget){
+            this.indexOfDifficulty = Math.log2((this.YdistancePrevTarget / this.targetHeight) + 1);
+        }
+        else{
+            this.indexOfDifficulty = Math.log2((this.XdistancePrevTarget / this.targetWidth) + 1);
+        }
+    }
+
 }

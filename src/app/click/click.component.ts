@@ -162,6 +162,7 @@ export class ClickComponent extends BaseTasksComponent{
 
   public async addSuccess() {
     this.taskEvaluationService.calculateTargetDistance(this.taskElement as HTMLElement, this.taskEvaluationService.targetOnMainScreen ? window : this.dualscreen.secondWindow);
+    this.taskEvaluationService.calculateTargetSize(this.taskElement as HTMLElement)
     this.error = false;
     this.taskEvaluationService.endTask(false);
     this.showInterTrialPage(true);

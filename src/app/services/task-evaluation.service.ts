@@ -149,6 +149,7 @@ export class TaskEvaluationService implements OnDestroy {
       this.clearMouseStartStop(); //end last MOUSE interval (during Mix2 only)
       this.result!.setDuration();
       this.result!.setPosNumber();
+      this.result!.setIndexOfDifficulty();
       this.result!.errors = this.errorCount;
       this.taskRunning = false;
       this.playAudio("assets/success.mp3");
@@ -218,6 +219,12 @@ export class TaskEvaluationService implements OnDestroy {
     }
     this.prevDistanceToBorder = [targetCenterFromTop, targetCenterToBottom, targetCenterFromLeft, targetCenterToRight];
     this.prevScreen = this.result!.targetOnMainScreen?Screens.MAINSCREEN:Screens.SECONDSCREEN;
+  }
+
+  calculateTargetSize(target : HTMLElement){
+    const targetRect = target.getBoundingClientRect();
+    this.result!.targetWidth = targetRect.width;
+    this.result!.targetHeight = targetRect.height;
   }
 
   exportResults(){
