@@ -86,7 +86,6 @@ export class EyeInputService implements OnDestroy {
   }
 
   public moveArrowWithMouse(e: MouseEvent, arrow: HTMLElement, limits: [number, number, number, number]) {
-    this.taskEvaluationService.evaluateMouseStartStop(this.timeout); //similar to register MouseStartStop but to evaluate distribution - using same timeout as here
     const pointerAcceleration : number = 2;
     this.ngZone.runOutsideAngular(() => {
 

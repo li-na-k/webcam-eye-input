@@ -1,4 +1,4 @@
-import { AfterViewInit, ApplicationRef, Component, Injector, OnDestroy, TemplateRef, ViewChild, ViewContainerRef, Input, ElementRef, NgZone, EventEmitter, Output } from '@angular/core';
+import { AfterViewInit, ApplicationRef, Component, Injector, OnDestroy, TemplateRef, ViewChild, ViewContainerRef, Input, ElementRef, NgZone, EventEmitter, Output, HostListener } from '@angular/core';
 import {
   TemplatePortal,
   DomPortalOutlet,
@@ -6,6 +6,7 @@ import {
 import { changeXPos, changeYPos } from '../state/eyetracking/eyetracking.action';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
+import { TaskEvaluationService } from '../services/task-evaluation.service';
 
 
 @Component({
@@ -30,7 +31,8 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
     private _viewContainerRef: ViewContainerRef,
     private injector: Injector,
     private applicationRef: ApplicationRef,
-    private store : Store<AppState>){}
+    private store : Store<AppState>,
+    protected taskEvaluationService : TaskEvaluationService,){}
 
   ngAfterViewInit(){
     if(!this.initialOpening){
@@ -79,6 +81,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
       setTimeout(() => {
         this.attachContent();
         this.attachStyles();
+        this.attachEventListener();
         if(this.initialOpening && this.secondWindow){
           this.secondWindow.opener.name = "parent";
         }    
@@ -116,6 +119,14 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
       // Copy stylesheet link from parent window
       this.styleSheetElement = this.getStyleSheetElement();
       this.secondWindow.document.head.appendChild(this.styleSheetElement);
+    }
+  }
+
+  private attachEventListener(){
+    if(this.secondWindow){
+      this.secondWindow.addEventListener("mousemove", (e) => {
+          this.taskEvaluationService.evaluateMouseStartStop(); //similar to register MouseStartStop but to evaluate distribution
+      })
     }
   }
 

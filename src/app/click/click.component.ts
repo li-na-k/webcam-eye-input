@@ -21,6 +21,7 @@ import { SocketService } from '../services/socket.service';
 export class ClickComponent extends BaseTasksComponent{
   @HostListener('body:mousemove', ['$event']) 
   onMouseMove(e : any) {
+    this.taskEvaluationService.evaluateMouseStartStop(); //similar to register MouseStartStop but to evaluate distribution
     if(this.dualscreen.secondScreen_arrow && this.dualscreen.secondWindow){ // move second screen arrow with mouse
       this.eyeInputService.moveArrowWithMouse(e, this.dualscreen.secondScreen_arrow.nativeElement, [0, this.dualscreen.secondWindow.innerWidth, this.dualscreen.secondWindow.innerHeight, 0]);
     }

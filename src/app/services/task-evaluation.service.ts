@@ -88,13 +88,15 @@ export class TaskEvaluationService implements OnDestroy {
   }
 
   // called on every mouse move
-  evaluateMouseStartStop(timeout: number) {
+  evaluateMouseStartStop() {
+    const timeout = 1000; // how long can mouse be unmoved until it is considered to be eye input? (MAGIC uses eye input after 1000 ms -> using this for evaluation too)
     const currentTime = Date.now();
     // mouse was not moving before - start a new mouse interval & end previous eye interval
     if (!this.isMouseMoving) {
       if (this.intervalStartTime !== null) { //if a task is running
         const eyeIntervalDuration = currentTime - this.intervalStartTime;
         this.result?.eyeMouseDistribution.push(eyeIntervalDuration);
+        // console.log("--------- start mouse---------")
       }
       this.isMouseMoving = true;
       this.intervalStartTime = currentTime;
@@ -102,11 +104,12 @@ export class TaskEvaluationService implements OnDestroy {
     // end current mouse interval if timeout is reached
     if (this.timeoutId) clearTimeout(this.timeoutId);
     this.timeoutId = setTimeout(() => {
-      if(this.isMouseMoving){
+      if(this.isMouseMoving){ // mouse was moving before
         const mouseIntervalDuration = Date.now() - this.intervalStartTime!;
         this.result?.eyeMouseDistribution.push(mouseIntervalDuration);
         this.isMouseMoving = false;
         this.intervalStartTime = Date.now(); // new start time for the next eye interval
+        // console.log("______________ end mouse _____________________")
       }
     }, timeout);
   }
@@ -118,6 +121,7 @@ export class TaskEvaluationService implements OnDestroy {
       if (this.intervalStartTime !== null) {
         const finalIntervalDuration = currentTime - this.intervalStartTime;
         this.result?.eyeMouseDistribution.push(finalIntervalDuration);
+        // console.log("______________ end mouse _____________________")
       }
       else {
         console.error("Could not close LAST mouse interval because intervalStartTime was null.")
