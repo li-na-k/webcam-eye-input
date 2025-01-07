@@ -73,16 +73,37 @@ export class EyeInputService implements OnDestroy {
     let x : number = this.x * window.innerWidth;
     let y : number = (1-this.y) * window.innerHeight;
 
-    this.applyTransformation(arrow, x, y);
+    this.applyTransformation(arrow, x, y, 0.3, 0);
   } 
 
-  private applyTransformation(obj: HTMLElement, x : number, y : number){  //DOM is only manipulated once per frame, without ng change detection -> more efficient
+   //DOM is only manipulated once per frame, without ng change detection -> more efficient
+  private applyTransformation(
+    obj: HTMLElement, 
+    x: number, 
+    y: number, 
+    maxDuration: number = 0.3, 
+    minDuration: number = 0 // Optional minimum duration for very large distances
+  ): void {
     this.ngZone.runOutsideAngular(() => {
       requestAnimationFrame(() => {
+        const rect = obj.getBoundingClientRect();
+        const currentX = rect.left;
+        const currentY = rect.top;
+        const distance = Math.sqrt((x - currentX) ** 2 + (y - currentY) ** 2);
+  
+        // dynamic duration: longer duration should result in shorter duration (cursor jumps), shorter durations smoothed more (less jitter)
+        let duration = maxDuration - (distance * (maxDuration / 700)); // Linear scaling
+  
+        // Ensure duration doesn't go below the minimum
+        if (duration < minDuration) {
+          duration = minDuration;
+        }
+  
+        // Apply the transformation with the calculated duration
+        this.renderer.setStyle(obj, 'transition', `transform ${duration}s ease`);
         this.renderer.setStyle(obj, 'transform', `translate(${x}px, ${y}px)`);
       });
     });
-
   }
 
   public moveArrowWithMouse(e: MouseEvent, arrow: HTMLElement, limits: [number, number, number, number]) {
@@ -96,7 +117,7 @@ export class EyeInputService implements OnDestroy {
       x = Math.max(limits[3], Math.min(x, limits[1])); // Left and right boundaries
       y = Math.max(limits[0], Math.min(y, limits[2])); // Top and bottom boundaries
       
-      this.applyTransformation(arrow, x, y);
+      this.applyTransformation(arrow, x, y, 0, 0);
       
       this.registerMouseStartStop();
     });
@@ -126,10 +147,10 @@ export class EyeInputService implements OnDestroy {
         const now = performance.now();
         if (now - lastUpdate >= intervalDelay) { // only update when necessary
           if(!this.mouseInput && moveCursor){
-            this.renderer.addClass(this.arrow!, 'smoothTransition');
+            this.renderer.addClass(this.arrow!, 'redShaddow');
             this.moveArrowWithEyes(this.arrow!, window);
           } else {
-            this.renderer.removeClass(this.arrow!, 'smoothTransition');
+            this.renderer.removeClass(this.arrow!, 'redShaddow');
           }
           lastUpdate = now;
         }

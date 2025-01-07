@@ -90,8 +90,6 @@ export class ClickComponent extends BaseTasksComponent{
 
   private changeScreen(toScreen : Screens, moveCursor : boolean = true, hideInactiveCursor : boolean = true){
     const eyeInputTimeOut = 0 //after screenchange, wait a few seconds before moving cursor with eye again (easier mouse take over after screen change!)
-    this.mainScreen_arrow!.classList.remove("smoothTransition"); //jump
-    this.dualscreen.secondScreen_arrow.nativeElement.classList.remove("smoothTransition"); //jump
     this.taskEvaluationService.addScreenChange();
     if(toScreen == Screens.MAINSCREEN){ //from top to bottom (= second to main screen) 
       this.dualscreen.focusMainWindow();
