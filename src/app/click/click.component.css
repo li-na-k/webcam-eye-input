@@ -26,34 +26,39 @@
 mat-card{
     background-color: var(--apricot);
     color: #fff;
-    border-radius: 15px;
-    padding: 20px;
-}
-
-mat-card:hover{
-    cursor: default;
-}
-
-mat-card-title{
-    padding-bottom: 10px;
+    border-radius: 100px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .clickArea{
-    font-size: 40px;
+    font-size: 30px;
     line-height: 40px;
     font-weight: bold;
 }
 
 /* width & height values are 0.5 of size large*/
-.small{ 
+/* .small{ 
     width: 250px;
     height: 90px;
     margin: 45px 125px;
-}
+} 
 
 .large{
     width: 500px;
     height: 180px;
+}*/
+
+.small{ 
+    width: 50px;
+    height: 50px;
+} 
+
+.large{
+    width: 100px;
+    height: 100px;
 }
 
 .pos1{
