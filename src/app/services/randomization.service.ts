@@ -23,20 +23,21 @@ export class RandomizationService {
   public inputMethodInstructions : string = "";
 
   // store
-  private selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
   private selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
+  public inputOrder : InputType[] = [InputType.MOUSE]; //! exp. conductor: change this
+  public sizeOrder : Sizes[] =  [Sizes.L, Sizes.S]; //! exp. conductor: adapt this
+
   //order of reps
-  public inputOrder : InputType[] = [InputType.MOUSE];
   public taskOrder : Tasks[] = [Tasks.SELECT];
   public repOrder : RepObject[] = []
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
   public repsDone : number = -1;
   //current rep
-  public selectedSize : Sizes =  Sizes.S;
   public successTargetOnScreen1 : boolean = true;
-  public selectedPos : Positions = Positions.POS1
+  public selectedPos : Positions = Positions.POS1;
+  public selectedSize : Sizes = Sizes.L;
   public getUnselectedPos(): Positions {
       if (this.selectedPos == Positions.POS1) {
         return Positions.POS2;
@@ -53,16 +54,10 @@ export class RandomizationService {
   messageSubject = new Subject();
   
   constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService, private http: HttpClient) { 
-    this.randomizeExperiment();
-
     this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak
       .subscribe(d => {
         this.input = d
       });
-    this.selectedTask$
-      .subscribe(d => {
-        this.task = d
-      }); 
   }
 
   //source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -215,16 +210,11 @@ export class RandomizationService {
     return this.taskEvaluationService.playAudio(src); 
   }
 
-  private randomizeExperiment() : void{
-    this.shuffle(this.inputOrder);
-    this.shuffle(this.taskOrder);
-    console.log(this.inputOrder);
-    console.log(this.taskOrder);
-  }
-
   private randomizeNewTask(){
     this.readAndShuffleRepOrderFromCSV("assets/repOrder.csv").then((repOrder)=>{
       this.repOrder = repOrder
+      console.log("all repOrder", this.repOrder)
+
     })
   }
 
@@ -243,26 +233,21 @@ export class RandomizationService {
     try{
       const fileContent = await this.readFileFromAssets(filename)
       const lines: string[] = fileContent.trim().replace(/\r/g, '').split('\n');
-      this.shuffle(lines)
-      lines.forEach((line: string) => {
-        const parts: string[] = line.split(';');
-        const size: Sizes = this.parseEnum(parts[4]);
-        const positions : number[] = parts.slice(0, 4).map((numStr: string) => parseInt(numStr));
-        positions.forEach((num : number, index : number) => {
-          const pos : Positions = num%2==0?Positions.POS2:Positions.POS1;
-          const mainScreen : boolean = num<=2?false:true;
-          repOrder.push({pos: pos, mainScreen: mainScreen, size: size, numberInBlock: index});
-        })
+      this.sizeOrder.forEach((size) => {
+        this.shuffle(lines)
+        lines.forEach((line: string) => {
+          const parts: string[] = line.split(';');
+          const positions : number[] = parts.slice(0, 4).map((numStr: string) => parseInt(numStr));
+          positions.forEach((num : number, index : number) => {
+            const pos : Positions = num%2==0?Positions.POS2:Positions.POS1;
+            const mainScreen : boolean = num<=2?false:true;
+            repOrder.push({pos: pos, mainScreen: mainScreen, size, numberInBlock: index});
+          })
+        });
       });
-    }
-    catch (error){
+    } catch (error){
       console.error("Error while reading the file: ", error)
     }
     return repOrder;
   }
-
-  private parseEnum(value: string): Sizes {
-    return value as Sizes;
-  }
-
 }
