@@ -69,11 +69,12 @@ export class EyeInputService implements OnDestroy {
     return (tb_inside && lr_inside)
   }
 
+  maxTargetDist = 500;
   public moveArrowWithEyes(arrow : HTMLElement, window : Window){ //move to current eye pos
     let x : number = this.x * window.innerWidth;
     let y : number = (1-this.y) * window.innerHeight;
 
-    this.applyTransformation(arrow, x, y, 0.3, 0);
+    this.applyTransformation(arrow, x, y, 0.3, 0, this.maxTargetDist);
   } 
 
    //DOM is only manipulated once per frame, without ng change detection -> more efficient
@@ -82,7 +83,8 @@ export class EyeInputService implements OnDestroy {
     x: number, 
     y: number, 
     maxDuration: number = 0.3, 
-    minDuration: number = 0 // Optional minimum duration for very large distances
+    minDuration: number = 0, // Optional minimum duration for very large distances
+    maxDistance: number = 400 // distance at which minDuration is reached (minDistance is defined as 0)
   ): void {
     this.ngZone.runOutsideAngular(() => {
       requestAnimationFrame(() => {
@@ -92,7 +94,7 @@ export class EyeInputService implements OnDestroy {
         const distance = Math.sqrt((x - currentX) ** 2 + (y - currentY) ** 2);
   
         // dynamic duration: longer duration should result in shorter duration (cursor jumps), shorter durations smoothed more (less jitter)
-        let duration = maxDuration - (distance * (maxDuration / 700)); // Linear scaling
+        let duration = maxDuration - (distance * (maxDuration / maxDistance)); // Linear scaling
   
         // Ensure duration doesn't go below the minimum
         if (duration < minDuration) {
