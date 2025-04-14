@@ -111,6 +111,7 @@ export class RandomizationService {
         this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
         this.selectedPos = this.repOrder[this.repsDone].pos;
         this.taskEvaluationService.pos = this.selectedPos;
+        this.taskEvaluationService.repeated = this.repOrder[this.repsDone].repeated;
         if (this.repOrder[this.repsDone].numberInBlock == 0) {
           await this.waitForSpaceKey()
           setTimeout(()=>{
@@ -139,6 +140,20 @@ export class RandomizationService {
       console.error("No next Block. NextRep index out of bounds.")
     }
     return nextBlock
+  }
+
+  addCurrentRepBlockToEndOfExp(){
+    // find start of the block
+    let startIndex = this.repsDone;
+    while (startIndex > 0 && this.repOrder[startIndex].numberInBlock !== 0) {
+      startIndex--;
+    }
+    // push all four items of the current block
+    const blockToAdd = this.repOrder.slice(startIndex, startIndex + 4);
+    for (let item of blockToAdd) {
+      const repeatedItem = { ...item, repeated: true }; // clone and add repeated flag
+      this.repOrder.push(repeatedItem);
+    }
   }
 
   private async waitForSpaceKey(): Promise<void> {
@@ -236,7 +251,7 @@ export class RandomizationService {
           positions.forEach((num : number, index : number) => {
             const pos : Positions = num%2==0?Positions.POS2:Positions.POS1;
             const mainScreen : boolean = num<=2?false:true;
-            repOrder.push({pos: pos, mainScreen: mainScreen, size, numberInBlock: index});
+            repOrder.push({pos: pos, mainScreen: mainScreen, size, numberInBlock: index, repeated: false});
           })
         });
       });

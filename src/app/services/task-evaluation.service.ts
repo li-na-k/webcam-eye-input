@@ -41,11 +41,11 @@ export class TaskEvaluationService implements OnDestroy {
 
   public results : TaskResult[] = []; //nicht als rxjs store weil mans einfach gleich hier in eine Datei reinschreibt, es muss ja sonst von nirgendwo drauf zugegriffen werden
   private taskRunning : boolean = false;
-  private errorCount : number = 0;
   public selectedSize : Sizes = Sizes.S; //set by randomization Service
   public numberInBlock : number = 0; //set by randomization Service
   public targetOnMainScreen : boolean = false; //set by randomization Service
   public pos : Positions = Positions.POS1; //set by randomization Service
+  public repeated : boolean = false; //set by randomization Service
 
   // for mouse eye distribution detection
   private intervalStartTime: number | null = null;
@@ -60,7 +60,6 @@ export class TaskEvaluationService implements OnDestroy {
     }
     else{
       this.taskRunning = true;
-      this.errorCount = 0;
       let result : TaskResult = new TaskResult();
       this.results.push(result);
       result.startTime = Date.now();
@@ -72,20 +71,13 @@ export class TaskEvaluationService implements OnDestroy {
       result.positionOnScreen = this.pos;
       result.setPosNumber();
       result.eyeMouseDistribution = [];
+      result.repeated = this.repeated;
       this.intervalStartTime = result.startTime;
       this.result = result;
       this.isMouseMoving = false;
     }
   }
 
-  addError(){
-    if(this.taskRunning){
-      this.errorCount++;
-    }
-    else{
-      console.log("no error was added because task has not been started.")
-    }
-  }
 
   // called on every mouse move
   evaluateMouseStartStop() {
@@ -154,9 +146,7 @@ export class TaskEvaluationService implements OnDestroy {
       this.result!.setDuration();
       this.result!.setPosNumber();
       this.result!.setIndexOfDifficulty();
-      this.result!.errors = this.errorCount;
       this.taskRunning = false;
-      this.playAudio("assets/success.mp3");
       if(aborted){
         this.result!.aborted = aborted;
       }
@@ -235,6 +225,7 @@ export class TaskEvaluationService implements OnDestroy {
       "durationPerPixel",
       "errors",
       "aborted",
+      "repeated",
       "screenChanges",
       "targetOnMainScreen",
       "positionOnScreen",

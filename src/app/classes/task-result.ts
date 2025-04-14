@@ -12,7 +12,7 @@ export class TaskResult {
     endTime : number = new Date().getTime();
     duration : number = 0;
     durationPerPixel : number = 0;
-    errors: number = 0;
+    repeated : boolean = false;
 
     aborted : boolean = false;
     screenChanges : number[] = [];

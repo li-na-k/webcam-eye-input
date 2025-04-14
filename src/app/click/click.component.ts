@@ -150,8 +150,7 @@ export class ClickComponent extends BaseTasksComponent{
       if(clickArea){ //if not clicked outside of click area
         //Check if right area clicked
         if(clickArea?.id != this.taskElementID && clickArea.parentElement?.id != this.taskElementID){
-          this.error = true;
-          this.taskEvaluationService.addError();
+          this.skipBlock(); // will be added at the end of experiment for a second try
         }
         else{ 
           this.addSuccess();
@@ -160,6 +159,7 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   public async addSuccess() {
+    this.taskEvaluationService.playAudio("assets/success.mp3");
     this.taskEvaluationService.calculateTargetDistance(this.taskElement as HTMLElement, this.taskEvaluationService.targetOnMainScreen ? window : this.dualscreen.secondWindow);
     this.taskEvaluationService.calculateTargetSize(this.taskElement as HTMLElement)
     this.error = false;
@@ -174,9 +174,11 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   public async skipBlock() : Promise<void> {
+    this.taskEvaluationService.playAudio("assets/error.mp3");
     return new Promise(async (resolve, reject) => {
       try {
         const repAtSkip = this.randomizationService.repsDone;
+        this.randomizationService.addCurrentRepBlockToEndOfExp()
         while (this.randomizationService.repsDone > 0 && this.randomizationService.repsDone % 4 !== 0 || this.randomizationService.repsDone === repAtSkip) {
           this.error = false;
           this.taskEvaluationService.endTask(true);

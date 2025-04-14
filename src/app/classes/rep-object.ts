@@ -6,4 +6,5 @@ export class RepObject {
     mainScreen : boolean = true;
     size : Sizes = Sizes.S;
     numberInBlock : number = 0; 
+    repeated : boolean = false;
 }
