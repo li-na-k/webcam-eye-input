@@ -214,12 +214,6 @@ export class RandomizationService {
     return number;
   }
 
-  public playNumberAudio(num : number) : Promise<Event>{
-    let numberString : string = String(num)
-    let src : string = "assets/number-" + numberString + ".mp3";
-    return this.taskEvaluationService.playAudio(src); 
-  }
-
   private randomizeNewTask(){
     this.readAndShuffleRepOrderFromCSV("assets/repOrder.csv").then((repOrder)=>{
       this.repOrder = repOrder
