@@ -181,10 +181,7 @@ export class TaskEvaluationService implements OnDestroy {
     })
   }
 
-
-
-
-  targetsOnYaxis = false; //specify here whether a setup with the second screen above or on the left is used
+  //! mainScreen currently on bottom right
   prevDistanceToBorder : [number, number, number, number] = [0,0,0,0]; //[targetCenterFromTop, targetCenterToBottom, targetCenterFromLeft, targetCenterToRight]
   prevScreen : Screens = Screens.MAINSCREEN;
   calculateTargetDistance(target : HTMLElement, window : Window){
@@ -192,14 +189,14 @@ export class TaskEvaluationService implements OnDestroy {
       console.error("DOM may not have loaded yet. No target distance was calculated.");
       return;
     }
-    // let result : TaskResult = this.results[this.results.length-1]; //current result object
+    console.log("window pixel size", window.devicePixelRatio)
 
     const targetRect = target.getBoundingClientRect();
 
-    const targetCenterFromTop = this.targetsOnYaxis ? (Math.round(targetRect.top + 0.5 * (targetRect.bottom - targetRect.top))) : 0; // Center position from top ↓
-    const targetCenterToBottom = this.targetsOnYaxis ? (Math.round(window.innerHeight - targetCenterFromTop)) : 0; // Center position to bottom of the window ↓
-    const targetCenterFromLeft = this.targetsOnYaxis ? 0 : Math.round(targetRect.left + 0.5 * (targetRect.right - targetRect.left)); // Center position from left →
-    const targetCenterToRight = this.targetsOnYaxis ? 0 : Math.round(window.innerWidth - targetCenterFromLeft); // Center position to right of the window →
+    const targetCenterFromTop = Math.round(targetRect.top + 0.5 * (targetRect.bottom - targetRect.top)); // Center position from top ↓
+    const targetCenterToBottom = Math.round(window.innerHeight - targetCenterFromTop); // Center position to bottom of the window ↓
+    const targetCenterFromLeft = Math.round(targetRect.left + 0.5 * (targetRect.right - targetRect.left)); // Center position from left →
+    const targetCenterToRight = Math.round(window.innerWidth - targetCenterFromLeft); // Center position to right of the window →
 
     const isSameScreen = this.result!.targetOnMainScreen == (this.prevScreen == Screens.MAINSCREEN)
 
