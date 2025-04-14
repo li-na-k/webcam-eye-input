@@ -13,7 +13,7 @@
     </div>
     <div *ngIf="clicked">
         <div class = "popup-full-background"></div>
-        <div class="nextBlock" *ngIf="!error"> 🔊 {{randomizationService.getNextBlockNumbers(randomizationService.repsDone)}} </div>
+        <div class="nextBlock" *ngIf="!error">{{randomizationService.getNextBlockNumbers(randomizationService.repsDone)}} </div>
         <!-- <div class="nextBlock" *ngIf="error" style="color: var(--red)"> ✖ </div> -->
     </div>  
 </dual-screen>
@@ -32,7 +32,7 @@
 </div>
 <div *ngIf="clicked">
     <div class = "popup-full-background"></div>
-    <div class="nextBlock" *ngIf="!error"> 🔊 {{randomizationService.getNextBlockNumbers(randomizationService.repsDone)}} </div>
+    <div class="nextBlock" *ngIf="!error">{{randomizationService.getNextBlockNumbers(randomizationService.repsDone)}} </div>
     <!-- <div class="nextBlock" *ngIf="error" style="color: var(--red)"> ✖ </div> -->
 </div>  
 

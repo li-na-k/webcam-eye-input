@@ -112,7 +112,7 @@ export class RandomizationService {
         this.selectedPos = this.repOrder[this.repsDone].pos;
         this.taskEvaluationService.pos = this.selectedPos;
         if (this.repOrder[this.repsDone].numberInBlock == 0) {
-          await this.playBlockSound(this.repsDone)
+          await this.waitForSpaceKey()
           setTimeout(()=>{
             this.taskEvaluationService.startTask();
             resolve();
@@ -141,20 +141,15 @@ export class RandomizationService {
     return nextBlock
   }
 
-  private async playBlockSound(rep: number): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          let nextBlock = this.getNextBlockNumbers(rep) 
-            for (let num of nextBlock){
-              await this.playNumberAudio(num);
-           }
-          resolve(true);
-        } catch (error) {
-          console.error("An error occurred while playing the sounds:", error);
-          reject(error);
+  private async waitForSpaceKey(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      const handler = (event: KeyboardEvent) => {
+        if (event.code === 'Space') {
+          window.removeEventListener('keydown', handler);
+          resolve();
         }
-      }, 500);
+      };
+      window.addEventListener('keydown', handler);
     });
   }
 
