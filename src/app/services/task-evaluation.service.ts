@@ -242,6 +242,30 @@ export class TaskEvaluationService implements OnDestroy {
     ]);
   }
 
+  /* 
+•	inputType – Mouse, Mix1 (NINJA), or Mix2 (MAGIC)
+•	Task – in our experiment this will always be “Select”
+•	Size – large or small (exact size see targetWidth / targetHeight)	
+•	numberInBlock – is it the first (0), second (1), third (2), or fourth (3) of the order / block?
+•	Duration – duration between task onset and click	
+•	durationPerPixel – duration relative to the distance to the previous target (we will not analyse the first target since here, we do not have a previous target)	
+•	repeated – if the participant makes an error (clicks on the wrong target) the whole block will be aborted (skip directly to next order block). The whole block will be repeated at the end of the experiment and all these repetitions will have repeated = true
+•	aborted – will be true for repetitions where an error occurred (in this case the rest of the block will be skipped, and all remaining repetitions will also have aborted = true)
+•	screenChanges - (will only be tracked for screenChanges that were done via eye tracking)
+•	targetOnMainScreen – was the target on the bottom screen?
+•	positionOnScreen – left (1) or right (2) target on the screen?
+•	posNumber – the number displayed on the target (1, 2, 3, or 4)
+•	XdistancePrevTarget – distance in x direction to the previous target. I calculate this considering that the main screen is at the bottom right (that's the setup that was most common in the interviews, right?)
+•	YdistancePrevTarget- distance in y direction to the previous target. I calculate this considering that the main screen is at the bottom right (that's the setup that was most common in the interviews, right?)
+•	targetWidth – should be the same as targetHeight (either 50 or 100 px at the moment)
+•	targetHeight - should be the same as targetWidth (either 50 or 100 px at the moment)
+•	indexOfDifficulty - calcualtion see corresponding function in this file
+•	eyeMouseDistribution – only for input methods that contain gaze: at what points in time did participants switch between eye and mouse input?
+•	eyeIntervalsDuration – total duration during which eye input was used
+•	mouseIntervalsDuration – total duration during which mouse input was used
+•	intervalChanges – how often did they change between eye and mouse input?
+  */
+
   //source: https://dev.to/idrisrampurawala/exporting-data-to-excel-and-csv-in-angular-3643#export-to-csv
   public exportToCsv(rows: TaskResult[], fileName: string, columns?: string[]): string | void {
     if (!rows || !rows.length) {
