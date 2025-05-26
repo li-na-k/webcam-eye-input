@@ -51,6 +51,7 @@ mat-card{
     height: 180px;
 }*/
 
+/*
 .small{ 
     width: 50px;
     height: 50px;
@@ -59,6 +60,16 @@ mat-card{
 .large{
     width: 100px;
     height: 100px;
+}
+*/
+.small{ 
+    width: 1.3cm;
+    height: 1.3cm;
+} 
+
+.large{
+    width: 2.6cm;
+    height: 2.6cm;
 }
 
 .pos1{
