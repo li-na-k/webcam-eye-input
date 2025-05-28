@@ -1,9 +1,8 @@
 <app-header></app-header>
 <app-surface-tags></app-surface-tags>
 
-<!-- header -->
+<!-- old header, showing progress-->
 <!-- <div *ngIf="!randomizationService.showFinalPageComponent" class="button-header-container">
-    # progress + skip
     <div *ngIf="!showRecalibration" 
         style="background-color: white; border-radius: 15px; padding: 10px 15px; 
         display: flex; justify-content: flex-start; align-items:center; width: 650px; flex-wrap: wrap;">
@@ -19,6 +18,16 @@
         </div>
     </span>
 </div> -->
+
+<!-- header without showing progress-->
+<div *ngIf="!randomizationService.showFinalPageComponent" class="button-header-container">
+    <span class="white-box" *ngIf="!showRecalibration" >
+        <div>
+            <span style="font-weight: bold;">{{selectedInputType$ | async}}</span>
+        </div>
+    </span>
+</div>
+        
         
 
 <!-- content -->
