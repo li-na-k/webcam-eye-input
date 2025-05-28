@@ -135,7 +135,7 @@ export class ClickComponent extends BaseTasksComponent{
   protected startEyeInput(){ //not needed for this experiment
   }
 
-  protected startMix1Input(){ //Ninja Cursors - eyes only for changing screen/cursor
+  protected startNinjaInput(){ //Ninja Cursors - eyes only for changing screen/cursor
     this.webSocketService.startSendingGazeData();
     this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput, false); //Start with main screen
     this.renderer.setStyle(this.mainScreen_arrow, 'visibility', 'visible');
@@ -223,7 +223,7 @@ export class ClickComponent extends BaseTasksComponent{
       let matrix = new WebKitCSSMatrix(style.transform);
       let x = matrix.m41;
       let y = matrix.m42;
-      if (this.selectedInputType === InputType.MIX2 || this.selectedInputType === InputType.MIX1) {
+      if (this.selectedInputType === InputType.MAGIC || this.selectedInputType === InputType.NINJA) {
           const halflength = Math.ceil(this.clickAreas!.length / 2);
           const activeClickAreas = this.dualscreen.getActiveScreen() === 1 ? this.clickAreas!.slice(0, halflength) : this.clickAreas!.slice(halflength);
 
@@ -261,7 +261,7 @@ export class ClickComponent extends BaseTasksComponent{
     }
   }
 
-  protected startMix2Input(){
+  protected startMagicInput(){
     this.webSocketService.startSendingGazeData();
     this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput); //Start with main screen
     this.renderer.setStyle(this.mainScreen_arrow, 'visibility', 'visible');
@@ -285,7 +285,7 @@ export class ClickComponent extends BaseTasksComponent{
     this.mix2loaded = false;
     this.dualscreen.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
     this.dualscreen.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
-    this.eyeInputService.stopMix2Input();
+    this.eyeInputService.stopMagicInput();
     document.removeEventListener('mousedown', this.bound_changeOnClick); 
     this.webSocketService.stopSendingGazeData();
   }

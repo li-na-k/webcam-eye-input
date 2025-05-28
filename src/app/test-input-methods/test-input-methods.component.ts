@@ -70,7 +70,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
   
     private bound_changeOnClick = this.changeOnClick.bind(this);
     private changeOnClick(){
-      if(this.selectedInputType == InputType.MIX2){
+      if(this.selectedInputType == InputType.MAGIC){
           let inside = this.eyeInputService.isInside(this.clickArea!, parseInt(this.mainScreen_arrow!.style.left, 10), parseInt(this.mainScreen_arrow!.style.top, 10));
           if(inside){
             this.addSuccess();
@@ -81,7 +81,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       }
     }
   
-    protected async startMix2Input(){
+    protected async startMagicInput(){
       await this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
       document.addEventListener('mousedown', this.bound_changeOnClick);
       /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
@@ -98,7 +98,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       //MIX2
       this.mix2loaded = false;
       if(this.mainScreen_arrow){
-        this.eyeInputService.stopMix2Input();
+        this.eyeInputService.stopMagicInput();
       }
       document.removeEventListener('mousedown', this.bound_changeOnClick); 
       //view port resets
@@ -132,7 +132,7 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       this.activateSelectedInputType(); 
     }
 
-    protected override startMix1Input(): void {
+    protected override startNinjaInput(): void {
       //not needed
     }
 

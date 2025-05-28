@@ -142,7 +142,7 @@ export class TaskEvaluationService implements OnDestroy {
   endTask(aborted? : boolean){
     if(this.taskRunning){
       this.result!.endTime = Date.now();
-      this.clearMouseStartStop(); //end last MOUSE interval (during Mix2 only)
+      this.clearMouseStartStop(); //end last MOUSE interval (during Magic only)
       this.result!.setDuration();
       this.result!.setPosNumber();
       this.result!.setIndexOfDifficulty();
@@ -243,7 +243,7 @@ export class TaskEvaluationService implements OnDestroy {
   }
 
   /* 
-•	inputType – Mouse, Mix1 (NINJA), or Mix2 (MAGIC)
+•	inputType – Mouse, Ninja (NINJA), or Magic (MAGIC)
 •	Task – in our experiment this will always be “Select”
 •	Size – large or small (exact size see targetWidth / targetHeight)	
 •	numberInBlock – is it the first (0), second (1), third (2), or fourth (3) of the order / block?

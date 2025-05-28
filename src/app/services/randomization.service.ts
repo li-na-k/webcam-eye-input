@@ -179,7 +179,7 @@ export class RandomizationService {
   }
 
   private setInstruction() : void{
-    if(this.input == InputType.MIX2){
+    if(this.input == InputType.MAGIC){
       this.inputMethodInstructions = "Move the cursor with your eye-gaze. Move your mouse to override the eye input and thus do the finetuning of the cursor movement."
       switch(this.task){
         case Tasks.SELECT:

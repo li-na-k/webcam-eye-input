@@ -15,7 +15,7 @@ import { selectInputType } from '../state/expConditions/expconditions.selector';
 })
 export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @Output() startMix2 = new EventEmitter();
+  @Output() startMagic = new EventEmitter();
   @Output() addSuccess = new EventEmitter();
 
   protected selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
@@ -27,12 +27,12 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   constructor(protected store : Store<AppState>, protected eyeInputService : EyeInputService, protected randomizationService : RandomizationService) { }
 
   protected enablePointerLock(): void {
-    this.startMix2.emit();
+    this.startMagic.emit();
     this.showPopup = false;
   }
 
   protected skipRep(): void{
-    this.startMix2.emit(); 
+    this.startMagic.emit(); 
     this.addSuccess.emit();
     this.showPopup = false;
   }
@@ -44,7 +44,7 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   }
 
   ngAfterViewInit(): void {
-    this.eyeInputService.stopMix2Input();
+    this.eyeInputService.stopMagicInput();
   }
 
   ngOnDestroy(){

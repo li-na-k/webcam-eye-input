@@ -55,7 +55,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  //Fake Focus necessary because otherwise mouse tracking stops during Mix2 Input
+  //Fake Focus necessary because otherwise mouse tracking stops during Magic Input
   public secondFakeFocussed : boolean = false;
   public focusMainWindow(){
     //this.mainWindow.focus();
