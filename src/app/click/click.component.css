@@ -14,6 +14,7 @@
     height: 100%; 
     justify-content: space-between; 
     align-items: center;
+    margin: 0px 150px;
 }
 
 .container{
@@ -37,6 +38,8 @@ mat-card{
     font-size: 30px;
     line-height: 40px;
     font-weight: bold;
+    cursor: pointer;
+    user-select: none;
 }
 
 /* width & height values are 0.5 of size large*/
@@ -63,13 +66,13 @@ mat-card{
 }
 */
 .small{ 
-    width: 1.3cm;
-    height: 1.3cm;
+    width: 1.43cm;
+    height: 1.43cm;
 } 
 
 .large{
-    width: 2.6cm;
-    height: 2.6cm;
+    width: 3.57cm;
+    height: 3.57cm;
 }
 
 .pos1{
