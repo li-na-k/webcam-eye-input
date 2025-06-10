@@ -1,11 +1,12 @@
 :root {
-    --blue:#85a7b8;
+   /* --blue:#85a7b8;
     --green: #98B63E;
     --apricot: #d7816a;
     --red: #bd4f6c;
     --red-background: #bd4f6c84;
     --green-background: #a0bd4184;
-    
+    */
+
     font-family: Roboto,Helvetica Neue Light,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;
     line-height: 150%;
 }
@@ -144,4 +145,64 @@ button:disabled{
     display:flex;
     justify-content:center;
     align-items:center;
+}
+
+/**************************** New UI **************************/
+/***General***/
+:root{
+    --White: #fff !important;
+    --Red: #d24c4c !important;
+    --Teal: #2c736b !important;
+    --Mustard: #c89f56 !important;
+    --Black: #000 !important;
+    --LightGrey: #e4e4e4 !important;
+    --MidGrey: #7d7d7d !important;
+    --DarkGrey: #4a4a4a !important;
+}
+.footer, .title-container, .button-header-container > div, .button-header-container{
+visibility: hidden;
+}
+
+body{
+    background-color: var(--White) !important;
+
+}
+mat-card{
+    background-color: var(--White);
+    border: 1px solid var(--MidGrey);
+    color: black;
+}
+mat-card:hover{
+border-color: var(--DarkGrey);
+}
+button {
+    background-color: var(--Red);
+}
+
+/* -----------to be fixed---------- fonticon="done"
+
+/***Pop Ups***/
+
+.popup-header .mat-icon {
+    display: none;
+}
+div#Second_Screen_Window > button {
+    background: black;
+}
+/* -----------to be fixed---------- div#Second_Screen_Window > button {
+    blinking
+}
+*/
+div#Skip_Block_Hint{
+background: red;
+    text-align: center;
+    margin: 0 auto;
+    height: 100px;
+    position: relative;
+    z-index: 11111;
+}
+    
+/*** Second Screen***/
+div#Second_Screen_Window_Success_Msg{
+    text-align: center;
 }
