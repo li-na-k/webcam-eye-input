@@ -179,8 +179,6 @@ button {
     background-color: var(--Red);
 }
 
-/* -----------to be fixed---------- fonticon="done"
-
 /***Pop Ups***/
 
 .popup-header .mat-icon {
@@ -189,10 +187,6 @@ button {
 div#Second_Screen_Window > button {
     background: black;
 }
-/* -----------to be fixed---------- div#Second_Screen_Window > button {
-    blinking
-}
-*/
 div#Skip_Block_Hint{
 background: red;
     text-align: center;
