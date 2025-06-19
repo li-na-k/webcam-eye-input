@@ -11,6 +11,7 @@ import { selectTask, selectInputType } from '../state/expConditions/expcondition
 import { TaskEvaluationService } from './task-evaluation.service';
 import { RepObject } from '../classes/rep-object';
 import { HttpClient } from '@angular/common/http';
+import { KeyService } from './key.service';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,12 @@ export class RandomizationService {
 
   messageSubject = new Subject();
   
-  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService, private http: HttpClient) { 
+  constructor(
+    private store : Store<AppState>, 
+    private taskEvaluationService : TaskEvaluationService, 
+    private http: HttpClient, 
+    private keyService: KeyService
+  ){ 
     this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak
       .subscribe(d => {
         this.input = d
@@ -100,7 +106,6 @@ export class RandomizationService {
   }
 
   public async nextRep(): Promise<void> { //endTask(); must be called separately!
-    return new Promise<void>(async (resolve, reject) => {
       this.repsDone++;
       console.log("------------ repsDone:", this.repsDone)
       if (this.repsDone < this.repOrder.length) {
@@ -113,20 +118,16 @@ export class RandomizationService {
         this.taskEvaluationService.pos = this.selectedPos;
         this.taskEvaluationService.repeated = this.repOrder[this.repsDone].repeated;
         if (this.repOrder[this.repsDone].numberInBlock == 0) {
-          await this.waitForSpaceKey()
+          await this.keyService.waitForSpaceKey()
           setTimeout(()=>{
             this.taskEvaluationService.startTask();
-            resolve();
           }, 500)
         } else {
           this.taskEvaluationService.startTask();
-          resolve();
         }
       } else {
         this.nextTask();
-        resolve();
       }
-    });
   }
 
   public getNextBlockNumbers(rep : number) : number[]{
@@ -154,18 +155,6 @@ export class RandomizationService {
       const repeatedItem = { ...item, repeated: true }; // clone and add repeated flag
       this.repOrder.push(repeatedItem);
     }
-  }
-
-  private async waitForSpaceKey(): Promise<void> {
-    return new Promise<void>((resolve) => {
-      const handler = (event: KeyboardEvent) => {
-        if (event.code === 'Space') {
-          window.removeEventListener('keydown', handler);
-          resolve();
-        }
-      };
-      window.addEventListener('keydown', handler);
-    });
   }
 
   public selectTask(task : Tasks) : void{

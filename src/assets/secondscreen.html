@@ -16,5 +16,15 @@
   <div style="height: 100%" id="outletElement">
  <!-- this is where the content will go - makes it possible to change content without removing scripts from body -->
   </div>
+    <script>
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        console.log('[SecondWindow] Space pressed');
+        if (window.opener) {
+          window.opener.postMessage('space-pressed', '*');
+        }
+      }
+    });
+  </script>
 </body>
 </html>

@@ -165,17 +165,12 @@ export class ClickComponent extends BaseTasksComponent{
     this.error = false;
     this.taskEvaluationService.endTask(false);
     this.showInterTrialPage(true);
-    try {
-        await this.randomizationService.nextRep();
-    } catch (error) {
-        console.error("An error occurred during nextRep():", error);
-    }
+    await this.randomizationService.nextRep();
     this.showInterTrialPage(false);
   }
 
   public async skipBlock() : Promise<void> {
     this.taskEvaluationService.playAudio("assets/error.mp3");
-    return new Promise(async (resolve, reject) => {
       try {
         const repAtSkip = this.randomizationService.repsDone;
         this.randomizationService.addCurrentRepBlockToEndOfExp()
@@ -186,13 +181,10 @@ export class ClickComponent extends BaseTasksComponent{
           await this.randomizationService.nextRep() //if nextTask is called: repsDone set to -1 -> check for larger 0 in while loop
         } 
         this.showInterTrialPage(false)
-        resolve();
       }
       catch (error) {
         console.error("An error occurred during skipBlock():", error);
-        return reject(error)
       }  
-    })
   }
 
   protected startMouseInput(){
