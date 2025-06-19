@@ -1,11 +1,12 @@
 :root {
-    --blue:#85a7b8;
+   /* --blue:#85a7b8;
     --green: #98B63E;
     --apricot: #d7816a;
     --red: #bd4f6c;
     --red-background: #bd4f6c84;
     --green-background: #a0bd4184;
-    
+    */
+
     font-family: Roboto,Helvetica Neue Light,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;
     line-height: 150%;
 }
@@ -144,4 +145,102 @@ button:disabled{
     display:flex;
     justify-content:center;
     align-items:center;
+}
+
+/**************************** New UI **************************/
+/***General***/
+:root{
+    --AccentColor:#c54828 !important;
+    --White: #fff !important;
+    --Black: #000 !important;
+    --LightGray: #e4e4e4 !important;
+    --Gray: #ccc !important;
+    --MidGray: #7d7d7d !important;
+    --DarkGray: #4a4a4a !important;
+
+    --Error: rgba(255, 0, 0, 0.2) !important;
+    --Success:  rgba(0, 255, 47, 0.2) !important;
+    --Warning: rgba(255, 238, 0, 0.2) !important;
+
+    --Mouse: #585c74;
+    --Magic: #392f86;
+    --Ninja: #2c736b;
+    --Eye:#8f7549;
+}
+.footer, .title-container, .button-header-container > div, .button-header-container{
+visibility: hidden;
+}
+
+body{
+    background-color: var(--White) !important;
+
+}
+mat-card{
+    background-color: var(--White) !important;
+    border: 1px solid var(--MidGray) !important;
+    color: var(--MidGray) !important;
+    transition: background-color 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+
+}
+mat-card:hover{
+    background-color: var(--LightGray ) !important;
+    border-color: var(--Black) !important;
+    color: var(--Black) !important;
+}
+
+
+.clickArea {
+  transition: background-color 0.4s ease-in-out !important;
+}
+
+.clickArea.success {
+  background-color: #d4edda !important; 
+}
+
+.clickArea.error {
+  background-color: #f8d7da !important; 
+}
+
+
+/***Pop Ups***/
+.Popup{
+    border-radius: 3px !important;
+}
+.popup-header .mat-icon {
+    display: none;
+}
+div#Second_Screen_Window > button {
+    background: black;
+}
+
+div#SkipGuide, div#MemorizeGuide {
+    z-index: 999;
+    position: relative;
+    text-align: center;
+    padding: 20px 0;
+    color: var(--Gray);
+}
+/*** Buttons ***/
+
+button {
+    background-color: var(--AccentColor);
+    border-radius: 3px !important;
+    padding: 20px 30px;
+    font-weight: bold;
+}    
+#InputTypeIsMouse{
+    background-color: var(--Mouse);
+}
+#InputTypeIsMagic{
+    background-color: var(--Magic);
+}
+#InputTypeIsNinja{
+    background-color: var(--Ninja);
+}
+#InputTypeIsEye{
+    background-color: var(--Eye);
+}
+/*** Second Screen***/
+div#Second_Screen_Window_Success_Msg{
+    text-align: center;
 }

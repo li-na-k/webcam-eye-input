@@ -55,16 +55,7 @@
             <div class="popup-background"></div>
                 <div class="Popup">
                     <div class="popup-header">
-                        <mat-icon style="display: block; 
-                        color: var(--blue);
-                        color: var(--blue);
-                        margin-left: auto;
-                        margin-right: auto;
-                        font-size: 40px;
-                        margin-bottom: 20px;
-                        width: 40px;
-                        height: 40px;">change_circle</mat-icon>
-                        Your Input Method now:
+                        Your Input Method is:
                         <span style="font-weight: bold; color: var(--blue);">{{selectedInputType}}</span>
                     </div>
                     <div style="margin-bottom: 45px;">
@@ -78,13 +69,21 @@
                     </div>
                     <button
                         (click)="showTaskPopup=false; startExperiment(); this.blur($event)"
+                         
+                        [id]="
+                        selectedInputType == InputType.MOUSE ? 'InputTypeIsMouse' :
+                        selectedInputType == InputType.EYE ? 'InputTypeIsEye' :
+                        selectedInputType == InputType.NINJA ? 'InputTypeIsNinja' :
+                        selectedInputType == InputType.MAGIC ? 'InputTypeIsMagic' :
+                        'InputTypeElse'
+                        "
                         [disabled] = "!baseTaskComponent || !baseTaskComponent.secondWindowLoaded">
                         <div style="display:flex;align-items:center;">
                             <mat-icon *ngIf="!baseTaskComponent || !baseTaskComponent.secondWindowLoaded">
                                 <mat-spinner diameter="20">
                             </mat-spinner>
                             </mat-icon>
-                            <span style="padding: 5px 5px"> Start task</span>
+                            <span style="padding: 5px 5px"> START EXPERIMENT </span>
                         </div>
                     </button>
                     <!-- <div *ngIf="selectedInputType != InputType.MAGIC && selectedInputType != InputType.NINJA" style="width: 200px; font-size: 12px; line-height:15px; margin: auto; margin-top: 15px;">If you cannot complete a task, click the skip button at the top.</div>

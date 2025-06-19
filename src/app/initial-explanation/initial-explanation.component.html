@@ -7,23 +7,25 @@
         </div>
         <!-- instructions -->
         <div *ngIf="currentInstruction==0">
-            For this experiment, two browser windows are necessary.<br>
-            Click the button below to open the second window.<br>
-            <div style="margin: 15px 0px 15px 0px"><button
-                    (click)="dualscreen.openSecondWindow(); this.disabledNext = false;">Open second window</button>
-            </div>
+
             <div style="display: flex; justify-content: space-around; margin: 25px 0px;">
                 <div style="text-align: left; margin-top: 15px;">
-                    Then ...
+                    Remember to:
                     <ul>
                         <!-- mainScreen currently on bottom right -->
-                        <li>Move the second window to your second monitor, so that it is on the LEFT and ABOVE the main screen.</li>
-                        <li>Expand both windows to full size.</li>
+                        <li>Move the second window to your second monitor   </li>
+                        <li>Expand both windows to full size (fn + F11) </li>
                     </ul>
                 </div>
                 <!-- <div>
                     <img src="/assets/second_screen_explanation.png" style="border-radius: 15px; width: 350px;" />
                 </div> -->
+            </div>
+                        <div style="margin: 15px 0px 15px 0px">
+                <button id="OpenSecondScreen"
+                    (click)="dualscreen.openSecondWindow(); this.disabledNext = false;">
+                    OPEN SECOND WINDOW
+                </button>
             </div>
         </div>
         <!-- <div *ngIf="currentInstruction==1">
@@ -57,7 +59,7 @@
                 Next <mat-icon style="margin-left: 5px;" fontIcon="arrow_forward"></mat-icon>
             </button>
             <button *ngIf="currentInstruction==(numberInstructions-1) && currentInstruction!=1"
-                style="display: flex; align-items: center; float: right; " type="button" (click)="nextExplanation();">
+                style="display: flex; align-items: center; float: right; visibility: hidden;" type="button" (click)="nextExplanation();">
                 OK <mat-icon style="margin-left: 5px;" fontIcon="done"></mat-icon>
             </button>
             <button *ngIf="currentInstruction==1" style="display: flex; align-items: center; float: right; "
@@ -72,9 +74,9 @@
     </div>
 </div>
 
-<dual-screen #dualscreen>
+<dual-screen #dualscreen (secondWindowLoaded)="handleSecondWindowLoaded()">
     <div>
         Great! This is the second window. Do not close it before finsihing the experiment.
-        <div style="font-size: 350px; color: lightgray; line-height: 350px; text-align: center;">2</div>
+        <div style="text-align: center; font-size: 350px; color: lightgray; line-height: 350px;">2</div>
     </div>
 </dual-screen>
