@@ -175,13 +175,13 @@ export class ClickComponent extends BaseTasksComponent{
 
   }
 
-private showFeedbackEffect(element: Element | null, type: "success" | "error") {
-  if (!element) return;
-  element.classList.add(type);
-  setTimeout(() => {
-    element.classList.remove(type);
-  }, 400); 
-}
+  private showFeedbackEffect(element: Element | null, type: "success" | "error") {
+    if (!element) return;
+    element.classList.add(type);
+    setTimeout(() => {
+      element.classList.remove(type);
+    }, 400); 
+  }
 
   public async skipBlock() : Promise<void> {
     this.taskEvaluationService.playAudio("assets/incorrect.mp3");

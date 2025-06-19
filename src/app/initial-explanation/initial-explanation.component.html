@@ -24,7 +24,7 @@
                         <div style="margin: 15px 0px 15px 0px">
                 <button id="OpenSecondScreen"
                     (click)="dualscreen.openSecondWindow(); this.disabledNext = false;">
-                    CLICK HERE
+                    OPEN SECOND WINDOW
                 </button>
             </div>
         </div>
@@ -61,7 +61,7 @@
             <button *ngIf="currentInstruction==(numberInstructions-1) && currentInstruction!=1"
                 style="display: flex; align-items: center; float: right; visibility: hidden;" type="button" (click)="nextExplanation();">
                 OK <mat-icon style="margin-left: 5px;" fontIcon="done"></mat-icon>
-            </button >
+            </button>
             <button *ngIf="currentInstruction==1" style="display: flex; align-items: center; float: right; "
                 type="button" (click)="this.socketService.startCalibration(); nextExplanation();">
                 Start calibration <mat-icon style="margin-left: 5px;" fontIcon="done"></mat-icon>
@@ -77,6 +77,6 @@
 <dual-screen #dualscreen (secondWindowLoaded)="handleSecondWindowLoaded()">
     <div>
         Great! This is the second window. Do not close it before finsihing the experiment.
-        <div style=" text-align: center; font-size: 350px; color: lightgray; line-height: 350px; text-align: center;">2</div>
+        <div style="text-align: center; font-size: 350px; color: lightgray; line-height: 350px;">2</div>
     </div>
 </dual-screen>

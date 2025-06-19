@@ -91,11 +91,10 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
 
     //Go full Screen on both screens
     document.documentElement.requestFullscreen();
-
-     const dualscreenElement = document.querySelector('dual-screen') as any;
-  if (dualscreenElement && dualscreenElement.secondWindow) {
-    dualscreenElement.secondWindow.postMessage({ type: 'go-fullscreen' }, '*');
-  }
+    const dualscreenElement = document.querySelector('dual-screen') as any;
+    if (dualscreenElement && dualscreenElement.secondWindow) {
+      dualscreenElement.secondWindow.postMessage({ type: 'go-fullscreen' }, '*');
+    }
 
     //Experiment Logic
     this.baseTaskComponent.activateSelectedInputType();

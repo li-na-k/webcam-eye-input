@@ -36,9 +36,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(){
     if(!this.initialOpening){
-      this.openSecondWindow().then(() => 
-        this.secondWindowLoaded.emit(true)
-      );
+      this.openSecondWindow();
     }
   }
 
@@ -70,8 +68,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
     this.mainWindow.document.body.style.backgroundColor = "#d0d0d0";
   }
 
-  public openSecondWindow() : Promise<Window>{
-    return new Promise(resolve => {
+  public openSecondWindow() : void{
       if(!this.initialOpening){ //re-use old window
         this.secondWindow = window.open('', 'SECOND_SCREEN') ?? undefined;
       }
@@ -89,14 +86,9 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
         }    
         this.mainWindow = window.open('', 'parent');
         
-        //Emit Event
         this.secondWindowLoaded.emit(true);
 
-        if(this.secondWindow){
-          resolve(this.secondWindow);
-        }
-      }, 2000)
-    })     
+      }, 2000)   
   }
 
   private attachContent(){
