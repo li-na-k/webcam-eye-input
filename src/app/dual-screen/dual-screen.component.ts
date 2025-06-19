@@ -75,9 +75,11 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
       if(!this.initialOpening){ //re-use old window
         this.secondWindow = window.open('', 'SECOND_SCREEN') ?? undefined;
       }
+    
       else{ //open new window
-        this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=1300,height=700,left=50,top=50') ?? undefined;
+        this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=400,height=300,left=-1920,top=-1080') ?? undefined;
       }
+
       setTimeout(() => {
         this.attachContent();
         this.attachStyles();
@@ -86,6 +88,10 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
           this.secondWindow.opener.name = "parent";
         }    
         this.mainWindow = window.open('', 'parent');
+        
+        //Emit Event
+        this.secondWindowLoaded.emit(true);
+
         if(this.secondWindow){
           resolve(this.secondWindow);
         }
@@ -146,7 +152,7 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(){
     //default text when no content is displayed on second screen during the next component
     if(this.secondWindow?.document.getElementById("content")){
-      this.secondWindow.document.getElementById("content")!.innerText = "Check the main screen for further instructions."
+      this.secondWindow.document.getElementById("content")!.innerText = "Please check the main screen for further instructions."
     }
   }
 

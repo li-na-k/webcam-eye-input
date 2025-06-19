@@ -54,7 +54,8 @@ export class TaskEvaluationService implements OnDestroy {
   private result : TaskResult | null = null;
 
   startTask(){
-    console.log("--start task--")
+console.log("--start task--")
+    
     if(this.taskRunning){
       console.info("there is already a task running")
     }
@@ -77,7 +78,6 @@ export class TaskEvaluationService implements OnDestroy {
       this.isMouseMoving = false;
     }
   }
-
 
   // called on every mouse move
   evaluateMouseStartStop() {
