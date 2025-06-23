@@ -34,8 +34,8 @@ export class InitialExplanationComponent {
     }
 
     protected handleSecondWindowLoaded() {
-  console.log("Second window loaded! Closing popup automatically.");
-  this.closePopup();
-}
+      console.log("Second window loaded! Closing popup automatically.");
+      this.closePopup();
+    }
 
 }

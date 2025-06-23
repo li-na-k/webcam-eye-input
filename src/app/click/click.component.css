@@ -25,8 +25,9 @@
 }
 
 mat-card{
-    background-color: var(--apricot);
-    color: #fff;
+    background-color: var(--White);
+    border: 1px solid var(--DarkGray);
+    color: var(--DarkGray);
     border-radius: 100px;
     text-align: center;
     display: flex;

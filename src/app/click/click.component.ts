@@ -160,7 +160,6 @@ export class ClickComponent extends BaseTasksComponent{
 
   public async addSuccess() {
     this.taskEvaluationService.playAudio("assets/correct.mp3");
-    this.showFeedbackEffect(this.taskElement, "success");
     this.taskEvaluationService.calculateTargetDistance(this.taskElement as HTMLElement, this.taskEvaluationService.targetOnMainScreen ? window : this.dualscreen.secondWindow);
     this.taskEvaluationService.calculateTargetSize(this.taskElement as HTMLElement)
     this.error = false;
@@ -171,17 +170,8 @@ export class ClickComponent extends BaseTasksComponent{
 
   }
 
-  private showFeedbackEffect(element: Element | null, type: "success" | "error") {
-    if (!element) return;
-    element.classList.add(type);
-    setTimeout(() => {
-      element.classList.remove(type);
-    }, 400); 
-  }
-
   public async skipBlock() : Promise<void> {
     this.taskEvaluationService.playAudio("assets/incorrect.mp3");
-    this.showFeedbackEffect(this.taskElement, "error");
       try {
         const repAtSkip = this.randomizationService.repsDone;
         this.randomizationService.addCurrentRepBlockToEndOfExp()
