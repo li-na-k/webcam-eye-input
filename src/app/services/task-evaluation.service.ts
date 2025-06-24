@@ -180,6 +180,9 @@ export class TaskEvaluationService implements OnDestroy {
       return;
     }
     console.log("window pixel size", window.devicePixelRatio)
+    
+    const overlapVertical = 250; // if screens are not "corner to corner": enter vertical overlap here
+    /* TODO: test this -> measure real dist in cm! (for comparison with 100px measure alignment line) */
 
     const targetRect = target.getBoundingClientRect();
 
@@ -196,11 +199,11 @@ export class TaskEvaluationService implements OnDestroy {
     }
     else{
       if(this.result!.targetOnMainScreen){ // from second screen to main screen: ↓ or →
-        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[1] + targetCenterFromTop;
+        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[1] + targetCenterFromTop - overlapVertical;
         this.result!.XdistancePrevTarget = this.prevDistanceToBorder[3] + targetCenterFromLeft;
       }
       else{ // from main screen to second screen: ↑ or ← 
-        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToBottom;
+        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToBottom - overlapVertical;
         this.result!.XdistancePrevTarget = this.prevDistanceToBorder[2] + targetCenterToRight;
       }
     }

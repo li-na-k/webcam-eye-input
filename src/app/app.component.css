@@ -10,6 +10,15 @@
     overflow-y: hidden;
 }
 
+.alignment-guide{
+    width: 100px;
+    top: 250px;
+    left: 0px;
+    position: absolute;
+    border-top: 3px red solid;
+    z-index: 1000;
+    color: red;
+    text-align: center;
 }
 
 .mat-mdc-icon-button{
