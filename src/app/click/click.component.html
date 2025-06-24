@@ -11,7 +11,7 @@
             <mat-card-title>{{randomizationService.getUnselectedPos() | matCardTitle: false}}</mat-card-title>
         </mat-card>
     </div>
-    <div *ngIf="clicked">
+    <div *ngIf="clicked" style="margin-top:300px;">
         <div class = "popup-full-background"></div>
         <div class="nextBlock" *ngIf="!error">{{randomizationService.getNextBlockNumbers(randomizationService.repsDone)}} </div>
         <!-- <div class="nextBlock" *ngIf="error" style="color: var(--red)"> ✖ </div> -->
@@ -30,7 +30,7 @@
         <mat-card-title>{{randomizationService.getUnselectedPos() | matCardTitle: true}}</mat-card-title>
     </mat-card>
 </div>
-<div *ngIf="clicked">
+<div *ngIf="clicked" style="margin-top:100px;">
     <div class = "popup-full-background"></div>
 
     <div id="MemorizeGuide">memorize this:</div>
@@ -38,7 +38,6 @@
     <div class="nextBlock" *ngIf="!error">{{randomizationService.getNextBlockNumbers(randomizationService.repsDone)}} </div>
     <!-- <div class="nextBlock" *ngIf="error" style="color: var(--red)"> ✖ </div> -->
     
-    //
     <div id="SkipGuide">Ready? press <span style="font-weight: bold;">Space Button</span></div>
 
 </div>  
