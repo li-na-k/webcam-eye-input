@@ -35,6 +35,8 @@ export class RandomizationService {
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
   public repsDone : number = -1;
+  public trialsPerRep = 5; 
+
   //current rep
   public successTargetOnScreen1 : boolean = true;
   public selectedPos : Positions = Positions.POS1;
@@ -226,15 +228,23 @@ export class RandomizationService {
     try{
       const fileContent = await this.readFileFromAssets(filename)
       const lines: string[] = fileContent.trim().replace(/\r/g, '').split('\n');
+      // copy lines to have 5 reps of each condition
+      const replicatedLines: string[] = [];
+      lines.forEach(line => {
+        for (let i = 0; i < this.trialsPerRep; i++) {
+          replicatedLines.push(line);
+        }
+      });
       this.sizeOrder.forEach((size) => {
-        this.shuffle(lines)
-        lines.forEach((line: string) => {
+        this.shuffle(replicatedLines)
+        replicatedLines.forEach((line: string) => {
           const parts: string[] = line.split(';');
           const positions : number[] = parts.slice(0, 4).map((numStr: string) => parseInt(numStr));
+
           positions.forEach((num : number, index : number) => {
             const pos : Positions = num%2==0?Positions.POS2:Positions.POS1;
             const mainScreen : boolean = num<=2?false:true;
-            repOrder.push({pos: pos, mainScreen: mainScreen, size, numberInBlock: index, repeated: false});
+              repOrder.push({pos: pos, mainScreen: mainScreen, size, numberInBlock: index, repeated: false});
           })
         });
       });
