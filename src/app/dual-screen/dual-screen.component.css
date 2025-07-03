@@ -1,10 +1,11 @@
 .content{
     /* margin: 15px 20px; */
     background-color: white;
-    height: 100%; /* calc(100% - 210px); */
+    height: 100%;
+    /* height: calc(100% - 210px); */
     overflow-y: hidden;
-    /* border-radius: 15px;
-    padding: 30px; */
+    border-radius: 15px;
+    /*padding: 30px;*/
 } 
 
 .arrow {
