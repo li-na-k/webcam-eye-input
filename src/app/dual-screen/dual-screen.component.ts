@@ -58,13 +58,13 @@ export class DualScreenComponent implements AfterViewInit, OnDestroy {
   public focusMainWindow(){
     //this.mainWindow.focus();
     this.secondFakeFocussed = false;
-    this.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
+    this.mainWindow.document.body.style.backgroundColor = "var(--AccentColor)";
     this.secondWindow?this.secondWindow.document.body.style.backgroundColor = "#d0d0d0":null;
   }
   public focusSecondWindow(){
     //this.secondWindow.focus();
     this.secondFakeFocussed = true;
-    this.secondWindow?this.secondWindow.document.body.style.backgroundColor = "var(--apricot)":null;
+    this.secondWindow?this.secondWindow.document.body.style.backgroundColor = "var(--AccentColor)":null;
     this.mainWindow.document.body.style.backgroundColor = "#d0d0d0";
   }
 

@@ -19,7 +19,7 @@
 
 body{
     margin: 0px;
-    background-color: var(--apricot);
+    background-color: var(--AccentColor);
 }
 
 h1{
@@ -109,7 +109,7 @@ button:disabled{
     cursor: pointer;
     background-color: transparent;
     font-size: 30px;
-    color: var(--apricot);
+    color: var(--AccentColor);
 }
 
 .popup-header {
