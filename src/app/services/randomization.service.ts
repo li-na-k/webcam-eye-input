@@ -28,6 +28,7 @@ export class RandomizationService {
 
   public inputOrder : InputType[] = [InputType.MOUSE]; //! exp. conductor: change this
   public sizeOrder : Sizes[] =  [Sizes.L, Sizes.S]; //! exp. conductor: adapt this
+  public participantID : String = "lina"; //! exp. conductor: adapt this
 
   //order of reps
   public taskOrder : Tasks[] = [Tasks.SELECT];

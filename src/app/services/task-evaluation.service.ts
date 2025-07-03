@@ -218,8 +218,8 @@ export class TaskEvaluationService implements OnDestroy {
     this.result!.targetHeight = targetRect.height;
   }
 
-  exportResults(){
-    this.exportToCsv(this.results, "myresults", [
+  exportResults(fileName : string = "myResults"){
+    this.exportToCsv(this.results, fileName, [
       "task",
       "inputType",
       "size",
@@ -270,7 +270,7 @@ export class TaskEvaluationService implements OnDestroy {
   */
 
   //source: https://dev.to/idrisrampurawala/exporting-data-to-excel-and-csv-in-angular-3643#export-to-csv
-  public exportToCsv(rows: TaskResult[], fileName: string, columns?: string[]): string | void {
+  public exportToCsv(rows: TaskResult[], fileName: string = "experimentResults", columns?: string[]): string | void {
     if (!rows || !rows.length) {
       console.error("No results data found.")
       return;
@@ -293,7 +293,7 @@ export class TaskEvaluationService implements OnDestroy {
           return cell;
         }).join(separator);
       }).join('\n');
-    this.saveAsFile(csvContent, "experimentResults" + ".csv", "csv");
+    this.saveAsFile(csvContent, fileName + ".csv", "csv");
   }
 
   private saveAsFile(buffer: any, fileName: string, fileType: string): void {
