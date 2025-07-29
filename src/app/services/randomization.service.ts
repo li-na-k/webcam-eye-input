@@ -36,7 +36,7 @@ export class RandomizationService {
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
   public repsDone : number = -1;
-  public trialsPerRep = 5; 
+  public trialsPerRep = 2;
 
   //current rep
   public successTargetOnScreen1 : boolean = true;
