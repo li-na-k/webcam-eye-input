@@ -15,7 +15,23 @@
     justify-content: center; 
     gap: 900px; /* override this for dual screen */
     align-items: center;
-    /* margin: 0px 150px; */
+}
+
+.flex-container-secondWin{
+    display: flex; 
+    flex-direction: row; /* use column for column layout */
+    height: 100%; 
+    justify-content: center; 
+    gap: 1500px; /* override this for dual screen */
+    align-items: center;
+}
+
+.circle-container {
+  width: 3.57cm; /* Fixed width; must be large enough for largest circle size */
+  height: 3.57cm;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .container{

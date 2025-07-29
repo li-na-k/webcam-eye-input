@@ -1,15 +1,21 @@
 <dual-screen #dualscreen (secondWindowLoaded)="secondWindowLoaded=true" [initialOpening]="false" [contentHeight]="'50%'">
-    <div class="flex-container" *ngIf="!clicked">
-        <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.selectedPos, 'clickArea']" id="click-task"> 
-            <mat-card-title>{{randomizationService.selectedPos | matCardTitle: false}}</mat-card-title>
-        </mat-card>
+    <div class="flex-container-secondWin" *ngIf="!clicked">
+        <div class="circle-container" *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="['pos'+randomizationService.selectedPos]">
+            <mat-card [ngClass]="[randomizationService.selectedSize, 'clickArea']" id="click-task"> 
+                <mat-card-title>{{randomizationService.selectedPos | matCardTitle: false}}</mat-card-title>
+            </mat-card>
+        </div>
         <!-- show following in case correct click target is not on second screen -->
-        <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.selectedPos, 'clickArea']"> 
-            <mat-card-title>{{randomizationService.selectedPos| matCardTitle: false}}</mat-card-title>
-        </mat-card>
-        <mat-card [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.getUnselectedPos(), 'clickArea']">
-            <mat-card-title>{{randomizationService.getUnselectedPos() | matCardTitle: false}}</mat-card-title>
-        </mat-card>
+        <div class="circle-container" *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="['pos'+randomizationService.selectedPos]">
+            <mat-card [ngClass]="[randomizationService.selectedSize, 'clickArea']"> 
+                <mat-card-title>{{randomizationService.selectedPos| matCardTitle: false}}</mat-card-title>
+            </mat-card>
+        </div>
+        <div class="circle-container" [ngClass]="['pos'+randomizationService.getUnselectedPos()]">
+            <mat-card [ngClass]="[randomizationService.selectedSize, 'clickArea']">
+                <mat-card-title>{{randomizationService.getUnselectedPos() | matCardTitle: false}}</mat-card-title>
+            </mat-card>
+        </div>
     </div>
     <div *ngIf="clicked" style="margin-top:300px;">
         <div class = "popup-full-background"></div>
@@ -19,16 +25,22 @@
 </dual-screen>
 
 <div class="flex-container" *ngIf="!clicked">
-    <mat-card *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.selectedPos, 'clickArea']" id="click-task"> 
-        <mat-card-title>{{randomizationService.selectedPos | matCardTitle: true}}</mat-card-title>
-    </mat-card>
+    <div class="circle-container" *ngIf="randomizationService.successTargetOnScreen1" [ngClass]="['pos'+randomizationService.selectedPos]">
+        <mat-card [ngClass]="[randomizationService.selectedSize, 'clickArea']" id="click-task"> 
+            <mat-card-title>{{randomizationService.selectedPos | matCardTitle: true}}</mat-card-title>
+        </mat-card>
+    </div>
     <!-- show following in case correct click target is not on main screen -->
-    <mat-card *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.selectedPos, 'clickArea']"> 
-        <mat-card-title>{{randomizationService.selectedPos | matCardTitle: true}}</mat-card-title>
-    </mat-card>
-    <mat-card [ngClass]="[randomizationService.selectedSize, 'pos'+randomizationService.getUnselectedPos(), 'clickArea']">
-        <mat-card-title>{{randomizationService.getUnselectedPos() | matCardTitle: true}}</mat-card-title>
-    </mat-card>
+    <div class="circle-container" *ngIf="!randomizationService.successTargetOnScreen1" [ngClass]="['pos'+randomizationService.selectedPos]">
+        <mat-card [ngClass]="[randomizationService.selectedSize, 'clickArea']"> 
+            <mat-card-title>{{randomizationService.selectedPos | matCardTitle: true}}</mat-card-title>
+        </mat-card>
+    </div>
+    <div class="circle-container" [ngClass]="['pos'+randomizationService.getUnselectedPos()]">
+        <mat-card [ngClass]="[randomizationService.selectedSize, 'clickArea']">
+            <mat-card-title>{{randomizationService.getUnselectedPos() | matCardTitle: true}}</mat-card-title>
+        </mat-card>
+    </div>
 </div>
 <div *ngIf="clicked" style="margin-top:100px;">
     <div class = "popup-full-background"></div>
