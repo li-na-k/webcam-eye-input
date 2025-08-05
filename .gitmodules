@@ -1,0 +1,3 @@
+[submodule "ANALYSIS"]
+	path = ANALYSIS
+	url = https://github.com/li-na-k/analysis-dual-screen-eye-input
