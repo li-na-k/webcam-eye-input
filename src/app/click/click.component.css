@@ -27,8 +27,8 @@
 }
 
 .circle-container {
-  width: 3.57cm; /* Fixed width; must be large enough for largest circle size */
-  height: 3.57cm;
+  width: 3.2cm; /* Fixed width; must be large enough for largest circle size */
+  height: 3.2cm;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -84,13 +84,13 @@ mat-card{
 }
 */
 .small{ 
-    width: 1.43cm;
-    height: 1.43cm;
+    width: 1.2cm;
+    height: 1.2cm;
 } 
 
 .large{
-    width: 3.57cm;
-    height: 3.57cm;
+    width: 3.2cm;
+    height: 3.2cm;
 }
 
 .pos1{

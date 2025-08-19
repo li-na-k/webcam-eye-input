@@ -12,10 +12,10 @@
 
 .alignment-guide{
     width: 100px;
-    top: 250px;
+    top: 50%;
     left: 0px;
     position: absolute;
-    border-top: 3px red solid;
+    border-top: 1px red solid;
     z-index: 1000;
     color: red;
     text-align: center;
