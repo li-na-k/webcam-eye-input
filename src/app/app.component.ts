@@ -3,10 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from './state/app.state';
 import { InputType } from './enums/input-type';
 import { Tasks } from './enums/tasks';
-
-import { CalibrationComponent } from './calibration/calibration.component';
 import { BaseTasksComponent } from './base-tasks/base-tasks.component';
-import { WebgazerService } from 'src/app/services/webgazer.service';
 import { TaskEvaluationService } from './services/task-evaluation.service';
 import { RandomizationService } from './services/randomization.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
@@ -22,7 +19,6 @@ import { selectInputType, selectTask } from './state/expConditions/expconditions
 export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewChecked{
   title = 'eye-input-webpage';
   @ViewChild(BaseTasksComponent) baseTaskComponent! : BaseTasksComponent;
-  @ViewChild(CalibrationComponent) calibrationCmp : CalibrationComponent = new CalibrationComponent(this.webgazerService);
 
   // @HostListener allows us to also guard against browser refresh, close, etc.
   @HostListener('window:beforeunload')
@@ -40,20 +36,21 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
   protected InputType = InputType;
   protected TaskType = Tasks;
 
-  //calibration status
-  protected calibrationDone : boolean = false;
+  protected showRecalibration : boolean = false; //set false when re-calibration needed
+
   //calibration explanation popup
-  protected showCalibExplanation : boolean = true
+  protected showInitialExplanation : boolean = true;
+  protected setShowInitialExplanation(value : boolean){
+    this.showInitialExplanation = value;
+  }
 
   //Test Mode
-  protected showTestMode : boolean = true;
+  protected showTestMode : boolean = false; //not needed here - test mode in seperate branch
 
   //task explanation
   protected showTaskPopup : boolean = false; 
-  protected showInputMethodPopup : boolean = true;
 
-  constructor(private store : Store<AppState>, 
-    protected webgazerService : WebgazerService, 
+  constructor(private store : Store<AppState>,
     private cdRef: ChangeDetectorRef, 
     private taskEvaluationService : TaskEvaluationService,
     protected randomizationService : RandomizationService){}
@@ -63,8 +60,6 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
     }
   
     ngOnInit(): void {
-    this.webgazerService.startWebgazer();
-    this.webgazerService.checkWebGazerLoaded();
     this.selectedInputType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(d => {
@@ -89,41 +84,42 @@ export class AppComponent implements OnInit, ComponentCanDeactivate, AfterViewCh
 
   ngAfterViewInit(){
     this.randomizationService.nextInputMethod();
-    this.calibrationDone = false; //not using this.setCalibrationDone(false) here because in the beginning a calibration is needed (for test mode) even if first input is mouse
     this.cdRef.detectChanges(); //because on mouse input, calibrationDone will be changed to true
   }
 
-  protected updateCalibrationDone(done : boolean){ 
-    if(done){ //calibration should NOT be shown next task
-      this.calibrationDone = true;
-      this.showCalibExplanation = false; //as soon as (first) calibration is done: explanation will not be shown second time
-    }
-    else{ //SHOW calibration next task
-      if(this.selectedInputType == InputType.MOUSE){ 
-        this.calibrationDone = true; //no calibration needed if mouse input
-      }
-      else{
-        this.calibrationDone = false;
-      }
-    }
-  }
+  async startExperiment(){
 
-  confirmSelection(){
+    //Go full Screen on both screens
+    document.documentElement.requestFullscreen();
+    const dualscreenElement = document.querySelector('dual-screen') as any;
+    if (dualscreenElement && dualscreenElement.secondWindow) {
+      dualscreenElement.secondWindow.postMessage({ type: 'go-fullscreen' }, '*');
+    }
+
+    //Experiment Logic
     this.baseTaskComponent.activateSelectedInputType();
-    this.taskEvaluationService.startTask();
+    this.baseTaskComponent.showInterTrialPage(true); 
+    await this.randomizationService.nextRep();
+    this.baseTaskComponent.showInterTrialPage(false);
+  }
+  
+  protected skipButtonClick = () => {
+    const skipButton = document.getElementById("skip");
+    if(skipButton && skipButton instanceof HTMLButtonElement){
+      (skipButton as HTMLButtonElement).disabled = true
+      this.baseTaskComponent.skipBlock().then(
+          () => (skipButton as HTMLButtonElement).disabled = false
+      )
+    }
+    else{
+      console.error("No skip button found.")
+    }
   }
 
   blur($event : any){
     $event.target.blur();
   }
-  
-  protected enteredUserID: string = "";
-  protected userIDSubmitted : boolean = false;
 
-  protected userIDSubmit(){
-    this.taskEvaluationService.userID = this.enteredUserID;
-    this.userIDSubmitted = true;
-  }
 }  
 
 

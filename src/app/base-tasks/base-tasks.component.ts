@@ -2,14 +2,12 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { InputType } from '../enums/input-type';
-import { WebgazerService } from '../services/webgazer.service';
 import { AppState } from '../state/app.state';
 import { selectInputType, selectTask } from '../state/expConditions/expconditions.selector';
 import { Tasks } from '../enums/tasks';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
 
-declare var webgazer: any;
 @Component({
   selector: 'app-base-tasks',
   templateUrl: './base-tasks.component.html',
@@ -17,13 +15,14 @@ declare var webgazer: any;
 })
 export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
+  public abstract secondWindowLoaded : boolean;
+
   readonly InputType = InputType;
   protected selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   protected selectedInputType : InputType = InputType.EYE; 
   protected destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
   protected moveArrowinterval : any;
-  protected arrow : HTMLElement | null = document.getElementById("arrow");
-  protected sandbox : HTMLElement | null = document.getElementById("experimentSandbox");
+  protected mainScreen_arrow : HTMLElement | null = document.getElementById("arrow");
 
   protected timeOutAfterMouseInput : number = 500;
 
@@ -32,7 +31,6 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   constructor(protected store : Store<AppState>, 
     protected cdRef: ChangeDetectorRef, 
-    protected webgazerService : WebgazerService,
     protected taskEvaluationService : TaskEvaluationService, //will be used in derived classes
     protected randomizationService : RandomizationService) { }  
   
@@ -58,30 +56,28 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   protected abstract startEyeInput() : void;
   protected abstract startMouseInput() : void;
-  protected abstract startMix1Input() : void;
-  protected abstract startMix2Input() : void;
+  protected abstract startNinjaInput() : void;
+  protected abstract startMagicInput() : void;
   abstract stopAllInputs() : void;
   abstract addSuccess(aborted?: boolean) : void;
-
+  abstract skipBlock() : Promise<void>;
+  abstract showInterTrialPage(show : boolean) : void;
 
 
   public activateSelectedInputType(){
     console.log("activate selected input type: ", this.selectedTask + " " + this.selectedInputType);
-    this.webgazerService.resumeWebgazer();
     this.cdRef.detectChanges();
-    this.stopAllInputs();
     if(this.selectedInputType == InputType.EYE){
       this.startEyeInput();
     }
     if(this.selectedInputType == InputType.MOUSE){
-      this.webgazerService.pauseWebgazer();
       this.startMouseInput()
     }
-    if(this.selectedInputType == InputType.MIX1){
-      this.startMix1Input();
+    if(this.selectedInputType == InputType.NINJA){
+      this.startNinjaInput();
     }
-    if(this.selectedInputType == InputType.MIX2){
-      this.startMix2Input();
+    if(this.selectedInputType == InputType.MAGIC){
+      this.startMagicInput();
     }
   }
 
@@ -93,11 +89,10 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
       this.pointerLockInterval = setInterval(() => {
         if(this.mix2loaded && document.pointerLockElement == null){
           this.pointerLockStopped = true;
-          console.log("pointer lock zero!")
         }
         else{
           this.pointerLockStopped = false;
         }
-      },1000)
+      },2000)
   }
 }

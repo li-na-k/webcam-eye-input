@@ -17,9 +17,10 @@ export class FinalPageComponent implements OnInit {
   @Output() calibrationDoneEvent = new EventEmitter<boolean>();
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.questionnaireCountdownDone = true;
-    }, 20000)
+    this.downloadFile();
+    // setTimeout(() => {
+    //   this.questionnaireCountdownDone = true;
+    // }, 0)
   }
 
   confirmNextInput(){
@@ -27,9 +28,15 @@ export class FinalPageComponent implements OnInit {
     this.calibrationDoneEvent.emit(false); 
   }
 
-  goToExportPage(){
-    this.showExportPage = true;
-    this.taskEvaluationService.exportResults();
+  // goToExportPage(){
+  //   this.showExportPage = true;
+  //   this.taskEvaluationService.exportResults();
+  // }
+
+  downloadFile(){
+    const timestamp = new Date().toISOString();
+    const fileName : string = this.randomizationService.participantID + "-" + timestamp;
+    this.taskEvaluationService.exportResults(fileName);
   }
 
 }

@@ -73,7 +73,7 @@ mat-card-title{
     display: block;
     margin-left: auto;
     margin-right: auto;
-    color: var(--apricot);
+    color: var(--AccentColor);
     height: 48px;
     width: 48px;
     font-size: 48px;

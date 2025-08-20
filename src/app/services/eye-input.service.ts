@@ -1,9 +1,9 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentEyePos } from 'src/app/state/eyetracking/eyetracking.selector';
 import { AppState } from 'src/app/state/app.state';
-
+import { TaskEvaluationService } from './task-evaluation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,34 +12,38 @@ export class EyeInputService implements OnDestroy {
 
   private currentEyePos$ : Observable<any> = this.store.select(selectCurrentEyePos);
   private destroy$ : Subject<boolean> = new Subject<boolean>(); //for unsubscribing Observables
+
   // properties for Mix 2
   private mouseInput : boolean = false;
   private timeOutAfterMouseInput : any;
+  private timeout : number = 1000; //after what time is mouseInput interval considered to have ended (for switch to EyeInput + TaskResult EyeMouseDistribution) //TODO
   private moveArrowInterval : any;
-  private arrow : HTMLElement | null = null;
-  private sandbox : HTMLElement | null = null;
-  private timeout : number = 0;
+  private arrow : HTMLElement | null = null; //currently active fake cursor
+  private renderer: Renderer2;
 
-  constructor(private store : Store<AppState>) { }
+  private x = 0.0;
+  private y = 0.0;
 
-  public areEyesInsideElement(el : HTMLElement) : boolean{
-    let x = 0.0;
-    let y = 0.0;
+  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService, rendererFactory: RendererFactory2, private ngZone: NgZone) { 
+    this.renderer = rendererFactory.createRenderer(null, null);
     this.currentEyePos$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(d => {
-      x = d.x;
-      y = d.y;
-    });
-    return this.isInside(el, x, y);
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(d => {
+        this.x = d.x;
+        this.y = d.y;
+      });
+  }
+
+  public areEyesInsideElement(el : HTMLElement) : boolean {
+    return this.isInside(el, this.x, this.y);
   }
 
   public isInside(el : HTMLElement, x? : number, y?: number){
     let clientWidth = document.documentElement.clientWidth;
     let clientHeight = document.documentElement.clientHeight;
     let boundingBox = el.getBoundingClientRect();
-    let lr_inside = false;
-    let tb_inside = false;
+    let lr_inside : boolean = false;
+    let tb_inside : boolean = false;
     if(x){
       if(
       (boundingBox.left <= x || boundingBox.left <= 0) && 
@@ -65,110 +69,127 @@ export class EyeInputService implements OnDestroy {
     return (tb_inside && lr_inside)
   }
 
-  private moveArrowWithEyes(arrow : HTMLElement | null){
-    let x = 0.0;
-    let y = 0.0;
-    this.currentEyePos$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(d => {
-      x = d.x;
-      y = d.y;
-    });
-    if(this.arrow){
-      arrow!.style.left = x + "px";
-      arrow!.style.top = y + "px"
-    }
-    else{
-      throw Error("Provided arrow is null.")
-    }
+  maxTargetDist = 500;
+  public moveArrowWithEyes(arrow : HTMLElement, window : Window){ //move to current eye pos
+    let x : number = this.x * window.innerWidth;
+    let y : number = (1-this.y) * window.innerHeight;
+
+    this.applyTransformation(arrow, x, y, 0.3, 0, this.maxTargetDist);
   } 
 
-  private moveArrowWithMouse(e : any, arrow : HTMLElement, sandbox : HTMLElement){
-    let x = parseInt(arrow!.style.left, 10) + e.movementX;
-    let y = parseInt(arrow!.style.top, 10) + e.movementY;
-    const sbRight = sandbox!.getBoundingClientRect().right;
-    const sbBottom = sandbox!.getBoundingClientRect().bottom;
-    const sbLeft = sandbox!.getBoundingClientRect().left;
-    const sbTop = sandbox!.getBoundingClientRect().top;
-    if (x > sbRight) {
-      x = sbRight
-    }
-    if (x < sbLeft) {
-      x = sbLeft
-    }
-    if (y > sbBottom) {
-      y = sbBottom
-    }
-    if (y < sbTop) {
-      y = sbTop
-    }
-    arrow!.style.left = x + "px";
-    arrow!.style.top = y + "px";
+   //DOM is only manipulated once per frame, without ng change detection -> more efficient
+  private applyTransformation(
+    obj: HTMLElement, 
+    x: number, 
+    y: number, 
+    maxDuration: number = 0.3, 
+    minDuration: number = 0, // Optional minimum duration for very large distances
+    maxDistance: number = 400 // distance at which minDuration is reached (minDistance is defined as 0)
+  ): void {
+    this.ngZone.runOutsideAngular(() => {
+      requestAnimationFrame(() => {
+        const rect = obj.getBoundingClientRect();
+        const currentX = rect.left;
+        const currentY = rect.top;
+        const distance = Math.sqrt((x - currentX) ** 2 + (y - currentY) ** 2);
+  
+        // dynamic duration: longer duration should result in shorter duration (cursor jumps), shorter durations smoothed more (less jitter)
+        let duration = maxDuration - (distance * (maxDuration / maxDistance)); // Linear scaling
+  
+        // Ensure duration doesn't go below the minimum
+        if (duration < minDuration) {
+          duration = minDuration;
+        }
+  
+        // Apply the transformation with the calculated duration
+        this.renderer.setStyle(obj, 'transition', `transform ${duration}s ease`);
+        this.renderer.setStyle(obj, 'transform', `translate(${x}px, ${y}px)`);
+      });
+    });
   }
 
-  public activateMix2Input(sandbox : HTMLElement | null, arrow : HTMLElement | null, timeout: number){
-    //lock original cursor, add fake arrow instead
-    if(!sandbox){
-      throw Error("Provided sandbox is null.")
+  public moveArrowWithMouse(e: MouseEvent, arrow: HTMLElement, limits: [number, number, number, number]) {
+    const pointerAcceleration : number = 2;
+    this.ngZone.runOutsideAngular(() => {
+
+      const matrix = new WebKitCSSMatrix(window.getComputedStyle(arrow).transform);
+      let x = matrix.m41 + e.movementX*pointerAcceleration;
+      let y = matrix.m42 + e.movementY*pointerAcceleration;
+      
+      x = Math.max(limits[3], Math.min(x, limits[1])); // Left and right boundaries
+      y = Math.max(limits[0], Math.min(y, limits[2])); // Top and bottom boundaries
+      
+      this.applyTransformation(arrow, x, y, 0, 0);
+      
+      this.registerMouseStartStop();
+    });
+  }
+
+  public async activateEyeInput(window: Window, arrow : HTMLElement | null, timeout: number, moveCursor : boolean = true){
+    if(!window){
+      throw Error("Provided window is null.")
     }
     if(!arrow){
       throw Error("Provided arrow is null.")
     }
-    //remove red dot
-    const dot = document.getElementById("webgazerGazeDot");
-    if(dot){
-      dot.style.visibility = "hidden";
-    }
-    //assign method parameters to instance properties to be able to use them in mouseTakeover()
-    this.sandbox = sandbox; 
     this.arrow = arrow;
     this.timeout = timeout;
-    this.sandbox!.requestPointerLock(); 
-    this.arrow!.style.visibility = 'visible';
-    this.arrow!.style.left = "50%";
-    this.arrow!.style.top = "50%";
+    //lock original cursor, add fake arrow instead
+    if(document.pointerLockElement == null){ //if not already locked
+      await document.body.requestPointerLock();   
+    }
+    this.renderer.setStyle(this.arrow, 'visibility', 'visible');
     //eye input
-    this.moveArrowInterval = setInterval(() => {
-      if(!this.mouseInput){
-        this.arrow!.classList.add("smoothTransition");
-        this.moveArrowWithEyes(this.arrow);
-      }
-      else{
-        this.arrow!.classList.remove("smoothTransition");
-      }
-    }, 100);
-    window.document.addEventListener('mousemove', this.bound_mouseTakeover); 
+    const refreshRate = 60; // screen refresh rate, adapt if necessary
+    const intervalDelay = 1000 / refreshRate;
+    clearInterval(this.moveArrowInterval);
+    let lastUpdate = 0;
+    this.ngZone.runOutsideAngular(() => {
+      this.moveArrowInterval = setInterval(() => {
+        const now = performance.now();
+        if (now - lastUpdate >= intervalDelay) { // only update when necessary
+          if(!this.mouseInput && moveCursor){
+            this.renderer.addClass(this.arrow!, 'redShaddow');
+            this.moveArrowWithEyes(this.arrow!, window);
+          } else {
+            this.renderer.removeClass(this.arrow!, 'redShaddow');
+          }
+          lastUpdate = now;
+        }
+      }, intervalDelay);
+    });
   }
 
-  private bound_mouseTakeover = this.mouseTakeover.bind(this);
-  private mouseTakeover(e : any){
+  private registerMouseStartStop(){ //like mouseTakeover but without takeover of fake cursor (only for analysing how eye/mouse usage was during Magic)
     clearTimeout(this.timeOutAfterMouseInput);
-    this.mouseInput = true;
-    this.moveArrowWithMouse(e, this.arrow!, this.sandbox!);
+    if(!this.mouseInput){ //until now it was eye input, now change to mouse input
+      this.mouseInput = true;
+    }
     this.timeOutAfterMouseInput = setTimeout(() => {
       this.mouseInput = false;
     }, this.timeout)
   }
   
-  public stopMix2Input(sandbox : HTMLElement | null, arrow : HTMLElement | null){
-    document.exitPointerLock();
-    const dot = document.getElementById("webgazerGazeDot");
-    if(dot){
-      dot.style.visibility = "";
-    }
-    window.document.removeEventListener('mousemove', this.bound_mouseTakeover);
-    arrow!.style.visibility = 'hidden';
-    sandbox!.style.cursor = '';
+  public stopMagicInput(){ //stops last instances of stopMagicInput
     clearTimeout(this.timeOutAfterMouseInput);
+    this.taskEvaluationService.clearMouseStartStop();
     clearInterval(this.moveArrowInterval);
+    if(document.pointerLockElement){
+      document.exitPointerLock();
+    }
+    //replace fake cursor with real cursor again
+    if(this.arrow){
+      this.renderer.setStyle(this.arrow, 'visibility', 'hidden');
+    }
+    this.renderer.setStyle(document.body, 'cursor', '');
     this.mouseInput = false;
   }
 
   ngOnDestroy(): void{
     this.destroy$.next(true);
     this.destroy$.complete();
+    clearTimeout(this.timeOutAfterMouseInput);
+    clearInterval(this.moveArrowInterval); // clear the interval
+    this.stopMagicInput();
   }
-
-
-
 }

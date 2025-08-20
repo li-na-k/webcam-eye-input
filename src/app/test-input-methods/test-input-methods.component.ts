@@ -4,7 +4,6 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { BaseTasksComponent } from '../base-tasks/base-tasks.component';
 import { InputType } from '../enums/input-type';
-import { WebgazerService } from '../services/webgazer.service';
 import { TaskEvaluationService } from '../services/task-evaluation.service';
 import { RandomizationService } from '../services/randomization.service';
 import { Tasks } from '../enums/tasks';
@@ -16,21 +15,23 @@ import { Tasks } from '../enums/tasks';
 })
 export class TestInputMethodsComponent extends BaseTasksComponent implements OnInit, OnDestroy, AfterViewInit {
   
-    private readonly dwellTime = 1000;
+    public override secondWindowLoaded: boolean = false;
     private clickArea : HTMLElement | null = null; //all areas
-    private interval : any = 0; //one for each click Area
     protected Input = InputType;
+    public disableSkip(): boolean{
+      return false
+    }
   
     private taskElementID : string = "click-task"; //area that shows success when clicked
     protected success = false;
 
     private originalFirstInputMethod : InputType = InputType.EYE;
-    private originalFirstTask : Tasks = Tasks.HOVER;
+    private originalFirstTask : Tasks = Tasks.SELECT;
 
     @Output() endTestEvent = new EventEmitter<void>();
   
-    constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, webgazerService : WebgazerService, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
-     super(store, cdRef, webgazerService, taskEvaluationService, randomizationService)
+    constructor(cdRef: ChangeDetectorRef, private eyeInputService : EyeInputService, store : Store<AppState>, taskEvaluationService : TaskEvaluationService, randomizationService : RandomizationService) {
+     super(store, cdRef, taskEvaluationService, randomizationService)
     }
 
     override ngOnInit(): void {
@@ -43,65 +44,25 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
 
     ngAfterViewInit(){
       this.clickArea = document.getElementById(this.taskElementID)
-      this.sandbox = document.getElementById("experimentSandbox");
-      this.arrow = document.getElementById("arrow");
+      this.mainScreen_arrow = document.getElementById("arrow");
       //mouse as first input method
       this.selectInputType(InputType.MOUSE);
     }
-    
-    protected startEyeInput(){
-          let wentInsideAt : number|null = null; 
-          let inside : boolean = false;
-          this.interval = setInterval(() => {
-  
-            if(this.clickArea){
-              inside = this.eyeInputService.areEyesInsideElement(this.clickArea);
-              if (inside == true){
-                if (!wentInsideAt) { //entered -> dwell time start
-                  wentInsideAt = Date.now()
-                  //visualize dwell time
-                  this.clickArea.style.border = "5px solid #00000050";
-                }
-                else if (wentInsideAt + this.dwellTime < Date.now()) { //click
-                  this.clickArea.style.border = "";
-                  this.addSuccess();
-                  wentInsideAt = Date.now();
-                }
-              }
-              else{
-                wentInsideAt = null;
-                this.clickArea.style.border = "";
-              }
-            }
-          }, 100);
-    }
-  
-    protected startMix1Input(){
-      document.body.addEventListener('keydown', this.bound_Mix1Input); 
-    }
-  
-    private bound_Mix1Input = this.Mix1Input.bind(this); //otherwise function cannot be removed later with removeClickEvent
-    private Mix1Input(e : any){
-      if(e.keyCode == 13){
-          let inside : boolean = false;   
-          inside = this.eyeInputService.areEyesInsideElement(this.clickArea!);
-          if (inside == true){ 
-            this.addSuccess();
-          }
-      }
-    }
-  
 
     public addSuccess(){
-      this.taskEvaluationService.playAudio();
+      this.taskEvaluationService.playAudio("assets/success.mp3");
       this.clickArea?.classList.add("success");
       this.success = true;
       setTimeout(() => {
         this.clickArea?.classList.remove("success");
         this.success = false;
-      },2000);
+      },1000);
     }
-  
+
+    public override skipBlock(): Promise<void> {
+      //not needed here
+      return new Promise((d) => d)
+    }
   
     protected startMouseInput(){
       this.clickArea!.addEventListener('mousedown', this.bound_changeOnClick);
@@ -109,8 +70,8 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
   
     private bound_changeOnClick = this.changeOnClick.bind(this);
     private changeOnClick(){
-      if(this.selectedInputType == InputType.MIX2){
-          let inside = this.eyeInputService.isInside(this.clickArea!, parseInt(this.arrow!.style.left, 10), parseInt(this.arrow!.style.top, 10));
+      if(this.selectedInputType == InputType.MAGIC){
+          let inside = this.eyeInputService.isInside(this.clickArea!, parseInt(this.mainScreen_arrow!.style.left, 10), parseInt(this.mainScreen_arrow!.style.top, 10));
           if(inside){
             this.addSuccess();
           }
@@ -120,30 +81,24 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       }
     }
   
-    protected startMix2Input(){
-      this.eyeInputService.activateMix2Input(this.sandbox, this.arrow, this.timeOutAfterMouseInput);
+    protected async startMagicInput(){
+      await this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput);
       document.addEventListener('mousedown', this.bound_changeOnClick);
       /* addEventListener is acutally not a very angular way of handling this... a Host Listener would
       have been better, but it cannot be removed, which is necessary here (for other input methods)
       -> using Renderer2 might have been an option but this works, so keeeping it like this for the moment */
-      setTimeout(() =>
-        {this.mix2loaded = true;}
-      ,500) //no other option because pointer lock request does not return observable to check success 
+      this.mix2loaded = true;
     }
   
     public stopAllInputs(){
-      //end Eye Input
-      clearInterval(this.interval);
-      //end Mix1 click event
-      document.body.removeEventListener('keydown', this.bound_Mix1Input); 
       //remove click event MOUSE input
       if(this.clickArea){
        this.clickArea.removeEventListener('mousedown', this.bound_changeOnClick)
       }
       //MIX2
       this.mix2loaded = false;
-      if(this.arrow){
-        this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
+      if(this.mainScreen_arrow){
+        this.eyeInputService.stopMagicInput();
       }
       document.removeEventListener('mousedown', this.bound_changeOnClick); 
       //view port resets
@@ -176,6 +131,17 @@ export class TestInputMethodsComponent extends BaseTasksComponent implements OnI
       this.randomizationService.selectInputType(this.originalFirstInputMethod); 
       this.activateSelectedInputType(); 
     }
-  
+
+    protected override startNinjaInput(): void {
+      //not needed
+    }
+
+    protected startEyeInput(){ 
+      //not needed
+    }
+
+    public showInterTrialPage(show : boolean) : void {
+      this.success = show
+    }
   }
   

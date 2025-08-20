@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { InputType } from '../enums/input-type';
 import { Positions } from '../enums/positions';
 import { Sizes } from '../enums/sizes';
@@ -9,6 +9,9 @@ import { AppState } from '../state/app.state';
 import { changeInputType, changeTask } from '../state/expConditions/expconditions.action';
 import { selectTask, selectInputType } from '../state/expConditions/expconditions.selector';
 import { TaskEvaluationService } from './task-evaluation.service';
+import { RepObject } from '../classes/rep-object';
+import { HttpClient } from '@angular/common/http';
+import { KeyService } from './key.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,25 +19,37 @@ import { TaskEvaluationService } from './task-evaluation.service';
 export class RandomizationService {
 
   private input : InputType = InputType.EYE;
-  private task : Tasks = Tasks.HOVER;
+  private task : Tasks = Tasks.SELECT;
   public taskInstructions : string = "";
   public inputMethodInstructions : string = "";
 
   // store
-  private selectedTask$ : Observable<Tasks> = this.store.select(selectTask);
   private selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
 
-  //order of tasks
-  public inputOrder : InputType[] = [InputType.EYE, InputType.MIX1, InputType.MIX2, InputType.MOUSE]; 
-  public taskOrder : Tasks[] = [Tasks.SCROLL, Tasks.SELECT]; //to include the hover tasks, add "Tasks.HOVER" here
-  public positionOrder : Positions[] = [Positions.POS1, Positions.POS2, Positions.POS3, Positions.POS4];
+  public inputOrder : InputType[] = [InputType.MOUSE]; //! exp. conductor: change this
+  public sizeOrder : Sizes[] =  [Sizes.L, Sizes.S]; //! exp. conductor: adapt this
+  public participantID : String = "lina"; //! exp. conductor: adapt this
+
+  //order of reps
+  public taskOrder : Tasks[] = [Tasks.SELECT];
+  public repOrder : RepObject[] = []
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
+  public repsDone : number = -1;
+  public trialsPerRep = 2;
 
-  // each task: 3 different sizes, two reps each
-  public sizeOrder = [Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.S, Sizes.L, Sizes.L, Sizes.L, Sizes.L, Sizes.L];
-  public repsDone : number = 0;
-  public selectedSize : Sizes =  Sizes.S;
+  //current rep
+  public successTargetOnScreen1 : boolean = true;
+  public selectedPos : Positions = Positions.POS1;
+  public selectedSize : Sizes = Sizes.L;
+  public getUnselectedPos(): Positions {
+      if (this.selectedPos == Positions.POS1) {
+        return Positions.POS2;
+      }
+      else{
+        return Positions.POS1
+      }
+  }
 
   //final page after finishing inputs 
   public everythingDone: boolean = false;
@@ -42,26 +57,21 @@ export class RandomizationService {
 
   messageSubject = new Subject();
   
-  constructor(private store : Store<AppState>, private taskEvalutationService : TaskEvaluationService) { 
-    this.randomize();
-    console.log(this.inputOrder);
-    console.log(this.taskOrder);
-    console.log(this.sizeOrder);
-    console.log(this.positionOrder);
-
-    this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak possible
+  constructor(
+    private store : Store<AppState>, 
+    private taskEvaluationService : TaskEvaluationService, 
+    private http: HttpClient, 
+    private keyService: KeyService
+  ){ 
+    this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak
       .subscribe(d => {
         this.input = d
       });
-    this.selectedTask$
-      .subscribe(d => {
-        this.task = d
-      }); 
   }
 
   //source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
   private shuffle(array : any[]) : any[]{
-    let currentIndex = array.length,  randomIndex;
+    let currentIndex : number = array.length,  randomIndex;
     while (currentIndex != 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
@@ -84,30 +94,69 @@ export class RandomizationService {
   }
 
   private nextTask() : void{
-    this.shuffle(this.sizeOrder);
-    this.repsDone = 0;
+    this.randomizeNewTask()
+    this.repsDone = -1; //will be set to 0 at call of nextRep
     if(this.tasksDone < this.taskOrder.length){
       this.selectTask(this.taskOrder[this.tasksDone])
       this.tasksDone++;
       this.messageSubject.next('nextTask'); // emit event: popup with explanation + confirm button that activates input method should be displayed in app.component
     }
     else{
+      this.messageSubject.next('nextTask');
       this.showFinalPageComponent = true;
       this.nextInputMethod();
     }
   }
 
-  public nextRep() : void {
-    //endTask(); must be called separatly!
-    if(this.repsDone + 1 < this.sizeOrder.length){
-      this.selectedSize = this.sizeOrder[this.repsDone+1];
-      this.taskEvalutationService.selectedSize = this.selectedSize;
-      this.shuffle(this.positionOrder); 
+  public async nextRep(): Promise<void> { //endTask(); must be called separately!
       this.repsDone++;
-      this.taskEvalutationService.startTask();
+      console.log("------------ repsDone:", this.repsDone)
+      if (this.repsDone < this.repOrder.length) {
+        this.taskEvaluationService.numberInBlock = this.repOrder[this.repsDone].numberInBlock;
+        this.selectedSize = this.repOrder[this.repsDone].size;
+        this.taskEvaluationService.selectedSize = this.selectedSize;
+        this.successTargetOnScreen1 = this.repOrder[this.repsDone].mainScreen;
+        this.taskEvaluationService.targetOnMainScreen = this.successTargetOnScreen1;
+        this.selectedPos = this.repOrder[this.repsDone].pos;
+        this.taskEvaluationService.pos = this.selectedPos;
+        this.taskEvaluationService.repeated = this.repOrder[this.repsDone].repeated;
+        if (this.repOrder[this.repsDone].numberInBlock == 0) {
+          await this.keyService.waitForSpaceKey()
+          setTimeout(()=>{
+            this.taskEvaluationService.startTask();
+          }, 500)
+        } else {
+          this.taskEvaluationService.startTask();
+        }
+      } else {
+        this.nextTask();
+      }
+  }
+
+  public getNextBlockNumbers(rep : number) : number[]{
+    let nextBlock : number[] = []
+    nextBlock.length = 0
+    if (rep < this.repOrder.length - 3) {
+      for(let i = rep; i < rep+4; ++i){
+        nextBlock.push(this.getTargetNumber(this.repOrder[i].pos, this.repOrder[i].mainScreen))
+      }
+    } else {
+      console.error("No next Block. NextRep index out of bounds.")
     }
-    else{ 
-      this.nextTask();
+    return nextBlock
+  }
+
+  addCurrentRepBlockToEndOfExp(){
+    // find start of the block
+    let startIndex = this.repsDone;
+    while (startIndex > 0 && this.repOrder[startIndex].numberInBlock !== 0) {
+      startIndex--;
+    }
+    // push all four items of the current block
+    const blockToAdd = this.repOrder.slice(startIndex, startIndex + 4);
+    for (let item of blockToAdd) {
+      const repeatedItem = { ...item, repeated: true }; // clone and add repeated flag
+      this.repOrder.push(repeatedItem);
     }
   }
 
@@ -122,49 +171,9 @@ export class RandomizationService {
   }
 
   private setInstruction() : void{
-    if(this.input == InputType.EYE){
-      this.inputMethodInstructions = "Move the red dot with your eye-gaze."
-      switch(this.task){
-        case Tasks.HOVER:
-          this.taskInstructions = "Move the red dot over the button that says 'Hover over me!'."
-          break;
-        case Tasks.SCROLL:
-          this.taskInstructions = "Move the red dot to the screen borders (dotted area) to scroll in the respective direction. Scroll to the headline that says „Scroll here!“, then scroll to the top of the page again."
-          break;
-        case Tasks.SELECT:
-            this.taskInstructions = "Move the red dot over the button that says 'Select me!' for some seconds to select it."
-            break;
-        case Tasks.TEST:
-            this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button below, move the dot over it for some seconds."
-            break;
-      }
-    }
-    if(this.input == InputType.MIX1){
-      this.inputMethodInstructions = "Move the red dot with your eye-gaze. To confirm the position press ENTER."
-      switch(this.task){
-        case Tasks.HOVER:
-          this.taskInstructions = "Move the red dot over the button that says 'Hover over me!' and confirm with ENTER."
-          break;
-        case Tasks.SCROLL:
-          this.taskInstructions = "Move the red dot to the screen borders (dotted area) and <strong>keep ENTER pressed as long as you want to scroll</strong> in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
-          break;
-        case Tasks.SELECT:
-            this.taskInstructions = "Move the red dot over the button that says 'Select me!' and confirm with ENTER."
-            break;
-        case Tasks.TEST:
-            this.taskInstructions = "You can move the red dot with your eye-gaze. To select the button below, move the dot over it and confirm with ENTER."
-            break;
-      }
-    }
-    if(this.input == InputType.MIX2){
+    if(this.input == InputType.MAGIC){
       this.inputMethodInstructions = "Move the cursor with your eye-gaze. Move your mouse to override the eye input and thus do the finetuning of the cursor movement."
       switch(this.task){
-        case Tasks.HOVER:
-          this.taskInstructions = "Move the cursor over the button that says 'Hover over me!'."
-          break;
-        case Tasks.SCROLL:
-          this.taskInstructions = "Move the cursor to the screen borders (dotted area) to scroll in the respective direction. Scroll to the headline that says „Scroll here“, then scroll to the top of the page again."
-          break;
         case Tasks.SELECT:
             this.taskInstructions = "Move the cursor over the button that says 'Select me!'. Click (with your mouse) to select the button."
             break;        
@@ -176,12 +185,6 @@ export class RandomizationService {
     if(this.input == InputType.MOUSE){
       this.inputMethodInstructions = "Use the mouse, like you normally would."
       switch(this.task){
-        case Tasks.HOVER:
-          this.taskInstructions = "Hover over the button that says 'Hover over me!'."
-          break;
-        case Tasks.SCROLL:
-          this.taskInstructions = "Scroll to the headline that says „Scroll here“. Then, scroll to the top of the page again."
-          break;
         case Tasks.SELECT:
             this.taskInstructions = "Click the button that says 'Select me!'."
             break;
@@ -192,12 +195,63 @@ export class RandomizationService {
     }
   }
 
-  private randomize() : void{
-    this.shuffle(this.inputOrder);
-    this.shuffle(this.taskOrder);
-    this.shuffle(this.sizeOrder); 
-    this.shuffle(this.positionOrder);
-    this.selectedSize = this.sizeOrder[0]; //first size
+  private getTargetNumber(pos: Positions, mainScreen : boolean) : number {
+    let number = 0
+    if(mainScreen){
+      number = (Number(pos) + 2)
+    }
+    else{
+      number = Number(pos);
+    }
+    return number;
   }
 
+  private randomizeNewTask(){
+    this.readAndShuffleRepOrderFromCSV("assets/repOrder.csv").then((repOrder)=>{
+      this.repOrder = repOrder
+      console.log("all repOrder", this.repOrder)
+
+    })
+  }
+
+  private async readFileFromAssets(filePath: string): Promise<string> {
+    try {
+      const data : string = await firstValueFrom(this.http.get(filePath, { responseType: 'text' }));
+      return data;
+    } catch (error) {
+      console.error('Error reading file:', error);
+      return ''; // Return an empty string or handle the error accordingly
+    }
+  }
+
+  private async readAndShuffleRepOrderFromCSV(filename: string): Promise<RepObject[]> {
+    const repOrder: RepObject[] = [];
+    try{
+      const fileContent = await this.readFileFromAssets(filename)
+      const lines: string[] = fileContent.trim().replace(/\r/g, '').split('\n');
+      // copy lines to have 5 reps of each condition
+      const replicatedLines: string[] = [];
+      lines.forEach(line => {
+        for (let i = 0; i < this.trialsPerRep; i++) {
+          replicatedLines.push(line);
+        }
+      });
+      this.sizeOrder.forEach((size) => {
+        this.shuffle(replicatedLines)
+        replicatedLines.forEach((line: string) => {
+          const parts: string[] = line.split(';');
+          const positions : number[] = parts.slice(0, 4).map((numStr: string) => parseInt(numStr));
+
+          positions.forEach((num : number, index : number) => {
+            const pos : Positions = num%2==0?Positions.POS2:Positions.POS1;
+            const mainScreen : boolean = num<=2?false:true;
+              repOrder.push({pos: pos, mainScreen: mainScreen, size, numberInBlock: index, repeated: false});
+          })
+        });
+      });
+    } catch (error){
+      console.error("Error while reading the file: ", error)
+    }
+    return repOrder;
+  }
 }

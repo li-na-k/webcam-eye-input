@@ -1,11 +1,12 @@
 :root {
-    --blue:#85a7b8;
+   /* --blue:#85a7b8;
     --green: #98B63E;
     --apricot: #d7816a;
     --red: #bd4f6c;
     --red-background: #bd4f6c84;
     --green-background: #a0bd4184;
-    
+    */
+
     font-family: Roboto,Helvetica Neue Light,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;
     line-height: 150%;
 }
@@ -18,7 +19,7 @@
 
 body{
     margin: 0px;
-    background-color: var(--apricot);
+    background-color: var(--AccentColor);
 }
 
 h1{
@@ -26,12 +27,13 @@ h1{
 }
 
 button{
-    background-color: var(--apricot);
+    background-color: var(--AccentColor);
     color: #fff;
-    border-radius: 20px;
+    border-radius: 3px;
     border: none;
-    padding: 5px 15px;
-    margin: 2px;
+    padding: 20px 30px;
+    margin: 20px;
+    font-weight: bold;
 }
 
 button:hover{
@@ -44,43 +46,43 @@ button:disabled{
     color: #666666;
 }
 
-
-#webgazerVideoContainer{
-    transform: scale(0.5);
-    right: 20px !important;
-    left: auto !important;
-    top: 10px !important;
-    transform-origin: top right;
-    z-index: 4;
-}
-
-#webgazerVideoFeed{
-    border-radius: 15px !important;
+.linkstylebutton{
+    background-color: transparent;
+    color: black;
+    padding: 0px;
+    text-decoration: underline;
+    font-size: inherit;
 }
 
 .arrow {
     position: fixed;
-    top: 400px;
-    left: 400px;
+    top: -10px;
+    left: -10px;
+    transform: translate(50vw, 50vh); 
     width: 20px;
     visibility: hidden; 
     pointer-events: none;
-    z-index: 1000;
-    -webkit-filter: drop-shadow(2px 4px 6px black);
-    filter: drop-shadow(2px 4px 6px black);
+    z-index: 10;
+    will-change: transform;
+    /* -webkit-filter: drop-shadow(2px 4px 6px black);
+    filter: drop-shadow(2px 4px 6px black); */
+}
+
+.redShaddow{
+    -webkit-filter: drop-shadow(2px 4px 6px red); /* red to visualize the mix with eye input (where dot is also red) */
+    filter: drop-shadow(2px 4px 6px red);
 }
 
 .smoothTransition{
-    -webkit-filter: drop-shadow(2px 4px 6px red); /* red to visualize the mix with eye input (where dot is also red) */
-    filter: drop-shadow(2px 4px 6px red);
-    transition: all 0.5s linear;
-}
+    --transition-duration: 0s;
+    transition: transform var(--transition-duration) ease;
+  }
 
 .Popup{
     position: absolute;
     top: 10%;
     color: black;
-    border-radius: 15px; 
+    border-radius: 3px; 
     padding: 50px; 
     background-color: white; 
     z-index: 3;
@@ -107,11 +109,11 @@ button:disabled{
     cursor: pointer;
     background-color: transparent;
     font-size: 30px;
-    color: var(--apricot);
+    color: var(--AccentColor);
 }
 
 .popup-header {
-    padding: 20px 0px 40px 0px;
+    padding: 20px 0px 20px 0px;
     font-size: 30px;
     line-height: 30px;
   }
@@ -137,11 +139,55 @@ button:disabled{
     right: 0;
     bottom: 0;
     background-color: #fff;
-    z-index: 2;
+    z-index: 100;
 } 
 
 .FlexboxCentered{
     display:flex;
     justify-content:center;
     align-items:center;
+}
+
+/**************************** New UI **************************/
+/***General***/
+:root{
+    --AccentColor:#c54828 !important;
+    --White: #fff !important;
+    --Black: #000 !important;
+    --LightGray: #e4e4e4 !important;
+    --Gray: #ccc !important;
+    --MidGray: #7d7d7d !important;
+    --DarkGray: #4a4a4a !important;
+
+    --Mouse: #585c74;
+    --Magic: #392f86;
+    --Ninja: #2c736b;
+    --Eye:#8f7549;
+}
+
+/***Pop Ups***/
+.popup-header .mat-icon {
+    display: none;
+}
+
+div#SkipGuide, div#MemorizeGuide {
+    z-index: 999;
+    position: relative;
+    text-align: center;
+    padding: 20px 0;
+    color: var(--MidGray);
+}
+
+/*** Buttons ***/   
+#InputTypeIsMouse{
+    background-color: var(--Mouse);
+}
+#InputTypeIsMagic{
+    background-color: var(--Magic);
+}
+#InputTypeIsNinja{
+    background-color: var(--Ninja);
+}
+#InputTypeIsEye{
+    background-color: var(--Eye);
 }

@@ -1,19 +1,33 @@
 .content{
-    margin: 15px 20px;
+    /* margin: 30px; */
     background-color: white;
-    height: 500px;
-    overflow-y: scroll;
+    height: 100%;
+    overflow-y: hidden;
     border-radius: 15px;
-    padding: 30px;
+    padding: 0px;
+    background-color: white;
+    /* height: 100%;                                                                 */
+    overflow-y: hidden;
 }
 
-.mat-icon-button{
+.alignment-guide{
+    width: 100px;
+    top: 250px;
+    left: 0px;
+    position: absolute;
+    border-top: 3px red solid;
+    z-index: 1000;
+    color: red;
+    text-align: center;
+}
+
+.mat-mdc-icon-button{
     line-height: 0px;
     height: auto;
     width: auto;
 }
 
-.mat-spinner{
+mat-spinner{
     margin-left:auto;
     margin-right:auto;
     margin-bottom: 15px;
@@ -22,10 +36,6 @@
 .dropdown-label{
     font-size: 15px;
     font-weight: bold;
-}
-
-#experimentSandbox{
-    z-index: 0;
 }
 
 .button-header{
@@ -42,13 +52,12 @@
     position: absolute; 
     top: 0px; 
     left: auto;
-    right: 180px; 
+    right: 150px; 
     padding: 15px; 
     height: 50px;
     display: flex; 
     align-items: flex-start;
     gap: 15px; 
-
 }
 
 .instructions{
@@ -91,15 +100,15 @@ input{
 
 .white-box{
     background-color: white; 
-    padding: 10px 15px; 
+    padding: 30px 30px; 
     border-radius: 15px; 
-    height: 70px; 
-    min-width: 200px; 
+    min-width: 100px; 
     text-align: center; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    flex-wrap: wrap
+    flex-wrap: wrap;
+    font-size: 30px;
 }
 
 .reminder{
@@ -109,9 +118,11 @@ input{
 }
 
 .footer{
-    padding: 0px 22px;
-    font-size: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    font-family: "Ribes-Black";
     position: fixed;
     top: auto;
-    bottom: -5px;
+    bottom: 5px;
 }

@@ -1,4 +1,3 @@
-
     <div class="explanation ex1">
         <mat-icon class="arrow-explanation material-symbols-rounded">straight</mat-icon>
         Here you can see which task you are supposed to solve and which input method you are currently using.
@@ -9,17 +8,15 @@
         During the experiment you will see how many repetitions of a task you have already done. <b>Use the skip only if you are not able to do a repetition.</b>
     </div>
     
-    <div id="experimentSandbox" style="position: absolute;">
+    <div style="position: absolute;">
         <h2 style="margin-top: 150px;">Test Mode – get familiar with the page and the input methods!</h2>
         Choose an input method to try it:
      
         <div style="display: inline-flex;">
-            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Mouse-chip" class="chip" (click)="selectInputType(Input.MOUSE); this.blur($event)">Mouse</button>
-            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye-chip" class="chip" (click)="selectInputType(Input.EYE); this.blur($event)">Eye</button>
-            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye + ENTER-chip" class="chip" (click)="selectInputType(Input.MIX1); this.blur($event)">Eye + ENTER</button>
-            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye + Mouse-chip" class="chip" (click)="selectInputType(Input.MIX2); this.blur($event)">Eye + Mouse</button>
+            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MAGIC" id="Mouse-chip" class="chip" (click)="selectInputType(Input.MOUSE); this.blur($event)">Mouse</button>
+            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MAGIC" id="Eye + Mouse-chip" class="chip" (click)="selectInputType(Input.MAGIC); this.blur($event)">Eye + Mouse</button>
             <span style="padding: 0px 10px 0px 10px; font-size: 20px;"> | </span>
-            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MIX2" id="Eye + Mouse-chip" class="chip" (click)="endTestMode()">Exit test mode and start experiment</button>
+            <button [disabled]="!pointerLockStopped && selectedInputType == InputType.MAGIC" id="Eye + Mouse-chip" class="chip" (click)="endTestMode()">Exit test mode and start experiment</button>
         </div>
         <div style="width: 350px; font-size: 12px; left: 630px; position: absolute;"
             *ngIf="mix2loaded">
@@ -33,6 +30,6 @@
     
         <mat-card class="clickArea large" id="click-task" style="margin-top: 30px;"> 
             <mat-card-title *ngIf="!success">Try to select me!</mat-card-title>
-            <div *ngIf="success" class="success">✓</div>    
+            <div *ngIf="success" class="nextBlock">✓</div>    
         </mat-card>
     </div>

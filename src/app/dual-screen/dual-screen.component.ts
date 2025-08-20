@@ -1,0 +1,152 @@
+import { AfterViewInit, ApplicationRef, Component, Injector, OnDestroy, TemplateRef, ViewChild, ViewContainerRef, Input, ElementRef, NgZone, EventEmitter, Output, HostListener } from '@angular/core';
+import {
+  TemplatePortal,
+  DomPortalOutlet,
+} from '@angular/cdk/portal';
+import { changeXPos, changeYPos } from '../state/eyetracking/eyetracking.action';
+import { Store } from '@ngrx/store';
+import { AppState } from '../state/app.state';
+import { TaskEvaluationService } from '../services/task-evaluation.service';
+
+
+@Component({
+  selector: 'dual-screen',
+  templateUrl: './dual-screen.component.html',
+  styleUrls: ['./dual-screen.component.css'],
+})
+export class DualScreenComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('templatePortalContent') templatePortalContent!: TemplateRef<unknown>;
+  @ViewChild('arrow') secondScreen_arrow!: ElementRef;
+  @Input() initialOpening : boolean = true; //if true, component where dualScreen is used must call openSecondWindow() when it should be opened
+  //if false, content of the new component is automatically loaded into the already opened window
+  @Input() contentHeight : String = "100%"; 
+  @Output() public secondWindowLoaded = new EventEmitter();
+  public secondWindow : Window | undefined;
+  private mainWindow : any;
+  private templatePortal!: TemplatePortal<any>;
+  private styleSheetElement: any;
+  private dot: any;
+
+  constructor(
+    private _viewContainerRef: ViewContainerRef,
+    private injector: Injector,
+    private applicationRef: ApplicationRef,
+    private store : Store<AppState>,
+    protected taskEvaluationService : TaskEvaluationService,){}
+
+  ngAfterViewInit(){
+    if(!this.initialOpening){
+      this.openSecondWindow();
+    }
+  }
+
+  public closeSecondWindow(){
+    this.secondWindow?.close()
+  }
+
+  public getActiveScreen() : number { 
+    if(this.secondFakeFocussed){
+      return 2;
+    }
+    else{
+      return 1;
+    }
+  }
+
+  //Fake Focus necessary because otherwise mouse tracking stops during Magic Input
+  public secondFakeFocussed : boolean = false;
+  public focusMainWindow(){
+    //this.mainWindow.focus();
+    this.secondFakeFocussed = false;
+    this.mainWindow.document.body.style.backgroundColor = "var(--AccentColor)";
+    this.secondWindow?this.secondWindow.document.body.style.backgroundColor = "#d0d0d0":null;
+  }
+  public focusSecondWindow(){
+    //this.secondWindow.focus();
+    this.secondFakeFocussed = true;
+    this.secondWindow?this.secondWindow.document.body.style.backgroundColor = "var(--AccentColor)":null;
+    this.mainWindow.document.body.style.backgroundColor = "#d0d0d0";
+  }
+
+  public openSecondWindow() : void{
+      if(!this.initialOpening){ //re-use old window
+        this.secondWindow = window.open('', 'SECOND_SCREEN') ?? undefined;
+      }
+    
+      else{ //open new window
+        this.secondWindow = window.open('assets/secondscreen.html', 'SECOND_SCREEN', 'width=400,height=300,left=-1920,top=-1080') ?? undefined;
+      }
+
+      setTimeout(() => {
+        this.attachContent();
+        this.attachStyles();
+        this.attachEventListener();
+        if(this.initialOpening && this.secondWindow){
+          this.secondWindow.opener.name = "parent";
+        }    
+        this.mainWindow = window.open('', 'parent');
+        
+        this.secondWindowLoaded.emit(true);
+
+      }, 2000)   
+  }
+
+  private attachContent(){
+    if(this.secondWindow){
+      const outletElement = this.secondWindow.document.getElementById("outletElement");
+      this.secondWindow.document.title = 'Second Screen';
+      this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
+      if(outletElement){
+        outletElement.innerText = "";
+        new DomPortalOutlet(outletElement, undefined, this.applicationRef, this.injector)
+          .attach(this.templatePortal);
+      }
+      else{
+        console.error("no outlet element found.");
+      }
+    }
+    
+  }
+
+  private attachStyles(){
+    if(this.secondWindow){
+      // Copy styles from parent window
+      document.querySelectorAll('style').forEach(htmlElement => {
+        this.secondWindow?.document.head.appendChild(htmlElement.cloneNode(true));
+      });
+      // Copy stylesheet link from parent window
+      this.styleSheetElement = this.getStyleSheetElement();
+      this.secondWindow.document.head.appendChild(this.styleSheetElement);
+    }
+  }
+
+  private attachEventListener(){
+    if(this.secondWindow){
+      this.secondWindow.addEventListener("mousemove", (e) => {
+          this.taskEvaluationService.evaluateMouseStartStop(); //similar to register MouseStartStop but to evaluate distribution
+      })
+    }
+  }
+
+  //source: https://stackblitz.com/edit/portal-simple?file=src%2Fapp%2Fapp.component.ts
+  private getStyleSheetElement() {
+    const styleSheetElement = document.createElement('link');
+    document.querySelectorAll('link').forEach(htmlElement => {
+      if (htmlElement.rel === 'stylesheet') {
+        const absoluteUrl = new URL(htmlElement.href).href;
+        styleSheetElement.rel = 'stylesheet';
+        styleSheetElement.href = absoluteUrl;
+      }
+    });
+    return styleSheetElement;
+  }
+
+  ngOnDestroy(){
+    //default text when no content is displayed on second screen during the next component
+    if(this.secondWindow?.document.getElementById("content")){
+      this.secondWindow.document.getElementById("content")!.innerText = "Please check the main screen for further instructions."
+    }
+  }
+
+}
+

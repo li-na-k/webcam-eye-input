@@ -19,43 +19,42 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
 import { ClickComponent } from './click/click.component';
-import { HoverComponent } from './hover/hover.component';
-import { ScrollComponent } from './scroll/scroll.component';
 import { PopupPointerLockStopComponent } from './popup-pointer-lock-stop/popup-pointer-lock-stop.component';
 import { HeaderComponent } from './header/header.component';
 import { CalibrationComponent } from './calibration/calibration.component';
 import { FinalPageComponent } from './final-page/final-page.component';
 import { TestInputMethodsComponent } from './test-input-methods/test-input-methods.component';
+import { DualScreenComponent } from './dual-screen/dual-screen.component';
+import { SurfaceTagsComponent } from './surface-tags/surface-tags.component';
+import { InitialExplanationComponent } from './initial-explanation/initial-explanation.component';
+import { MatCardTitlePipe } from './mat-card-title.pipe';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    ClickComponent,
-    HoverComponent,
-    ScrollComponent,
-    PopupPointerLockStopComponent,
-    HeaderComponent,
-    CalibrationComponent,
-    FinalPageComponent,
-    TestInputMethodsComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatCardModule,
-    MatDividerModule,
-    StoreModule.forRoot({
-      eyetrackingData : eyetrackingReducer,
-      expConditionsData : expConditionsReducer
-    }),
-    BrowserAnimationsModule,
-    FormsModule
-  ],
-  providers: [PendingChangesGuard],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        ClickComponent,
+        PopupPointerLockStopComponent,
+        HeaderComponent,
+        CalibrationComponent,
+        FinalPageComponent,
+        TestInputMethodsComponent,
+        DualScreenComponent,
+        SurfaceTagsComponent,
+        InitialExplanationComponent,
+        MatCardTitlePipe
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatButtonModule,
+        MatSelectModule,
+        MatCardModule,
+        MatDividerModule,
+        StoreModule.forRoot({
+            eyetrackingData: eyetrackingReducer,
+            expConditionsData: expConditionsReducer
+        }),
+        BrowserAnimationsModule,
+        FormsModule], providers: [PendingChangesGuard, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }

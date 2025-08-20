@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil} from 'rxjs';
 import { EyeInputService } from 'src/app/services/eye-input.service';
@@ -15,12 +15,11 @@ import { selectInputType } from '../state/expConditions/expconditions.selector';
 })
 export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @Output() startMix2 = new EventEmitter();
+  @Output() startMagic = new EventEmitter();
   @Output() addSuccess = new EventEmitter();
 
   protected selectedInputType$ : Observable<InputType> = this.store.select(selectInputType);
   protected selectedInputType : InputType = InputType.EYE; 
-  protected sandbox : HTMLElement | null = document.getElementById("experimentSandbox"); 
   protected arrow : HTMLElement | null = document.getElementById("arrow"); 
   private destroy$ : Subject<boolean> = new Subject<boolean>(); 
   protected showPopup = true;
@@ -28,12 +27,12 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   constructor(protected store : Store<AppState>, protected eyeInputService : EyeInputService, protected randomizationService : RandomizationService) { }
 
   protected enablePointerLock(): void {
-    this.startMix2.emit();
+    this.startMagic.emit();
     this.showPopup = false;
   }
 
   protected skipRep(): void{
-    this.startMix2.emit(); 
+    this.startMagic.emit(); 
     this.addSuccess.emit();
     this.showPopup = false;
   }
@@ -45,20 +44,12 @@ export class PopupPointerLockStopComponent implements OnInit, OnDestroy, AfterVi
   }
 
   ngAfterViewInit(): void {
-    this.eyeInputService.stopMix2Input(this.sandbox, this.arrow);
-    this.eyeInputService.stopMix2Input(window.document.body, this.arrow); 
+    this.eyeInputService.stopMagicInput();
   }
 
   ngOnDestroy(){
     this.destroy$.next(true);
     this.destroy$.complete();
-    //document.body.removeEventListener('keydown', this.bound_popupIfEsc);
-  }
-
-  protected closeAndStopMix2() : void{
-    this.showPopup = false;
-    this.eyeInputService.stopMix2Input(this.sandbox, this.arrow)
-    this.eyeInputService.stopMix2Input(window.document.body, this.arrow);
   }
 
 }
