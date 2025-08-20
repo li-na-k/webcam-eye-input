@@ -11,6 +11,7 @@ import { selectTask, selectInputType } from '../state/expConditions/expcondition
 import { TaskEvaluationService } from './task-evaluation.service';
 import { RepObject } from '../classes/rep-object';
 import { HttpClient } from '@angular/common/http';
+import { KeyService } from './key.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,7 @@ export class RandomizationService {
 
   public inputOrder : InputType[] = [InputType.MOUSE]; //! exp. conductor: change this
   public sizeOrder : Sizes[] =  [Sizes.L, Sizes.S]; //! exp. conductor: adapt this
+  public participantID : String = "lina"; //! exp. conductor: adapt this
 
   //order of reps
   public taskOrder : Tasks[] = [Tasks.SELECT];
@@ -34,6 +36,8 @@ export class RandomizationService {
   public inputsDone : number = 0; 
   public tasksDone : number = 0;
   public repsDone : number = -1;
+  public trialsPerRep = 2;
+
   //current rep
   public successTargetOnScreen1 : boolean = true;
   public selectedPos : Positions = Positions.POS1;
@@ -53,7 +57,12 @@ export class RandomizationService {
 
   messageSubject = new Subject();
   
-  constructor(private store : Store<AppState>, private taskEvaluationService : TaskEvaluationService, private http: HttpClient) { 
+  constructor(
+    private store : Store<AppState>, 
+    private taskEvaluationService : TaskEvaluationService, 
+    private http: HttpClient, 
+    private keyService: KeyService
+  ){ 
     this.selectedInputType$ //unsubscribing not necessary since angular services are singleton -> no memory leak
       .subscribe(d => {
         this.input = d
@@ -100,7 +109,6 @@ export class RandomizationService {
   }
 
   public async nextRep(): Promise<void> { //endTask(); must be called separately!
-    return new Promise<void>(async (resolve, reject) => {
       this.repsDone++;
       console.log("------------ repsDone:", this.repsDone)
       if (this.repsDone < this.repOrder.length) {
@@ -113,20 +121,16 @@ export class RandomizationService {
         this.taskEvaluationService.pos = this.selectedPos;
         this.taskEvaluationService.repeated = this.repOrder[this.repsDone].repeated;
         if (this.repOrder[this.repsDone].numberInBlock == 0) {
-          await this.waitForSpaceKey()
+          await this.keyService.waitForSpaceKey()
           setTimeout(()=>{
             this.taskEvaluationService.startTask();
-            resolve();
           }, 500)
         } else {
           this.taskEvaluationService.startTask();
-          resolve();
         }
       } else {
         this.nextTask();
-        resolve();
       }
-    });
   }
 
   public getNextBlockNumbers(rep : number) : number[]{
@@ -156,18 +160,6 @@ export class RandomizationService {
     }
   }
 
-  private async waitForSpaceKey(): Promise<void> {
-    return new Promise<void>((resolve) => {
-      const handler = (event: KeyboardEvent) => {
-        if (event.code === 'Space') {
-          window.removeEventListener('keydown', handler);
-          resolve();
-        }
-      };
-      window.addEventListener('keydown', handler);
-    });
-  }
-
   public selectTask(task : Tasks) : void{
     this.store.dispatch(changeTask({newTask: task}));
     this.setInstruction(); 
@@ -179,7 +171,7 @@ export class RandomizationService {
   }
 
   private setInstruction() : void{
-    if(this.input == InputType.MIX2){
+    if(this.input == InputType.MAGIC){
       this.inputMethodInstructions = "Move the cursor with your eye-gaze. Move your mouse to override the eye input and thus do the finetuning of the cursor movement."
       switch(this.task){
         case Tasks.SELECT:
@@ -237,15 +229,23 @@ export class RandomizationService {
     try{
       const fileContent = await this.readFileFromAssets(filename)
       const lines: string[] = fileContent.trim().replace(/\r/g, '').split('\n');
+      // copy lines to have 5 reps of each condition
+      const replicatedLines: string[] = [];
+      lines.forEach(line => {
+        for (let i = 0; i < this.trialsPerRep; i++) {
+          replicatedLines.push(line);
+        }
+      });
       this.sizeOrder.forEach((size) => {
-        this.shuffle(lines)
-        lines.forEach((line: string) => {
+        this.shuffle(replicatedLines)
+        replicatedLines.forEach((line: string) => {
           const parts: string[] = line.split(';');
           const positions : number[] = parts.slice(0, 4).map((numStr: string) => parseInt(numStr));
+
           positions.forEach((num : number, index : number) => {
             const pos : Positions = num%2==0?Positions.POS2:Positions.POS1;
             const mainScreen : boolean = num<=2?false:true;
-            repOrder.push({pos: pos, mainScreen: mainScreen, size, numberInBlock: index, repeated: false});
+              repOrder.push({pos: pos, mainScreen: mainScreen, size, numberInBlock: index, repeated: false});
           })
         });
       });

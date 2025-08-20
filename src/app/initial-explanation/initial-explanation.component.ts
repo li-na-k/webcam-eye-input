@@ -33,4 +33,9 @@ export class InitialExplanationComponent {
       this.currentInstruction = 0; //reset in case re-opened
     }
 
+    protected handleSecondWindowLoaded() {
+      console.log("Second window loaded! Closing popup automatically.");
+      this.closePopup();
+    }
+
 }

@@ -160,7 +160,7 @@ export class EyeInputService implements OnDestroy {
     });
   }
 
-  private registerMouseStartStop(){ //like mouseTakeover but without takeover of fake cursor (only for analysing how eye/mouse usage was during Mix2)
+  private registerMouseStartStop(){ //like mouseTakeover but without takeover of fake cursor (only for analysing how eye/mouse usage was during Magic)
     clearTimeout(this.timeOutAfterMouseInput);
     if(!this.mouseInput){ //until now it was eye input, now change to mouse input
       this.mouseInput = true;
@@ -170,7 +170,7 @@ export class EyeInputService implements OnDestroy {
     }, this.timeout)
   }
   
-  public stopMix2Input(){ //stops last instances of stopMix2Input
+  public stopMagicInput(){ //stops last instances of stopMagicInput
     clearTimeout(this.timeOutAfterMouseInput);
     this.taskEvaluationService.clearMouseStartStop();
     clearInterval(this.moveArrowInterval);
@@ -190,6 +190,6 @@ export class EyeInputService implements OnDestroy {
     this.destroy$.complete();
     clearTimeout(this.timeOutAfterMouseInput);
     clearInterval(this.moveArrowInterval); // clear the interval
-    this.stopMix2Input();
+    this.stopMagicInput();
   }
 }

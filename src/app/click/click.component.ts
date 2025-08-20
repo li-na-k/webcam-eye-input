@@ -135,7 +135,7 @@ export class ClickComponent extends BaseTasksComponent{
   protected startEyeInput(){ //not needed for this experiment
   }
 
-  protected startMix1Input(){ //Ninja Cursors - eyes only for changing screen/cursor
+  protected startNinjaInput(){ //Ninja Cursors - eyes only for changing screen/cursor
     this.webSocketService.startSendingGazeData();
     this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput, false); //Start with main screen
     this.renderer.setStyle(this.mainScreen_arrow, 'visibility', 'visible');
@@ -159,23 +159,19 @@ export class ClickComponent extends BaseTasksComponent{
   }
 
   public async addSuccess() {
-    this.taskEvaluationService.playAudio("assets/success.mp3");
+    this.taskEvaluationService.playAudio("assets/correct.mp3");
     this.taskEvaluationService.calculateTargetDistance(this.taskElement as HTMLElement, this.taskEvaluationService.targetOnMainScreen ? window : this.dualscreen.secondWindow);
     this.taskEvaluationService.calculateTargetSize(this.taskElement as HTMLElement)
     this.error = false;
     this.taskEvaluationService.endTask(false);
     this.showInterTrialPage(true);
-    try {
-        await this.randomizationService.nextRep();
-    } catch (error) {
-        console.error("An error occurred during nextRep():", error);
-    }
+    await this.randomizationService.nextRep();
     this.showInterTrialPage(false);
+
   }
 
   public async skipBlock() : Promise<void> {
-    this.taskEvaluationService.playAudio("assets/error.mp3");
-    return new Promise(async (resolve, reject) => {
+    this.taskEvaluationService.playAudio("assets/incorrect.mp3");
       try {
         const repAtSkip = this.randomizationService.repsDone;
         this.randomizationService.addCurrentRepBlockToEndOfExp()
@@ -186,13 +182,10 @@ export class ClickComponent extends BaseTasksComponent{
           await this.randomizationService.nextRep() //if nextTask is called: repsDone set to -1 -> check for larger 0 in while loop
         } 
         this.showInterTrialPage(false)
-        resolve();
       }
       catch (error) {
         console.error("An error occurred during skipBlock():", error);
-        return reject(error)
       }  
-    })
   }
 
   protected startMouseInput(){
@@ -223,7 +216,7 @@ export class ClickComponent extends BaseTasksComponent{
       let matrix = new WebKitCSSMatrix(style.transform);
       let x = matrix.m41;
       let y = matrix.m42;
-      if (this.selectedInputType === InputType.MIX2 || this.selectedInputType === InputType.MIX1) {
+      if (this.selectedInputType === InputType.MAGIC || this.selectedInputType === InputType.NINJA) {
           const halflength = Math.ceil(this.clickAreas!.length / 2);
           const activeClickAreas = this.dualscreen.getActiveScreen() === 1 ? this.clickAreas!.slice(0, halflength) : this.clickAreas!.slice(halflength);
 
@@ -261,7 +254,7 @@ export class ClickComponent extends BaseTasksComponent{
     }
   }
 
-  protected startMix2Input(){
+  protected startMagicInput(){
     this.webSocketService.startSendingGazeData();
     this.eyeInputService.activateEyeInput(window, this.mainScreen_arrow, this.timeOutAfterMouseInput); //Start with main screen
     this.renderer.setStyle(this.mainScreen_arrow, 'visibility', 'visible');
@@ -283,9 +276,9 @@ export class ClickComponent extends BaseTasksComponent{
     }
     //MIX2
     this.mix2loaded = false;
-    this.dualscreen.mainWindow.document.body.style.backgroundColor = "var(--apricot)";
-    this.dualscreen.secondWindow.document.body.style.backgroundColor = "var(--apricot)";
-    this.eyeInputService.stopMix2Input();
+    this.dualscreen.mainWindow.document.body.style.backgroundColor = "var(--AccentColor)";
+    this.dualscreen.secondWindow.document.body.style.backgroundColor = "var(--AccentColor)";
+    this.eyeInputService.stopMagicInput();
     document.removeEventListener('mousedown', this.bound_changeOnClick); 
     this.webSocketService.stopSendingGazeData();
   }

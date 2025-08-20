@@ -12,8 +12,26 @@
     display: flex; 
     flex-direction: row; /* use column for column layout */
     height: 100%; 
-    justify-content: space-between; 
+    justify-content: center; 
+    gap: 900px; /* override this for dual screen */
     align-items: center;
+}
+
+.flex-container-secondWin{
+    display: flex; 
+    flex-direction: row; /* use column for column layout */
+    height: 100%; 
+    justify-content: center; 
+    gap: 1500px; /* override this for dual screen */
+    align-items: center;
+}
+
+.circle-container {
+  width: 3.57cm; /* Fixed width; must be large enough for largest circle size */
+  height: 3.57cm;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .container{
@@ -24,8 +42,9 @@
 }
 
 mat-card{
-    background-color: var(--apricot);
-    color: #fff;
+    background-color: var(--White);
+    border: 1px solid var(--DarkGray);
+    color: var(--DarkGray);
     border-radius: 100px;
     text-align: center;
     display: flex;
@@ -37,6 +56,8 @@ mat-card{
     font-size: 30px;
     line-height: 40px;
     font-weight: bold;
+    cursor: pointer;
+    user-select: none;
 }
 
 /* width & height values are 0.5 of size large*/
@@ -51,6 +72,7 @@ mat-card{
     height: 180px;
 }*/
 
+/*
 .small{ 
     width: 50px;
     height: 50px;
@@ -59,6 +81,16 @@ mat-card{
 .large{
     width: 100px;
     height: 100px;
+}
+*/
+.small{ 
+    width: 1.43cm;
+    height: 1.43cm;
+} 
+
+.large{
+    width: 3.57cm;
+    height: 3.57cm;
 }
 
 .pos1{

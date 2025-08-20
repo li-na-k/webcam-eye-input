@@ -1,10 +1,24 @@
 .content{
-    margin: 15px 30px;
+    /* margin: 30px; */
     background-color: white;
-    height: calc(100% - 200px);
+    height: 100%;
     overflow-y: hidden;
     border-radius: 15px;
-    padding: 30px;
+    padding: 0px;
+    background-color: white;
+    /* height: 100%;                                                                 */
+    overflow-y: hidden;
+}
+
+.alignment-guide{
+    width: 100px;
+    top: 250px;
+    left: 0px;
+    position: absolute;
+    border-top: 3px red solid;
+    z-index: 1000;
+    color: red;
+    text-align: center;
 }
 
 .mat-mdc-icon-button{
@@ -86,15 +100,15 @@ input{
 
 .white-box{
     background-color: white; 
-    padding: 10px 15px; 
+    padding: 30px 30px; 
     border-radius: 15px; 
-    height: 70px; 
     min-width: 100px; 
     text-align: center; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    flex-wrap: wrap
+    flex-wrap: wrap;
+    font-size: 30px;
 }
 
 .reminder{

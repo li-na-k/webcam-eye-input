@@ -33,6 +33,7 @@ export class SocketService {
     this.listenTo("gazeData")
     .subscribe((data : any) => {
       //store current x and y pos
+        data = data[0]
         this.store.dispatch(changeXPos({newx: data.norm_pos[0]}));
         this.store.dispatch(changeYPos({newy: data.norm_pos[1]}));
         this.store.dispatch(changeScreen({newScreen: data.name}));

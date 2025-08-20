@@ -56,8 +56,8 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
 
   protected abstract startEyeInput() : void;
   protected abstract startMouseInput() : void;
-  protected abstract startMix1Input() : void;
-  protected abstract startMix2Input() : void;
+  protected abstract startNinjaInput() : void;
+  protected abstract startMagicInput() : void;
   abstract stopAllInputs() : void;
   abstract addSuccess(aborted?: boolean) : void;
   abstract skipBlock() : Promise<void>;
@@ -73,11 +73,11 @@ export abstract class BaseTasksComponent implements OnInit, OnDestroy {
     if(this.selectedInputType == InputType.MOUSE){
       this.startMouseInput()
     }
-    if(this.selectedInputType == InputType.MIX1){
-      this.startMix1Input();
+    if(this.selectedInputType == InputType.NINJA){
+      this.startNinjaInput();
     }
-    if(this.selectedInputType == InputType.MIX2){
-      this.startMix2Input();
+    if(this.selectedInputType == InputType.MAGIC){
+      this.startMagicInput();
     }
   }
 

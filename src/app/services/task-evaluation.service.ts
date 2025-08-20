@@ -142,7 +142,7 @@ export class TaskEvaluationService implements OnDestroy {
   endTask(aborted? : boolean){
     if(this.taskRunning){
       this.result!.endTime = Date.now();
-      this.clearMouseStartStop(); //end last MOUSE interval (during Mix2 only)
+      this.clearMouseStartStop(); //end last MOUSE interval (during Magic only)
       this.result!.setDuration();
       this.result!.setPosNumber();
       this.result!.setIndexOfDifficulty();
@@ -180,6 +180,9 @@ export class TaskEvaluationService implements OnDestroy {
       return;
     }
     console.log("window pixel size", window.devicePixelRatio)
+    
+    const overlapVertical = 250; // if screens are not "corner to corner": enter vertical overlap here
+    /* TODO: test this -> measure real dist in cm! (for comparison with 100px measure alignment line) */
 
     const targetRect = target.getBoundingClientRect();
 
@@ -196,11 +199,11 @@ export class TaskEvaluationService implements OnDestroy {
     }
     else{
       if(this.result!.targetOnMainScreen){ // from second screen to main screen: ↓ or →
-        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[1] + targetCenterFromTop;
+        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[1] + targetCenterFromTop - overlapVertical;
         this.result!.XdistancePrevTarget = this.prevDistanceToBorder[3] + targetCenterFromLeft;
       }
       else{ // from main screen to second screen: ↑ or ← 
-        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToBottom;
+        this.result!.YdistancePrevTarget = this.prevDistanceToBorder[0] + targetCenterToBottom - overlapVertical;
         this.result!.XdistancePrevTarget = this.prevDistanceToBorder[2] + targetCenterToRight;
       }
     }
@@ -215,8 +218,8 @@ export class TaskEvaluationService implements OnDestroy {
     this.result!.targetHeight = targetRect.height;
   }
 
-  exportResults(){
-    this.exportToCsv(this.results, "myresults", [
+  exportResults(fileName : string = "myResults"){
+    this.exportToCsv(this.results, fileName, [
       "task",
       "inputType",
       "size",
@@ -243,7 +246,7 @@ export class TaskEvaluationService implements OnDestroy {
   }
 
   /* 
-•	inputType – Mouse, Mix1 (NINJA), or Mix2 (MAGIC)
+•	inputType – Mouse, Ninja (NINJA), or Magic (MAGIC)
 •	Task – in our experiment this will always be “Select”
 •	Size – large or small (exact size see targetWidth / targetHeight)	
 •	numberInBlock – is it the first (0), second (1), third (2), or fourth (3) of the order / block?
@@ -267,7 +270,7 @@ export class TaskEvaluationService implements OnDestroy {
   */
 
   //source: https://dev.to/idrisrampurawala/exporting-data-to-excel-and-csv-in-angular-3643#export-to-csv
-  public exportToCsv(rows: TaskResult[], fileName: string, columns?: string[]): string | void {
+  public exportToCsv(rows: TaskResult[], fileName: string = "experimentResults", columns?: string[]): string | void {
     if (!rows || !rows.length) {
       console.error("No results data found.")
       return;
@@ -290,7 +293,7 @@ export class TaskEvaluationService implements OnDestroy {
           return cell;
         }).join(separator);
       }).join('\n');
-    this.saveAsFile(csvContent, "experimentResults" + ".csv", "csv");
+    this.saveAsFile(csvContent, fileName + ".csv", "csv");
   }
 
   private saveAsFile(buffer: any, fileName: string, fileType: string): void {
